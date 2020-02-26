@@ -1,0 +1,47 @@
+
+.image {
+  height: 250px;
+  background: url("https://www.w3schools.com/howto/img_snow_wide.jpg") 50% 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.profile {
+  display: flex;
+  border: 1px solid lightsteelblue;
+  font-size: 16px;
+  padding: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+  border-radius: 3px;
+
+  &__left {
+    width: 200px;
+  }
+
+  &__right {
+    padding-left: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 200px);
+  }
+
+  &__img {
+    width: 150px;
+  }
+
+  &__job {
+    width: 50%;
+    text-align: center;
+  }
+
+  &__link {
+    display: inline-block;
+    margin: 3px 5px;
+
+    &:hover {
+      color: blue;
+    }
+  }
+
+}

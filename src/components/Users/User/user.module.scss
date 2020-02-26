@@ -1,0 +1,32 @@
+.user {
+  display: flex;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  color: #555;
+  &__left {
+    width: 15%;
+
+    button {
+      width: 100%;
+
+      &:disabled {
+        pointer-events: none;
+        opacity: 0.5;
+      }
+    }
+  }
+
+  &__right {
+    width: calc(85% - 20px);
+    border: 1px solid #B0C4DE;
+    border-radius: 3px;
+    margin-left: 20px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__avatar {
+
+  }
+}

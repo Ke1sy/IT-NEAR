@@ -1,0 +1,27 @@
+$theme-color: lightsteelblue !default;
+
+.header {
+  grid-area: h;
+  background: $theme-color;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  align-items: center;
+}
+
+
+.logo {
+  width: 100px;
+}
+
+.login {
+  padding-right: 20px;
+
+  &__link {
+    &.active,
+    &:hover {
+      color: red;
+      text-decoration: underline;
+    }
+  }
+}

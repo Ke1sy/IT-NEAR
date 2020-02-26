@@ -1,0 +1,11 @@
+.dialog {
+  margin-bottom: 10px;
+  &__link {
+    text-decoration: none;
+  }
+}
+
+.active {
+  font-size: 1.2em;
+  color: blue;
+}
