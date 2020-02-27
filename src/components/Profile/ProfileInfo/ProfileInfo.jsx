@@ -3,6 +3,7 @@ import classes from './profile-info.module.scss';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import jobImage from "../../../assets/images/job-image.png";
 import Preloader from "../../Preloader/Preloader";
+import ProfileStatus from "./ProfileStatus";
 
 const ProfileInfo = (props) => {
     const {profile} = props;
@@ -48,6 +49,9 @@ const ProfileInfo = (props) => {
                     <div className={classes.profile__column}>
                         <p><b>Name: </b>{profile.fullName}</p>
                         <p><b>About me: </b>{profile.aboutMe}</p>
+                        <p>
+                            <ProfileStatus status={profile.status}/>
+                        </p>
                     </div>
                     {profile.lookingForAJob &&
                     <div className={classes.profile__job}>

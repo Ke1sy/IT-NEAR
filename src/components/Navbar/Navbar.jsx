@@ -27,16 +27,14 @@ const LINKS = [
     },
 ];
 const Navbar = (props) => {
-    let {userId, isAuth} = props;
+    let {userId} = props;
     return (
         <nav className={styles.nav}>
-            {isAuth &&
-                <div className={styles.nav__item}>
-                    <NavLink to={`/profile/${userId}`} className={styles.nav__link} activeClassName={styles.active}>
-                        My Profile
-                    </NavLink>
-                </div>
-            }
+            <div className={styles.nav__item}>
+                <NavLink to={`/profile/${userId}`} className={styles.nav__link} activeClassName={styles.active}>
+                    My Profile
+                </NavLink>
+            </div>
 
             {LINKS.map(({id, text, url}) => (
                 <div className={styles.nav__item} key={id}>
@@ -49,11 +47,10 @@ const Navbar = (props) => {
     )
 };
 
-const mapStateToProps = ({authReducer: {userId, isAuth}}) => {
+const mapStateToProps = ({authReducer: {userId}}) => {
     return {
         userId,
-        isAuth
     }
 };
 
-export default connect(mapStateToProps, {})(Navbar);
+export default connect(mapStateToProps)(Navbar);

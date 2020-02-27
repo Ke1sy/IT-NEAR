@@ -4,14 +4,14 @@ import Dialog from "./Dialogs/Dialog";
 import Message from "./Message/Message";
 
 const Messages = (props) => {
-    const {messages, dialogs, newMessageText, addMessage, changeMessage} = props;
+    const {messages, dialogs, newMessageText, addMessage, updateNewMessageText} = props;
 
     const onMessageChange = ({target: {value}}) => {
-        changeMessage(value);
+        updateNewMessageText(value);
     };
 
     const onAddMessage = () => {
-        if(newMessageText.length > 0) {
+        if (newMessageText.length > 0) {
             addMessage();
         }
     };
@@ -20,6 +20,7 @@ const Messages = (props) => {
     let dialogsElems = dialogs.map(({id, name}) => (<Dialog key={id} name={name} id={id}/>));
 
     return (
+
         <div className={styles.content}>
             <div className={styles.dialogs}>
                 {dialogsElems}
