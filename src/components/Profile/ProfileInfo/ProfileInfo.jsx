@@ -5,8 +5,7 @@ import jobImage from "../../../assets/images/job-image.png";
 import Preloader from "../../Preloader/Preloader";
 import ProfileStatus from "./ProfileStatus";
 
-const ProfileInfo = (props) => {
-    const {profile} = props;
+const ProfileInfo = ({profile, status, setUserStatus}) => {
     if (!profile) {
         return <Preloader/>
     }
@@ -49,9 +48,7 @@ const ProfileInfo = (props) => {
                     <div className={classes.profile__column}>
                         <p><b>Name: </b>{profile.fullName}</p>
                         <p><b>About me: </b>{profile.aboutMe}</p>
-                        <p>
-                            <ProfileStatus status={profile.status}/>
-                        </p>
+                        <ProfileStatus status={status} setUserStatus={setUserStatus}/>
                     </div>
                     {profile.lookingForAJob &&
                     <div className={classes.profile__job}>

@@ -2,17 +2,14 @@ import React from 'react';
 import styles from './messages.module.scss';
 import Dialog from "./Dialogs/Dialog";
 import Message from "./Message/Message";
+import MessageForm from "./Message/MessageForm";
 
 const Messages = (props) => {
-    const {messages, dialogs, newMessageText, addMessage, updateNewMessageText} = props;
+    const {messages, dialogs, addMessage} = props;
 
-    const onMessageChange = ({target: {value}}) => {
-        updateNewMessageText(value);
-    };
-
-    const onAddMessage = () => {
-        if (newMessageText.length > 0) {
-            addMessage();
+    const onAddMessage = ({message}) => {
+        if (message.length > 0) {
+            addMessage(message);
         }
     };
 
@@ -20,7 +17,6 @@ const Messages = (props) => {
     let dialogsElems = dialogs.map(({id, name}) => (<Dialog key={id} name={name} id={id}/>));
 
     return (
-
         <div className={styles.content}>
             <div className={styles.dialogs}>
                 {dialogsElems}
@@ -29,10 +25,7 @@ const Messages = (props) => {
                 <div className={styles.messages__wrapper}>
                     {messagesElems}
                 </div>
-                <div className={styles.messages__form}>
-                    <textarea onChange={onMessageChange} value={newMessageText}/>
-                    <button onClick={onAddMessage}>Send</button>
-                </div>
+                <MessageForm onSubmit={onAddMessage}/>
             </div>
         </div>
     )

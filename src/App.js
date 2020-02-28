@@ -11,6 +11,7 @@ import MessagesContainer from "./components/Messages/MessagesContainer";
 import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
+import LoginContainer from "./components/Login/LoginContainer";
 
 const App = () => {
     return (
@@ -22,7 +23,7 @@ const App = () => {
                     <Route path="/profile/:id?" render={() => <ProfileContainer/>}/>
                     <Route path="/messages" render={() => <MessagesContainer/>}/>
                     <Route path="/news" component={News}/>
-                    <Route path="/login" component={Login}/>
+                    <Route path="/login" component={LoginContainer}/>
                     <Route path="/music" component={Music}/>
                     <Route path="/users" render={() => <UsersContainer/>}/>
                     <Route path="/settings" component={Settings}/>

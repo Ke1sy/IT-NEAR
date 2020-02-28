@@ -5,14 +5,14 @@ import {connect} from "react-redux";
 import {withAuthRedirect} from '../Redirects/AuthRedirect'
 import {compose} from "redux";
 
-const mapStateToProps = ({dialogsReducer: {messages, dialogs, newMessageText}}) => {
+const mapStateToProps = ({dialogsReducer: {messages, dialogs}}) => {
     return {
-        messages, dialogs, newMessageText
+        messages, dialogs
     }
 };
 
 const MessagesContainer = compose(
-    connect(mapStateToProps, {addMessage, updateNewMessageText}),
+    connect(mapStateToProps, {addMessage}),
     withAuthRedirect
 )(Messages);
 

@@ -24,5 +24,9 @@
 
   &__form {
     display: flex;
+
+    textarea {
+      min-width: 300px;
+    }
   }
 }

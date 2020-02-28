@@ -1,4 +1,4 @@
-import {ADD_MESSAGE, UPDATE_NEW_MESSAGE_TEXT} from "../constants";
+import {ADD_MESSAGE} from "../constants";
 
 const initialState = {
     dialogs: [
@@ -31,17 +31,14 @@ const initialState = {
             message: 'Message me, please. Miss You!'
         },
     ],
-    newMessageText: ''
 };
 
 const dialogsReducer = (state = initialState, {type, message}) => {
     switch (type) {
-        case UPDATE_NEW_MESSAGE_TEXT:
-            return {...state, newMessageText: message};
         case ADD_MESSAGE:
             const newMessages = [...state.messages, {
                 id: 5,
-                message: state.newMessageText
+                message
             }];
             return {...state, newMessageText: '', messages: newMessages};
         default:
@@ -49,7 +46,6 @@ const dialogsReducer = (state = initialState, {type, message}) => {
     }
 };
 
-export const updateNewMessageText = message => ({type: UPDATE_NEW_MESSAGE_TEXT, message});
-export const addMessage = () => ({type: ADD_MESSAGE});
+export const addMessage = (message) => ({type: ADD_MESSAGE, message});
 
 export default dialogsReducer;
