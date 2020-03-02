@@ -9,18 +9,17 @@ const LoginContainer = ({login, isAuth, userId}) => {
         login(email, password, rememberMe);
     };
 
-    if(isAuth) {
+    if (isAuth) {
         return <Redirect to={`/profile/${userId}`}/>
     }
 
     return (
-       <Login onSubmit={onSubmit}/>
+        <Login onSubmit={onSubmit}/>
     )
 };
 
 const mapStateToProps = ({authReducer: {isAuth, userId}}) => {
     return {isAuth, userId}
 };
-
 
 export default connect(mapStateToProps, {login})(LoginContainer);

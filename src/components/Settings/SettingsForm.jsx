@@ -8,15 +8,20 @@ import {required} from "../../utils/validate";
 const SettingsForm = ({handleSubmit, error, pristine, submitting, reset, profile, initialize}) => {
 
     useEffect(() => {
-        if (profile) {
+        const initForm = () => {
             const { aboutMe, contacts: {facebook, github, instagram, twitter, vk}, lookingForAJob, lookingForAJobDescription, fullName} = profile;
 
             initialize({
                 fullName, aboutMe, facebook, github, instagram, twitter, vk, lookingForAJob, lookingForAJobDescription
             });
-        }
+        };
 
-    }, [profile]);
+        if (profile) {
+            initForm()
+        }
+    }, [profile, initialize]);
+
+
 
     if (!profile) {
         return <Preloader showPreloader={true}/>

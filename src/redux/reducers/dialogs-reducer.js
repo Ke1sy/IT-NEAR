@@ -1,5 +1,6 @@
-import {ADD_MESSAGE} from "../constants";
 import {reset} from "redux-form";
+
+const ADD_MESSAGE = 'dialogs/ADD_MESSAGE';
 
 const initialState = {
     dialogs: [

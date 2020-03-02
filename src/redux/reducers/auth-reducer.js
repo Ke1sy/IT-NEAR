@@ -1,6 +1,7 @@
-import {SET_USER_DATA} from "../constants";
 import {authAPI} from "../../api/api";
 import {stopSubmit} from "redux-form";
+
+const SET_USER_DATA = 'auth/SET_USER_DATA';
 
 const initialState = {
     userId: null,
@@ -21,35 +22,30 @@ const authReducer = (state = initialState, {type, userId, login, email, isAuth})
 
 export const setUserData = (userId, login, email, isAuth) => ({type: SET_USER_DATA, userId, login, email, isAuth});
 
-export const authenticate = () => (dispatch) => {
-    authAPI.auth().then(({data, resultCode}) => {
-        if(resultCode === 0) {
-            const {id, login, email} = data;
-            dispatch(setUserData(id, login, email, true));
-        }
-    });
-
-    return 'User auth success'
+export const authenticate = () => async (dispatch) => {
+    const {data, resultCode} = await authAPI.auth();
+    if(resultCode === 0) {
+        const {id, login, email} = data;
+        dispatch(setUserData(id, login, email, true));
+    }
 };
 
 
-export const login = (email, password, rememberMe, captcha) => (dispatch) => {
-    authAPI.login(email, password, rememberMe, captcha).then(({resultCode, messages}) => {
-        if(resultCode === 0) {
-            dispatch(authenticate());
-        } else {
-            dispatch(stopSubmit("login", {_error: messages}));
-        }
-    })
+export const login = (email, password, rememberMe, captcha) => async (dispatch) => {
+    const  {resultCode, messages} = await authAPI.login(email, password, rememberMe, captcha);
+    if(resultCode === 0) {
+        dispatch(authenticate());
+    } else {
+        dispatch(stopSubmit("login", {_error: messages}));
+    }
 };
 
-export const logout = (history) => (dispatch) => {
-    authAPI.logout().then((data) => {
-        if(data.resultCode === 0) {
-            dispatch(setUserData(null, null, null, false));
-            history.push('/login')
-        }
-    })
+export const logout = (history) => async (dispatch) => {
+    const {resultCode} = await authAPI.logout();
+    if(resultCode === 0) {
+        dispatch(setUserData(null, null, null, false));
+        history.push('/login')
+    }
 };
 
 export default authReducer;

@@ -1,8 +1,11 @@
-import {ADD_POST, SET_STATUS, SET_USER_PROFILE} from "../constants";
 import {profileAPI} from "../../api/api";
 import {reset, stopSubmit} from 'redux-form';
 
-const initialState =  {
+const ADD_POST = 'profile/ADD_POST';
+const SET_STATUS = 'profile/SET_STATUS';
+const SET_USER_PROFILE = 'profile/SET_USER_PROFILE';
+
+const initialState = {
     posts: [
         {
             id: 1,
@@ -27,10 +30,10 @@ const profileReducer = (state = initialState, {type, text, profile}) => {
         case ADD_POST:
             const newPosts = [
                 ...state.posts, {
-                id: (new Date()).getTime(),
-                text: text,
-                likesCount: 0
-            }];
+                    id: (new Date()).getTime(),
+                    text: text,
+                    likesCount: 0
+                }];
             return {
                 ...state,
                 posts: newPosts,
@@ -54,33 +57,30 @@ export const getUserProfile = (id) => (dispatch) => {
     });
 };
 
-export const addPost = (text) => (dispatch) => {
+export const addPost = text => (dispatch) => {
     dispatch(addPostText(text));
     dispatch(reset('posts'));
 };
 
-export const getUserStatus = (id) => (dispatch) => {
-    profileAPI.getStatus(id).then(data => {
-        dispatch(setStatus(data));
-    });
+export const getUserStatus = id => async (dispatch) => {
+    const data = await profileAPI.getStatus(id);
+    dispatch(setStatus(data));
 };
 
-export const setUserStatus = (status) => (dispatch) => {
-    profileAPI.setStatus(status).then(({resultCode}) => {
-        if (resultCode === 0) {
-            dispatch(setStatus(status));
-        }
-    });
+export const setUserStatus = status => async (dispatch) => {
+    const {resultCode} = await profileAPI.setStatus(status);
+    if (resultCode === 0) {
+        dispatch(setStatus(status));
+    }
 };
 
-export const setProfileInfo = (info, userId) => (dispatch) => {
-    profileAPI.setProfileInfo(info).then(({resultCode, messages}) => {
-        if (resultCode === 0) {
-            dispatch(getUserProfile(userId));
-        } else {
-            dispatch(stopSubmit("settings", {_error: messages}));
-        }
-    });
+export const setProfileInfo = (info, userId) => async (dispatch) => {
+    const {resultCode, messages} = await profileAPI.setProfileInfo(info);
+    if (resultCode === 0) {
+        dispatch(getUserProfile(userId));
+    } else {
+        dispatch(stopSubmit("settings", {_error: messages}));
+    }
 };
 
 export default profileReducer;

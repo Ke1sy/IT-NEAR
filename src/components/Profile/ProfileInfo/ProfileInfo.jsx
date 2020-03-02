@@ -2,14 +2,9 @@ import React from 'react';
 import classes from './profile-info.module.scss';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import jobImage from "../../../assets/images/job-image.png";
-import Preloader from "../../Preloader/Preloader";
 import ProfileStatus from "./ProfileStatus";
 
 const ProfileInfo = ({profile, status, setUserStatus}) => {
-    if (!profile) {
-        return <Preloader/>
-    }
-
     let contactsArr = [];
     const contacts = profile.contacts;
 
@@ -37,7 +32,7 @@ const ProfileInfo = ({profile, status, setUserStatus}) => {
                     <div className={classes.profile__contacts}>
                         {
                             contactsArr.map(item =>
-                                <a href={item.url} key={item.name} className={classes.profile__link} target="_blank">
+                                <a href={item.url} key={item.name} className={classes.profile__link} target="_blank" rel="noopener noreferrer">
                                     {item.name}
                                 </a>
                             )

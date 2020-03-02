@@ -5,8 +5,7 @@ import {renderField} from "../Forms/components/FormControl";
 import {required, email, minLength} from "../../utils/validate";
 const minLength5 = minLength(5);
 
-const LoginForm = (props) => {
-    const {handleSubmit, pristine, submitting, reset, error} = props;
+const LoginForm = ({handleSubmit, pristine, submitting, reset, error}) => {
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>

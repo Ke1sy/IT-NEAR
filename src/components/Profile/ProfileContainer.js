@@ -1,28 +1,28 @@
-import React, {Component, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import Profile from "./Profile";
 import {connect} from "react-redux";
 import {getUserProfile, getUserStatus, setUserProfile, setUserStatus} from "../../redux/reducers/profile-reducer";
 import {withRouter} from "react-router-dom";
 import {compose} from "redux";
 
-const ProfileContainer = (props) => {
-    const {isAuth, userId, getUserProfile, getUserStatus} = props;
-    let id = props.match.params.id;
-
+const ProfileContainer = ({isAuth, userId, getUserProfile, getUserStatus, match, history, profile, status, setUserStatus}) => {
     useEffect(() => {
-        checkProfile();
-    }, [id]);
+        let id = match.params.id;
 
-    const checkProfile = () => {
-        if (!id || id === 'undefined') {
-            isAuth ? getUserProfile(userId) : props.history.push('/login');
-        }
-        getUserProfile(id);
-        getUserStatus(id);
-    };
+        const checkProfile = () => {
+            if (!id || id === 'undefined') {
+                isAuth ? id = userId : history.push('/login');
+            }
+            getUserProfile(id);
+            getUserStatus(id);
+        };
+
+        checkProfile();
+    }, [match.params.id, isAuth, getUserProfile, userId, getUserStatus, history]);
+
 
     return (
-        <Profile {...props} />
+        <Profile profile={profile} status={status} setUserStatus={setUserStatus}/>
     )
 };
 

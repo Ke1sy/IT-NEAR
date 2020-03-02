@@ -1,5 +1,6 @@
-import {SET_INITED} from "../constants";
 import {authenticate} from "./auth-reducer";
+
+const SET_INITED = 'app/SET_INITED';
 
 const initialState = {
    inited: false

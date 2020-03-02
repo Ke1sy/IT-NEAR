@@ -14,7 +14,7 @@ const SettingsContainer = (props) => {
 
     useEffect(() => {
         getUserProfile(userId);
-    }, [userId]);
+    }, [userId, getUserProfile]);
 
     return (
         <Settings profile={profile} setProfileInfo={updateProfileInfo} />
