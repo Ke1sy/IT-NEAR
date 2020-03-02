@@ -6,7 +6,7 @@ import {required, email, minLength} from "../../utils/validate";
 const minLength5 = minLength(5);
 
 const LoginForm = (props) => {
-    const {handleSubmit, pristine, submitting, reset} = props;
+    const {handleSubmit, pristine, submitting, reset, error} = props;
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -15,6 +15,7 @@ const LoginForm = (props) => {
                 type="email"
                 name="email"
                 label="Email:"
+                required={true}
                 validate={[required, email]}
             />
             <Field
@@ -22,6 +23,7 @@ const LoginForm = (props) => {
                 type="password"
                 name="password"
                 label="Password:"
+                required={true}
                 validate={[required, minLength5]}
             />
 
@@ -33,6 +35,8 @@ const LoginForm = (props) => {
                 type="checkbox"
                 label={"Remember me"}
             />
+            {error && <div className={styles.form__error}>{error}</div>}
+
             <div className={styles.form__btns}>
                 <button type="submit" disabled={pristine || submitting}>Submit</button>
                 <button type="button" disabled={pristine || submitting} onClick={reset}>

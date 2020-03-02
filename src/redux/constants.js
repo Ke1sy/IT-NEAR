@@ -1,3 +1,5 @@
+export const SET_INITED = 'SET_INITED';
+
 export const ADD_POST = 'ADD_POST';
 
 export const ADD_MESSAGE = 'ADD_MESSAGE';
@@ -13,7 +15,7 @@ export const TOGGLE_IS_LOADING = 'TOGGLE_IS_LOADING';
 export const TOGGLE_FOLLOW_IN_PROGRESS = 'TOGGLE_FOLLOW_IN_PROGRESS';
 
 export const SET_USER_DATA = 'SET_USER_DATA';
-export const LOGIN = 'LOGIN';
+
 
 
 

@@ -2,7 +2,7 @@ import React from "react";
 import styles from './form.module.scss';
 
 const inputTypes = [
-    'input',
+    'text',
     'email',
     'checkbox',
     'password'

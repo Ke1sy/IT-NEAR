@@ -2,8 +2,7 @@ import styles from "../messages.module.scss";
 import {Field, reduxForm} from "redux-form";
 import React from "react";
 
-const MessageForm = (props) => {
-    const {handleSubmit, submitting} = props;
+const MessageForm = ({handleSubmit, submitting}) => {
     return (
         <form className={styles.messages__form} onSubmit={handleSubmit}>
             <Field

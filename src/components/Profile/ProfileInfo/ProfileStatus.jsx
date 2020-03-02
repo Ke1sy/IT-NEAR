@@ -1,56 +1,45 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 
-class ProfileStatus extends Component {
-    state = {
-        isEditing: false,
-        status: this.props.status
-    };
+const ProfileStatus = ({status, setUserStatus}) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [newStatus, setNewStatus] = useState(status);
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.status !== this.props.status) {
-            this.setState({
-                status: this.props.status
-            })
-        }
-    }
+    const changeEditingMode = (val) => {
+        setIsEditing(val);
 
-    changeMode = (val) => {
-        this.setState({
-            isEditing: val
-        });
         if (!val) {
-            this.props.setUserStatus(this.state.status)
+            setUserStatus(newStatus)
         }
     };
 
-    handleChange = ({target: {value}}) => {
-        this.setState({
-            status: value
-        });
+    useEffect(() => {
+        setNewStatus(status)
+    }, [status]);
+
+
+    const handleChange = ({target: {value}}) => {
+        setNewStatus(value)
     };
 
-
-    render() {
-        const {status, isEditing} = this.state;
-        return (
-            <div className="status">
-                {!isEditing &&
-                <p onDoubleClick={() => this.changeMode(true)}>
-                    <b>Status: </b>
-                    <span>{status}</span>
-                </p>
-                }
-                {isEditing &&
-                <input
-                    type="text"
-                    autoFocus={true}
-                    value={status}
-                    onChange={this.handleChange}
-                    onBlur={() => this.changeMode(false)}/>
-                }
-            </div>
-        )
-    }
+    return (
+        <div className="status">
+            {!isEditing &&
+            <p onDoubleClick={() => changeEditingMode(true)}>
+                <b>Status: </b>
+                <span>{newStatus}</span>
+            </p>
+            }
+            {isEditing &&
+            <input
+                type="text"
+                autoFocus={true}
+                value={newStatus}
+                onChange={handleChange}
+                onBlur={() => changeEditingMode(false)}/>
+            }
+        </div>
+    )
 };
 
 export default ProfileStatus;
+

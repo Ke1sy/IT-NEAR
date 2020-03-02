@@ -3,7 +3,7 @@ import styles from './posts.module.scss';
 import Post from './Post';
 import PostsForm from "./PostsForm";
 
-const Posts = (props) => {
+const Posts = React.memo(props => {
     const {posts, addPost} = props;
     const onAddPost = ({postText}) => {
         if (postText.length > 0) {
@@ -20,6 +20,6 @@ const Posts = (props) => {
             ))}
         </div>
     )
-};
+});
 
 export default Posts;

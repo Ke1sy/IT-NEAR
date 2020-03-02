@@ -22,4 +22,10 @@
       width: 40%;
     }
   }
+
+  &__error {
+    color: red;
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
 }

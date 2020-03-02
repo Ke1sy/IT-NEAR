@@ -10,6 +10,4 @@ const mapStateToProps = ({profileReducer: {posts}}) => {
 };
 
 
-const PostsContainer = connect(mapStateToProps, {addPost})(Posts);
-
-export default PostsContainer;
+export default connect(mapStateToProps, {addPost})(Posts);

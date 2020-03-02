@@ -2,18 +2,26 @@ import React, {Component} from 'react';
 import {
     follow,
     unfollow,
-    getUsers,
+    requestUsers,
     setCurrentPage,
 } from "../../redux/reducers/users-reducer";
 import {connect} from "react-redux";
 import Users from "./Users";
 import Preloader from "../Preloader/Preloader";
+import {
+    getCurrentPage,
+    getFollowInProgress,
+    getIsLoading,
+    getPageSize,
+    getTotalUsersCount,
+    getUsers,
+} from "../../redux/reducers/users-selectors";
 
 
 class UsersContainer extends Component {
     componentDidMount() {
-        const {currentPage, pageSize, getUsers} = this.props;
-        getUsers(currentPage, pageSize);
+        const {currentPage, pageSize, requestUsers} = this.props;
+        requestUsers(currentPage, pageSize);
     }
 
     onSetCurrentPage = (page) => {
@@ -41,21 +49,21 @@ class UsersContainer extends Component {
     }
 }
 
-let mapStateToProps = ({usersReducer: {users, pageSize, totalUsersCount, currentPage, isLoading, followInProgress}}) => {
+let mapStateToProps = (state) => {
     return {
-        users,
-        pageSize,
-        totalUsersCount,
-        currentPage,
-        isLoading,
-        followInProgress
+        users: getUsers(state),
+        pageSize: getPageSize(state),
+        totalUsersCount: getTotalUsersCount(state),
+        currentPage: getCurrentPage(state),
+        isLoading: getIsLoading(state),
+        followInProgress: getFollowInProgress(state)
     }
 };
 
 
 export default connect(mapStateToProps, {
     unfollow,
-    getUsers,
+    requestUsers,
     setCurrentPage,
     follow
 })(UsersContainer);

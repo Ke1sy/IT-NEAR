@@ -1,52 +1,42 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import Profile from "./Profile";
 import {connect} from "react-redux";
-import {getUserProfile, getUserStatus, setUserStatus} from "../../redux/reducers/profile-reducer";
+import {getUserProfile, getUserStatus, setUserProfile, setUserStatus} from "../../redux/reducers/profile-reducer";
 import {withRouter} from "react-router-dom";
-import {withAuthRedirect} from '../Redirects/AuthRedirect'
 import {compose} from "redux";
 
-class ProfileContainer extends Component {
-    state = {
-        id: this.props.match.params.id
+const ProfileContainer = (props) => {
+    const {isAuth, userId, getUserProfile, getUserStatus} = props;
+    let id = props.match.params.id;
+
+    useEffect(() => {
+        checkProfile();
+    }, [id]);
+
+    const checkProfile = () => {
+        if (!id || id === 'undefined') {
+            isAuth ? getUserProfile(userId) : props.history.push('/login');
+        }
+        getUserProfile(id);
+        getUserStatus(id);
     };
 
-    componentDidMount() {
-       let {id} = this.state;
-        if (!id) {
-            this.setState({
-                id: 2
-            })
-        }
-        this.props.getUserProfile(id);
-        this.props.getUserStatus(id);
-    }
+    return (
+        <Profile {...props} />
+    )
+};
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.match.params.id !== this.props.match.params.id) {
-            let newId = this.props.match.params.id;
-            this.setState({
-                id: newId
-            });
-            this.props.getUserProfile(newId);
-            this.props.getUserStatus(newId);
-        }
-    }
-
-    render() {
-        const {profile} = this.props;
-        return (
-            <Profile {...this.props} profile={profile}/>
-        )
-    }
-}
-
-const mapStateToProps = ({profileReducer: {profile, status}}) => {
-    return {profile, status}
+const mapStateToProps = ({profileReducer: {profile, status}, authReducer: {isAuth, userId}}) => {
+    return {
+        profile,
+        status,
+        userId,
+        isAuth}
 };
 
 export default compose(
-    connect(mapStateToProps, {getUserProfile, getUserStatus, setUserStatus}),
+    connect(mapStateToProps, {getUserProfile, getUserStatus, setUserStatus, setUserProfile}),
     withRouter,
-    withAuthRedirect
 )(ProfileContainer);
+
+

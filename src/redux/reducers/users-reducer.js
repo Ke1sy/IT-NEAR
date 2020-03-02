@@ -69,7 +69,7 @@ export const toggleFollowInProgress = (inProgress, userId) => ({type: TOGGLE_FOL
 
 //thunk creators
 
-export const getUsers = (currentPage, pageSize) => (dispatch) => {
+export const requestUsers = (currentPage, pageSize) => (dispatch) => {
     dispatch(toggleIsLoading(true));
     usersAPI.getUsers(currentPage, pageSize).then(({items, totalCount}) => {
         dispatch(toggleIsLoading(false));

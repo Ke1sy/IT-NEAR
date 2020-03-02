@@ -1,6 +1,6 @@
 import {ADD_POST, SET_STATUS, SET_USER_PROFILE} from "../constants";
 import {profileAPI} from "../../api/api";
-import {reset} from 'redux-form';
+import {reset, stopSubmit} from 'redux-form';
 
 const initialState =  {
     posts: [
@@ -56,7 +56,7 @@ export const getUserProfile = (id) => (dispatch) => {
 
 export const addPost = (text) => (dispatch) => {
     dispatch(addPostText(text));
-    // dispatch(reset('posts'));
+    dispatch(reset('posts'));
 };
 
 export const getUserStatus = (id) => (dispatch) => {
@@ -69,6 +69,16 @@ export const setUserStatus = (status) => (dispatch) => {
     profileAPI.setStatus(status).then(({resultCode}) => {
         if (resultCode === 0) {
             dispatch(setStatus(status));
+        }
+    });
+};
+
+export const setProfileInfo = (info, userId) => (dispatch) => {
+    profileAPI.setProfileInfo(info).then(({resultCode, messages}) => {
+        if (resultCode === 0) {
+            dispatch(getUserProfile(userId));
+        } else {
+            dispatch(stopSubmit("settings", {_error: messages}));
         }
     });
 };

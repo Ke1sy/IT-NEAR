@@ -2,7 +2,7 @@ import React from 'react';
 import {NavLink} from "react-router-dom";
 import classes from './header.module.scss';
 
-const Header = ({userId, login, logout, isAuth}) => {
+const Header = ({userId, login, logout, isAuth, history}) => {
   return (
       <header className={classes.header}>
           <div>
@@ -15,7 +15,7 @@ const Header = ({userId, login, logout, isAuth}) => {
                 isAuth &&
                     <>
                         <NavLink to={`/profile/${userId}`} className={classes.login__link} activeClassName={classes.active}>Welcome, {login}</NavLink>
-                        <button onClick={() => logout()}>Logout</button>
+                        <button onClick={() => logout(history)}>Logout</button>
                     </>
             }
 

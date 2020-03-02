@@ -4,13 +4,10 @@ import Dialog from "./Dialogs/Dialog";
 import Message from "./Message/Message";
 import MessageForm from "./Message/MessageForm";
 
-const Messages = (props) => {
-    const {messages, dialogs, addMessage} = props;
+const Messages = ({messages, dialogs, addMessage}) => {
 
     const onAddMessage = ({message}) => {
-        if (message.length > 0) {
             addMessage(message);
-        }
     };
 
     let messagesElems = messages.map(({id, message}) => (<Message key={id} message={message}/>));

@@ -1,4 +1,5 @@
 import {ADD_MESSAGE} from "../constants";
+import {reset} from "redux-form";
 
 const initialState = {
     dialogs: [
@@ -46,6 +47,11 @@ const dialogsReducer = (state = initialState, {type, message}) => {
     }
 };
 
-export const addMessage = (message) => ({type: ADD_MESSAGE, message});
+export const addMessageAC = (message) => ({type: ADD_MESSAGE, message});
+
+export const addMessage = (message) => (dispatch) => {
+    dispatch(addMessageAC(message));
+    dispatch(reset('message'));
+};
 
 export default dialogsReducer;

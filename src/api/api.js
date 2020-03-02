@@ -2,10 +2,10 @@ import * as axios from "axios";
 
 const instance = axios.create({
     baseURL: "https://social-network.samuraijs.com/api/1.0/",
-    withCredentials: false,
+    withCredentials: true,
     headers: {
-       // "API-KEY": "0cd66f02-e607-46e0-aed7-5f9c57c49533",
-       "API-KEY": "eaba6ef0-ee77-455f-be6e-bf5d2c5dc4d6"
+        "API-KEY": "0cd66f02-e607-46e0-aed7-5f9c57c49533",
+        // "API-KEY": "eaba6ef0-ee77-455f-be6e-bf5d2c5dc4d6"
     }
 });
 
@@ -56,6 +56,27 @@ export const profileAPI = {
 
     setStatus: (status) => {
         return instance.put(`profile/status`, {status})
+            .then(response => response.data);
+    },
+
+    setProfileInfo: (info) => {
+        const  {aboutMe, facebook, github, instagram, twitter, vk, lookingForAJob, lookingForAJobDescription, fullName} = info;
+        return instance.put(`profile`, {
+            "aboutMe": aboutMe,
+            "contacts": {
+                facebook: facebook,
+                github: github,
+                instagram: instagram,
+                mainLink: null,
+                twitter: twitter,
+                vk: vk,
+                website: null,
+                youtube: null
+            },
+            "lookingForAJob": lookingForAJob,
+            "lookingForAJobDescription": lookingForAJobDescription,
+            "fullName": fullName
+        })
             .then(response => response.data);
     }
 };

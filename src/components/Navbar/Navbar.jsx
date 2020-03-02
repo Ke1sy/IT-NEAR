@@ -1,10 +1,13 @@
 import React from 'react';
 import styles from './navbar.module.scss';
 import {NavLink} from "react-router-dom";
-import {connect} from "react-redux";
 
 const LINKS = [
     {
+        id: 1,
+        text: 'My Profile',
+        url: '/profile'
+    }, {
         id: 2,
         text: 'Messages',
         url: '/messages'
@@ -22,20 +25,14 @@ const LINKS = [
         url: '/users'
     }, {
         id: 6,
-        text: 'Settings',
+        text: 'Profile Settings',
         url: '/settings'
     },
 ];
-const Navbar = (props) => {
-    let {userId} = props;
+
+const Navbar = () => {
     return (
         <nav className={styles.nav}>
-            <div className={styles.nav__item}>
-                <NavLink to={`/profile/${userId}`} className={styles.nav__link} activeClassName={styles.active}>
-                    My Profile
-                </NavLink>
-            </div>
-
             {LINKS.map(({id, text, url}) => (
                 <div className={styles.nav__item} key={id}>
                     <NavLink to={url} className={styles.nav__link} activeClassName={styles.active}>
@@ -47,10 +44,5 @@ const Navbar = (props) => {
     )
 };
 
-const mapStateToProps = ({authReducer: {userId}}) => {
-    return {
-        userId,
-    }
-};
 
-export default connect(mapStateToProps)(Navbar);
+export default Navbar;
