@@ -23,11 +23,7 @@ const LINKS = [
         id: 5,
         text: 'Users',
         url: '/users'
-    }, {
-        id: 6,
-        text: 'Profile Settings',
-        url: '/settings'
-    },
+    }
 ];
 
 const Navbar = () => {

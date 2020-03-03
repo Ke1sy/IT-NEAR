@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
+import editIcon from "../../../assets/images/edit.svg";
+import styles from "./profile-status.module.scss";
 
-const ProfileStatus = ({status, setUserStatus}) => {
+const ProfileStatus = ({status, setUserStatus, isOwner}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newStatus, setNewStatus] = useState(status);
 
@@ -22,11 +24,17 @@ const ProfileStatus = ({status, setUserStatus}) => {
     };
 
     return (
-        <div className="status">
+        <div>
             {!isEditing &&
-            <p onDoubleClick={() => changeEditingMode(true)}>
+            <p>
                 <b>Status: </b>
                 <span>{newStatus}</span>
+                {isOwner &&
+                    <span onClick={() => changeEditingMode(true)} className={styles.edit}>
+                        <img src={editIcon} alt=""/>
+                    </span>
+                }
+
             </p>
             }
             {isEditing &&

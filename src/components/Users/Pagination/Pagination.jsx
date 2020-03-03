@@ -31,7 +31,6 @@ const renderPaginationBtns = (page, onSetCurrentPage, totalPages) => {
                 {num}
             </button>
     })
-
 };
 
 

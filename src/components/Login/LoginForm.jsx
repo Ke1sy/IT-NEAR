@@ -1,11 +1,12 @@
 import React from "react";
 import {Field, reduxForm} from 'redux-form'
-import styles from './login-form.module.scss';
 import {renderField} from "../Forms/components/FormControl";
 import {required, email, minLength} from "../../utils/validate";
+import styles from './login-form.module.scss';
+
 const minLength5 = minLength(5);
 
-const LoginForm = ({handleSubmit, pristine, submitting, reset, error}) => {
+const LoginForm = ({handleSubmit, pristine, submitting, reset, error, captchaUrl}) => {
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -34,6 +35,19 @@ const LoginForm = ({handleSubmit, pristine, submitting, reset, error}) => {
                 type="checkbox"
                 label={"Remember me"}
             />
+
+            {captchaUrl &&
+            <>
+                <img src={captchaUrl} alt=""/>
+                <Field
+                    name="captcha"
+                    component={renderField}
+                    type="text"
+                    label={"Type the symbols from image above: "}
+                    validate={[required]}
+                />
+            </>
+            }
             {error && <div className={styles.form__error}>{error}</div>}
 
             <div className={styles.form__btns}>

@@ -1,20 +1,20 @@
 import React from 'react';
-import Footer from "./components/Footer/Footer";
-import Navbar from "./components/Navbar/Navbar";
-import News from "./components/News/News";
-import Music from "./components/Music/Music";
-
-import UsersContainer from "./components/Users/UsersContainer";
 import {Switch, Route, withRouter} from "react-router-dom";
-import MessagesContainer from "./components/Messages/MessagesContainer";
-import ProfileContainer from "./components/Profile/ProfileContainer";
-import HeaderContainer from "./components/Header/HeaderContainer";
-import LoginContainer from "./components/Login/LoginContainer";
 import {connect} from "react-redux";
 import {compose} from "redux";
 import {appInitialize} from "./redux/reducers/app-reducer";
 import Preloader from "./components/Preloader/Preloader";
-import SettingsContainer from "./components/Settings/SettingsContainer";
+import Footer from "./components/Footer/Footer";
+import Navbar from "./components/Navbar/Navbar";
+import HeaderContainer from "./components/Header/HeaderContainer";
+import withSuspense from "./components/HOC/Suspense";
+
+const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
+const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
+const LoginContainer = React.lazy(() => import(/* webpackChunkName: "LoginContainer" */"./components/Login/LoginContainer"));
+const UsersContainer = React.lazy(() => import(/* webpackChunkName: "UsersContainer" */"./components/Users/UsersContainer"));
+const News = React.lazy(() => import(/* webpackChunkName: "News" */"./components/News/News"));
+const Music = React.lazy(() => import(/* webpackChunkName: "Music" */"./components/Music/Music"));
 
 class App extends React.Component {
     componentDidMount() {
@@ -31,13 +31,12 @@ class App extends React.Component {
                 <Navbar/>
                 <div className="main">
                     <Switch>
-                        <Route path="/profile/:id?" render={() => <ProfileContainer/>}/>
-                        <Route path="/messages" render={() => <MessagesContainer/>}/>
-                        <Route path="/news" component={News}/>
-                        <Route path="/login" component={LoginContainer}/>
-                        <Route path="/music" component={Music}/>
-                        <Route path="/users" render={() => <UsersContainer/>}/>
-                        <Route path="/settings" component={SettingsContainer}/>
+                        <Route path="/profile/:id?" component={withSuspense(ProfileContainer)}/>
+                        <Route path="/messages" component={withSuspense(MessagesContainer)}/>
+                        <Route path="/news" component={withSuspense(News)}/>
+                        <Route path="/login" component={withSuspense(LoginContainer)}/>
+                        <Route path="/music" component={withSuspense(Music)}/>
+                        <Route path="/users" component={withSuspense(UsersContainer)}/>
                     </Switch>
                 </div>
                 <Footer/>

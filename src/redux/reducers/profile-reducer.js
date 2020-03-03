@@ -55,16 +55,14 @@ export const setUserProfile = profile => ({type: SET_USER_PROFILE, profile});
 export const setStatus = text => ({type: SET_STATUS, text});
 export const loadPhotoSuccess = photos => ({type: LOAD_PHOTO_SUCCESS, photos});
 
-export const getUserProfile = (id) => (dispatch) => {
-    profileAPI.getProfile(id).then(data => {
-        dispatch(setUserProfile(data));
-    });
+export const getUserProfile = (id) => async (dispatch) => {
+    const data = await profileAPI.getProfile(id);
+    dispatch(setUserProfile(data));
 };
 
-export const loadPhoto = (photo) => (dispatch) => {
-    profileAPI.loadPhoto(photo).then(({data}) => {
-        dispatch(loadPhotoSuccess(data.photos));
-    });
+export const loadPhoto = (photo) => async (dispatch) => {
+    const {data} = await profileAPI.loadPhoto(photo);
+    dispatch(loadPhotoSuccess(data.photos));
 };
 
 export const addPost = text => (dispatch) => {

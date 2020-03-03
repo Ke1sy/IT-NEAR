@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {Field, reduxForm} from "redux-form";
-import {renderField} from "../Forms/components/FormControl";
+import {renderField} from "../../../Forms/components/FormControl";
 import styles from "./settings-form.module.scss";
-import Preloader from "../Preloader/Preloader";
-import {required} from "../../utils/validate";
+import Preloader from "../../../Preloader/Preloader";
+import {required} from "../../../../utils/validate";
 
 const SettingsForm = ({handleSubmit, error, pristine, submitting, reset, profile, initialize}) => {
 
