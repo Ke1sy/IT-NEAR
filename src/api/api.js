@@ -59,6 +59,17 @@ export const profileAPI = {
             .then(response => response.data);
     },
 
+    loadPhoto: (photoFile) => {
+        const formData = new FormData();
+        formData.append("image", photoFile);
+        return instance.put(`profile/photo`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(response => response.data);
+    },
+
     setProfileInfo: (info) => {
         const  {aboutMe, facebook, github, instagram, twitter, vk, lookingForAJob, lookingForAJobDescription, fullName} = info;
         return instance.put(`profile`, {

@@ -99,7 +99,7 @@ const SettingsForm = ({handleSubmit, error, pristine, submitting, reset, profile
             {error && <div className={styles.form__error}>{error}</div>}
 
             <div className={styles.form__btns}>
-                <button type="submit" disabled={pristine || submitting}>Submit</button>
+                <button type="submit" disabled={pristine || submitting}>Save</button>
                 <button type="button" disabled={pristine || submitting} onClick={reset}>
                     Cancel
                 </button>

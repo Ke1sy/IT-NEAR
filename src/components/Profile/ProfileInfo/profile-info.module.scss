@@ -27,7 +27,9 @@
   }
 
   &__img {
-    width: 150px;
+    width: 100%;
+    object-fit: cover;
+    object-position: 0 0;
   }
 
   &__job {
@@ -41,6 +43,21 @@
 
     &:hover {
       color: blue;
+    }
+  }
+
+  &__avatar {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+  }
+
+  &__load {
+    button {
+      padding: 5px;
+      font-size: 15px;
+      margin: 10px auto;
+      width: 60%;
     }
   }
 

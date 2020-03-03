@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import classes from './profile-info.module.scss';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import jobImage from "../../../assets/images/job-image.png";
 import ProfileStatus from "./ProfileStatus";
 
-const ProfileInfo = ({profile, status, setUserStatus}) => {
+const ProfileInfo = ({profile, status, setUserStatus, isOwner, loadPhoto}) => {
+    const [photo, setPhoto] = useState(profile.photos.small);
+
     let contactsArr = [];
     const contacts = profile.contacts;
+    const inputFile = React.createRef();
 
     for (let key in contacts) {
         if (contacts[key] !== null) {
@@ -17,16 +20,41 @@ const ProfileInfo = ({profile, status, setUserStatus}) => {
         }
     }
 
+    const photoPreview = ({target: {files}}) => {
+        let photo =  URL.createObjectURL(files[0]);
+        setPhoto(photo);
+    };
+
+    const updateAvatar = (e) => {
+        e.preventDefault();
+        const files = inputFile.current.files;
+        if(files.length) {
+            loadPhoto(files[0]);
+        }
+    };
+
     return (
         <>
             <div className={classes.image}/>
 
             <div className={classes.profile}>
                 <div className={classes.profile__left}>
-                    <img
-                        src={profile.photos.small !== null ? profile.photos.small : userPlaceholder}
-                        alt=""
-                        className={classes.profile__img}/>
+                    <div className={classes.profile__avatar}>
+                        <img
+                            src={photo !== null ? photo : userPlaceholder}
+                            alt=""
+                            className={classes.profile__img}/>
+                    </div>
+
+                    {isOwner &&
+                        <div className={classes.profile__load}>
+                            <form onSubmit={updateAvatar}>
+                                <input type="file" name="photo" ref={inputFile} onChange={photoPreview}/>
+                                <button type="submit">Save</button>
+                            </form>
+                        </div>
+                    }
+
 
 
                     <div className={classes.profile__contacts}>

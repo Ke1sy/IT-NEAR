@@ -4,6 +4,7 @@ import {reset, stopSubmit} from 'redux-form';
 const ADD_POST = 'profile/ADD_POST';
 const SET_STATUS = 'profile/SET_STATUS';
 const SET_USER_PROFILE = 'profile/SET_USER_PROFILE';
+const LOAD_PHOTO_SUCCESS = 'profile/LOAD_PHOTO_SUCCESS';
 
 const initialState = {
     posts: [
@@ -25,7 +26,7 @@ const initialState = {
     status: ''
 };
 
-const profileReducer = (state = initialState, {type, text, profile}) => {
+const profileReducer = (state = initialState, {type, text, profile, photos}) => {
     switch (type) {
         case ADD_POST:
             const newPosts = [
@@ -42,6 +43,8 @@ const profileReducer = (state = initialState, {type, text, profile}) => {
             return {...state, profile: profile};
         case SET_STATUS:
             return {...state, status: text};
+        case LOAD_PHOTO_SUCCESS:
+            return {...state, profile: {...state.profile, photos: photos}};
         default:
             return state;
     }
@@ -50,10 +53,17 @@ const profileReducer = (state = initialState, {type, text, profile}) => {
 export const addPostText = (text) => ({type: ADD_POST, text});
 export const setUserProfile = profile => ({type: SET_USER_PROFILE, profile});
 export const setStatus = text => ({type: SET_STATUS, text});
+export const loadPhotoSuccess = photos => ({type: LOAD_PHOTO_SUCCESS, photos});
 
 export const getUserProfile = (id) => (dispatch) => {
     profileAPI.getProfile(id).then(data => {
         dispatch(setUserProfile(data));
+    });
+};
+
+export const loadPhoto = (photo) => (dispatch) => {
+    profileAPI.loadPhoto(photo).then(({data}) => {
+        dispatch(loadPhotoSuccess(data.photos));
     });
 };
 
