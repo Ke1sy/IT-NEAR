@@ -1,19 +1,33 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './messages.module.scss';
 import Dialog from "./Dialogs/Dialog";
 import Message from "./Message/Message";
 import MessageForm from "./Message/MessageForm";
 
-const Messages = ({messages, dialogs, addMessage}) => {
+const Messages = ({match, messages, dialogs, sendMessage, getDialogs, getMessages}) => {
+    const [activeDialog, setActiveDialog] = useState(null);
+    let id = match.params.id;
+
+    useEffect(() => {
+        getDialogs();
+    }, []);
+
+    useEffect(() => {
+        // setActiveDialog(id);
+        getMessages(id);
+    }, [match.params.id]);
 
     const onAddMessage = ({message}) => {
-            addMessage(message);
+        sendMessage(id, message);
     };
 
-    let messagesElems = messages.map(({id, message}) => (<Message key={id} message={message}/>));
-    let dialogsElems = dialogs.map(({id, name}) => (<Dialog key={id} name={name} id={id}/>));
+    let messagesElems = messages.map(message => <Message key={message.id} message={message}/>);
+    let dialogsElems = dialogs.map(({id, userName}) => (
+        <Dialog key={id} name={userName} id={id}/>
+    ));
 
     return (
+        <>
         <div className={styles.content}>
             <div className={styles.dialogs}>
                 {dialogsElems}
@@ -25,6 +39,8 @@ const Messages = ({messages, dialogs, addMessage}) => {
                 <MessageForm onSubmit={onAddMessage}/>
             </div>
         </div>
+        </>
+
     )
 };
 

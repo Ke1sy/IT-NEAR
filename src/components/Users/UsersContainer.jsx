@@ -4,6 +4,9 @@ import Users from "./Users";
 import Preloader from "../Preloader/Preloader";
 import {getCurrentPage, getFollowInProgress, getIsLoading, getPageSize, getTotalUsersCount, getUsers} from "../../redux/reducers/users-selectors";
 import {follow, unfollow, requestUsers, setCurrentPage} from "../../redux/reducers/users-reducer";
+import {startChat} from "../../redux/reducers/dialogs-reducer";
+import {withRouter} from "react-router-dom";
+import {compose} from "redux";
 
 class UsersContainer extends Component {
     componentDidMount() {
@@ -17,7 +20,7 @@ class UsersContainer extends Component {
     };
 
     render() {
-        const {users, pageSize, totalUsersCount, currentPage, isLoading, followInProgress, follow, unfollow} = this.props;
+        const {users, pageSize, totalUsersCount, currentPage, isLoading, followInProgress, follow, unfollow, startChat, history} = this.props;
 
         return (
             <Preloader showPreloader={isLoading}>
@@ -30,6 +33,8 @@ class UsersContainer extends Component {
                     totalUsersCount={totalUsersCount}
                     currentPage={currentPage}
                     followInProgress={followInProgress}
+                    startChat={startChat}
+                    history={history}
                 />
             </Preloader>
         )
@@ -48,9 +53,9 @@ let mapStateToProps = (state) => {
 };
 
 
-export default connect(mapStateToProps, {
-    unfollow,
-    requestUsers,
-    setCurrentPage,
-    follow
-})(UsersContainer);
+export default compose(
+    connect(mapStateToProps, {unfollow, requestUsers, setCurrentPage, follow, startChat}),
+    withRouter
+)(UsersContainer);
+
+

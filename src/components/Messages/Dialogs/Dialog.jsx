@@ -6,7 +6,7 @@ const Dialog = ({id, name}) => {
     return (
         <div className={styles.dialog}>
             <NavLink
-                to={`/messages/${id}`}
+                to={`/dialogs/${id}`}
                 className={styles.dialog__link}
                 activeClassName={styles.active}>
                 {name}

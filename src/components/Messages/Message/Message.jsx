@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './message.module.scss';
 
-const Message = ({message}) => {
+const Message = ({message: {addedAt, body, id, recipientId, senderId, senderName, translatedBody, viewed}}) => {
     return (
-        <div className={styles.message}>{message}</div>
+        <div className={styles.message}>{body}</div>
     )
 };
 

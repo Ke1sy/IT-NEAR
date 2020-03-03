@@ -28,7 +28,7 @@ const ProfileStatus = ({status, setUserStatus, isOwner}) => {
             {!isEditing &&
             <p>
                 <b>Status: </b>
-                <span>{newStatus}</span>
+                <span>{status}</span>
                 {isOwner &&
                     <span onClick={() => changeEditingMode(true)} className={styles.edit}>
                         <img src={editIcon} alt=""/>

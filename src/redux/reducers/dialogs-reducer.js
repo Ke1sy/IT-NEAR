@@ -1,58 +1,54 @@
 import {reset} from "redux-form";
+import {dialogsAPI} from "../../api/api";
 
-const ADD_MESSAGE = 'dialogs/ADD_MESSAGE';
+const SET_DIALOGS = 'dialogs/SET_DIALOGS';
+const SET_MESSAGES = 'dialogs/SET_MESSAGES';
 
 const initialState = {
-    dialogs: [
-        {
-            id: 1,
-            name: 'Jack',
-        }, {
-            id: 2,
-            name: 'Kristi'
-        }, {
-            id: 3,
-            name: 'Jane'
-        }, {
-            id: 4,
-            name: 'Noah'
-        },
-    ],
-    messages: [
-        {
-            id: 1,
-            message: 'Hello bro!'
-        }, {
-            id: 2,
-            message: 'How are you?'
-        }, {
-            id: 3,
-            message: 'How is your learning of react?'
-        }, {
-            id: 4,
-            message: 'Message me, please. Miss You!'
-        },
-    ],
+    dialogs: [],
+    messages: [],
 };
 
-const dialogsReducer = (state = initialState, {type, message}) => {
+const dialogsReducer = (state = initialState, {type, messages, dialogs}) => {
     switch (type) {
-        case ADD_MESSAGE:
-            const newMessages = [...state.messages, {
-                id: 5,
-                message
-            }];
-            return {...state, newMessageText: '', messages: newMessages};
+        case SET_DIALOGS:
+            return {...state, dialogs};
+        case SET_MESSAGES:
+            return {...state, messages};
         default:
             return state;
     }
 };
 
-export const addMessageAC = (message) => ({type: ADD_MESSAGE, message});
+export const setDialogs = (dialogs) => ({type: SET_DIALOGS, dialogs});
+export const setMessages = (messages) => ({type: SET_MESSAGES, messages});
 
-export const addMessage = (message) => (dispatch) => {
-    dispatch(addMessageAC(message));
-    dispatch(reset('message'));
+
+export const getDialogs = () => async (dispatch) => {
+    const response = await dialogsAPI.getDialogs();
+    dispatch(setDialogs(response));
+};
+
+export const startChat = (userId, history) => async (dispatch) => {
+    const {resultCode} = await dialogsAPI.startChat(userId);
+    if(resultCode === 0) {
+        history.push(`/dialogs/${userId}`)
+    }
+};
+
+export const sendMessage = (userId, message) => async (dispatch) => {
+    const response = await dialogsAPI.sendMessage(userId, message);
+    if(response.resultCode === 0) {
+        dispatch(getMessages(userId));
+        dispatch(reset('message'));
+    }
+};
+
+export const getMessages = (userId) => async (dispatch) => {
+    const {error, items} = await dialogsAPI.getMessages(userId);
+    if(!error) {
+        dispatch(setMessages(items));
+    }
 };
 
 export default dialogsReducer;

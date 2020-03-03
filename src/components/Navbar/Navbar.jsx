@@ -3,14 +3,10 @@ import styles from './navbar.module.scss';
 import {NavLink} from "react-router-dom";
 
 const LINKS = [
-    {
-        id: 1,
-        text: 'My Profile',
-        url: '/profile'
-    }, {
+     {
         id: 2,
-        text: 'Messages',
-        url: '/messages'
+        text: 'Dialogs',
+        url: '/dialogs'
     }, {
         id: 3,
         text: 'News',

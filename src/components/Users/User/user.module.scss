@@ -4,20 +4,25 @@
   flex-wrap: wrap;
   color: #555;
   &__left {
-    width: 15%;
+    width: 20%;
 
     button {
       width: 100%;
+      font-size: 14px;
 
       &:disabled {
         pointer-events: none;
         opacity: 0.5;
       }
+
+      &:not(:last-of-type) {
+        margin-bottom: 10px;
+      }
     }
   }
 
   &__right {
-    width: calc(85% - 20px);
+    width: calc(80% - 20px);
     border: 1px solid #B0C4DE;
     border-radius: 3px;
     margin-left: 20px;

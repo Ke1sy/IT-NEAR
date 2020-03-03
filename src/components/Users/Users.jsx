@@ -3,7 +3,7 @@ import styles from './users.module.scss';
 import User from "./User/User";
 import Pagination from "./Pagination/Pagination";
 
-const Users = ({users, pageSize, totalUsersCount, currentPage, follow, unfollow, onSetCurrentPage, followInProgress}) => {
+const Users = ({users, pageSize, totalUsersCount, currentPage, follow, unfollow, onSetCurrentPage, followInProgress, startChat, history}) => {
     const totalPages = Math.ceil(totalUsersCount / pageSize);
     const userItems = users.map(user =>
         <User
@@ -12,6 +12,8 @@ const Users = ({users, pageSize, totalUsersCount, currentPage, follow, unfollow,
             follow={follow}
             unfollow={unfollow}
             followInProgress={followInProgress}
+            startChat={startChat}
+            history={history}
         />
     );
 

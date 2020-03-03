@@ -32,11 +32,6 @@ const ProfileContainer = ({isAuth, userId, getUserProfile, getUserStatus, match,
         setProfileInfo(info, userId)
     };
 
-    // useEffect(() => {
-    //     getUserProfile(userId);
-    // }, [userId, getUserProfile]);
-
-
     return (
         <Profile
             profile={profile}

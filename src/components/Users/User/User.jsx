@@ -3,29 +3,35 @@ import styles from './user.module.scss';
 import userPlaceholder from '../../../assets/images/user-placeholder.png';
 import {NavLink} from "react-router-dom";
 
-const User = ({unfollow, follow, user, followInProgress}) => {
+const User = ({unfollow, follow, user, followInProgress, startChat, history}) => {
+    const {id, photos, name, status, followed} = user;
     return (
         <div className={styles.user}>
             <div className={styles.user__left}>
-                <NavLink to={`/profile/${user.id}`}>
+                <NavLink to={`/profile/${id}`}>
                     <img
-                        src={user.photos.small !== null ? user.photos.small : userPlaceholder}
+                        src={photos.small !== null ? photos.small : userPlaceholder}
                         alt=""
                         className={styles.user__avatar}/>
                 </NavLink>
 
                 <button
-                    disabled={followInProgress.includes(user.id)}
-                    onClick={user.followed ?
-                        () => unfollow(user.id) :
-                        () => follow(user.id)}>
-                    {user.followed ? "Unfollow" : "Follow"}
+                    disabled={followInProgress.includes(id)}
+                    onClick={followed ?
+                        () => unfollow(id) :
+                        () => follow(id)}>
+                    {followed ? "Unfollow" : "Follow"}
+                </button>
+                <button
+                    disabled={followInProgress.includes(id)}
+                    onClick={() => startChat(id, history)}>
+                    Send Message
                 </button>
             </div>
             <div className={styles.user__right}>
                 <div>
-                    <p>{user.name}</p>
-                    <p>{user.status}</p>
+                    <p>{name}</p>
+                    <p>{status}</p>
                 </div>
             </div>
         </div>

@@ -99,3 +99,26 @@ export const profileAPI = {
             .then(response => response.data);
     }
 };
+
+
+export const dialogsAPI = {
+    getDialogs: () => {
+        return instance.get('dialogs')
+            .then(response => response.data)
+    },
+
+    startChat: (userId) => {
+        return instance.put(`dialogs/${userId}`)
+            .then(response => response.data)
+    },
+
+    sendMessage: (userId, message) => {
+        return instance.post(`dialogs/${userId}/messages`, {body: message})
+            .then(response => response.data)
+    },
+
+    getMessages: (userId) => {
+        return instance.get(`dialogs/${userId}/messages`)
+            .then(response => response.data)
+    },
+}

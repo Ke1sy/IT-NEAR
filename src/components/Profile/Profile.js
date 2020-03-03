@@ -6,7 +6,7 @@ import Preloader from "../Preloader/Preloader";
 
 const Profile = ({profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo}) => {
     if (!profile) {
-        return <Preloader showPreloader={true} />
+        return <Preloader showPreloader={true}/>
     }
     return (
         <div className={classes.profile}>
@@ -18,7 +18,9 @@ const Profile = ({profile, status, setUserStatus, isOwner, loadPhoto, setProfile
                 loadPhoto={loadPhoto}
                 setProfileInfo={setProfileInfo}
             />
+            {isOwner &&
             <PostsContainer/>
+            }
         </div>
     )
 };
