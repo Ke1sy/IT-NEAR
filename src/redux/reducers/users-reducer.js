@@ -8,6 +8,7 @@ const SET_PAGE = 'users/SET_PAGE';
 const SET_TOTAL_COUNT = 'users/SET_TOTAL_COUNT';
 const TOGGLE_IS_LOADING = 'users/TOGGLE_IS_LOADING';
 const TOGGLE_FOLLOW_IN_PROGRESS = 'users/TOGGLE_FOLLOW_IN_PROGRESS';
+const SET_SEARCH_TEXT = 'users/SET_SEARCH_TEXT';
 
 const initialState = {
     users: [],
@@ -16,9 +17,10 @@ const initialState = {
     currentPage: 1,
     isLoading: true,
     followInProgress: [],
+    searchQuery: ''
 };
 
-const usersReducer = (state = initialState, {type, userId, users, page, count, isLoading, inProgress}) => {
+const usersReducer = (state = initialState, {type, userId, users, page, count, isLoading, inProgress, query}) => {
     switch (type) {
         case FOLLOW:
             return {
@@ -39,6 +41,8 @@ const usersReducer = (state = initialState, {type, userId, users, page, count, i
             return {...state, totalUsersCount: count};
         case TOGGLE_IS_LOADING:
             return {...state, isLoading: isLoading};
+        case SET_SEARCH_TEXT:
+            return {...state, searchQuery: query};
         case TOGGLE_FOLLOW_IN_PROGRESS:
             return {
                 ...state,
@@ -58,23 +62,19 @@ export const setPage = page => ({type: SET_PAGE, page});
 export const setUsersTotalCount = count => ({type: SET_TOTAL_COUNT, count});
 export const toggleIsLoading = isLoading => ({type: TOGGLE_IS_LOADING, isLoading});
 export const toggleFollowInProgress = (inProgress, userId) => ({type: TOGGLE_FOLLOW_IN_PROGRESS, inProgress, userId});
+export const setSearchText = query => ({type: SET_SEARCH_TEXT, query});
 
 //thunk creators
-export const requestUsers = (currentPage, pageSize) => async (dispatch) => {
+export const requestUsers = (currentPage, pageSize, searchText) => async (dispatch) => {
+    dispatch(setSearchText(searchText));
+    dispatch(setPage(currentPage));
     dispatch(toggleIsLoading(true));
-    const {items, totalCount} = await usersAPI.getUsers(currentPage, pageSize);
+    const {items, totalCount} = await usersAPI.getUsers(currentPage, pageSize, searchText);
     dispatch(toggleIsLoading(false));
     dispatch(setUsers(items));
     dispatch(setUsersTotalCount(totalCount));
 };
 
-export const setCurrentPage = (currentPage, pageSize) => async (dispatch) => {
-    dispatch(setPage(currentPage));
-    dispatch(toggleIsLoading(true));
-    const {items} = await usersAPI.getUsers(currentPage, pageSize);
-    dispatch(toggleIsLoading(false));
-    dispatch(setUsers(items));
-};
 
 const followUnfollow = async (dispatch, id, apiMethod, actionCreator) => {
     dispatch(toggleFollowInProgress(true, id));

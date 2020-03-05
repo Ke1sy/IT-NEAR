@@ -34,3 +34,7 @@ export const getIsLoading = (state) => {
 export const getFollowInProgress = (state) => {
     return state.usersReducer.followInProgress
 };
+
+export const getSearchQuery = (state) => {
+    return state.usersReducer.searchQuery
+};
