@@ -8,6 +8,7 @@ import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import withSuspense from "./components/HOC/Suspense";
+import NavbarContainer from "./components/Navbar/NavbarContainer";
 
 const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
@@ -36,7 +37,7 @@ class App extends React.Component {
         return (
             <div className="app">
                 <HeaderContainer/>
-                <Navbar/>
+                <NavbarContainer/>
                 <div className="main">
                     <Switch>
                         <Route exact path='/' render={() => <Redirect to={"/profile"}/>}/>

@@ -1,44 +1,57 @@
 import React, {useEffect, useState} from 'react';
 import styles from './messages.module.scss';
 import Dialog from "./Dialogs/Dialog";
-import Message from "./Message/Message";
-import MessageForm from "./Message/MessageForm";
+import MessagesChat from "./MessagesChat";
 
-const Messages = ({match, messages, dialogs, sendMessage, getDialogs, getMessages}) => {
-    const [activeDialog, setActiveDialog] = useState(null);
-    let id = match.params.id;
+const Messages = ({
+                      match,
+                      messages,
+                      deletedMessages,
+                      dialogs,
+                      sendMessage,
+                      getDialogs,
+                      getMessages,
+                      userId,
+                      deleteMessage,
+                      spamMessage,
+                      lastUserActivityDate,
+                      restoreMessage,
+                      spamedMessages
+                  }) => {
+    let friendId = match.params.id;
 
     useEffect(() => {
-        getDialogs();
+        getDialogs()
     }, []);
 
-    useEffect(() => {
-        // setActiveDialog(id);
-        getMessages(id);
-    }, [match.params.id]);
-
-    const onAddMessage = ({message}) => {
-        sendMessage(id, message);
-    };
-
-    let messagesElems = messages.map(message => <Message key={message.id} message={message}/>);
-    let dialogsElems = dialogs.map(({id, userName}) => (
-        <Dialog key={id} name={userName} id={id}/>
-    ));
+    let dialogsElems = dialogs.map(user =>
+        <Dialog
+            key={user.id}
+            user={user}
+        />
+    );
 
     return (
         <>
-        <div className={styles.content}>
-            <div className={styles.dialogs}>
-                {dialogsElems}
-            </div>
-            <div className={styles.messages}>
-                <div className={styles.messages__wrapper}>
-                    {messagesElems}
+            <div className={styles.content}>
+                <div className={styles.dialogs}>
+                    {dialogsElems}
                 </div>
-                <MessageForm onSubmit={onAddMessage}/>
+                {friendId && <MessagesChat
+                    deletedMessages={deletedMessages}
+                    spamedMessages={spamedMessages}
+                    friendId={friendId}
+                    messages={messages}
+                    sendMessage={sendMessage}
+                    getMessages={getMessages}
+                    userId={userId}
+                    deleteMessage={deleteMessage}
+                    spamMessage={spamMessage}
+                    lastUserActivityDate={lastUserActivityDate}
+                    restoreMessage={restoreMessage}
+                />}
+
             </div>
-        </div>
         </>
 
     )

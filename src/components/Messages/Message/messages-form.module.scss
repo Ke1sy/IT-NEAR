@@ -1,0 +1,19 @@
+.form {
+    display: flex;
+  }
+
+.textarea {
+    width: 75%;
+
+    textarea {
+      height: 48px;
+      min-height: 48px;
+      resize: none;
+    }
+  }
+
+.button {
+    width: 25%;
+    height: 48px;
+  font-size: 16px;
+}

@@ -1,5 +1,6 @@
 import {authAPI, securityAPI} from "../../api/api";
 import {stopSubmit} from "redux-form";
+import {getNewMessagesCount} from "./dialogs-reducer";
 
 const SET_USER_DATA = 'auth/SET_USER_DATA';
 const SET_CAPTCHA_URL = 'auth/SET_CAPTCHA_URL';
@@ -31,6 +32,7 @@ export const authenticate = () => async (dispatch) => {
     if (resultCode === 0) {
         const {id, login, email} = data;
         dispatch(setUserData(id, login, email, true));
+        dispatch(getNewMessagesCount());
     }
 };
 

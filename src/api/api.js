@@ -79,7 +79,7 @@ export const profileAPI = {
     },
 
     setProfileInfo: (info) => {
-        const  {aboutMe, facebook, github, instagram, twitter, vk, lookingForAJob, lookingForAJobDescription, fullName} = info;
+        const {aboutMe, facebook, github, instagram, twitter, vk, lookingForAJob, lookingForAJobDescription, fullName} = info;
         return instance.put(`profile`, {
             "aboutMe": aboutMe,
             "contacts": {
@@ -121,4 +121,25 @@ export const dialogsAPI = {
         return instance.get(`dialogs/${userId}/messages`)
             .then(response => response.data)
     },
-}
+
+    spamMessage: (messageId) => {
+        return instance.post(`dialogs/messages/${messageId}/spam`)
+            .then(response => response.data)
+    },
+
+    deleteMessage: (messageId) => {
+        return instance.delete(`dialogs/messages/${messageId}`)
+            .then(response => response.data)
+    },
+
+    //from deleted and spam
+    restoreMessage: (messageId) => {
+        return instance.put(`dialogs/messages/${messageId}/restore`)
+            .then(response => response.data)
+    },
+
+    newMessagesCount: () => {
+        return instance.get('dialogs/messages/new/count')
+            .then(response => response.data)
+    }
+};

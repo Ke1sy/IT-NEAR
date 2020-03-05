@@ -22,13 +22,14 @@ const LINKS = [
     }
 ];
 
-const Navbar = () => {
+const Navbar = ({newMessagesCount}) => {
     return (
         <nav className={styles.nav}>
             {LINKS.map(({id, text, url}) => (
                 <div className={styles.nav__item} key={id}>
                     <NavLink to={url} className={styles.nav__link} activeClassName={styles.active}>
                         {text}
+                        {url === '/dialogs' && newMessagesCount > 0 && <span> ({newMessagesCount})</span>}
                     </NavLink>
                 </div>
             ))}

@@ -1,18 +1,22 @@
-import styles from "../messages.module.scss";
 import {Field, reduxForm} from "redux-form";
 import React from "react";
+import {renderField} from "../../Forms/components/FormControl";
+import styles from './messages-form.module.scss';
+
 
 const MessageForm = ({handleSubmit, submitting}) => {
     return (
-        <form className={styles.messages__form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit}>
             <Field
                 name="message"
-                component="textarea"
+                type="textarea"
+                component={renderField}
                 placeholder="Type message..."
-                required
+                required={true}
+                groupClasses={styles.textarea}
             />
 
-            <button type="submit" disabled={submitting}>
+            <button type="submit" disabled={submitting} className={styles.button}>
                 Send
             </button>
         </form>

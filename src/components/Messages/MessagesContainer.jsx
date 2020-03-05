@@ -1,17 +1,23 @@
-import {sendMessage, getDialogs, getMessages} from "../../redux/reducers/dialogs-reducer";
+import {
+    sendMessage,
+    getDialogs,
+    getMessages,
+    deleteMessage,
+    spamMessage, restoreMessage,
+} from "../../redux/reducers/dialogs-reducer";
 import Messages from "./Messages";
 import {connect} from "react-redux";
 import {withAuthRedirect} from '../Redirects/AuthRedirect'
 import {compose} from "redux";
 
-const mapStateToProps = ({dialogsReducer: {messages, dialogs}}) => {
+const mapStateToProps = ({dialogsReducer: {messages, dialogs, lastUserActivityDate, deletedMessages, spamedMessages}, authReducer: {userId}}) => {
     return {
-        messages, dialogs
+        messages, dialogs, userId, lastUserActivityDate, deletedMessages, spamedMessages
     }
 };
 
 const MessagesContainer = compose(
-    connect(mapStateToProps, {sendMessage, getDialogs, getMessages}),
+    connect(mapStateToProps, {sendMessage, getDialogs, getMessages, deleteMessage, spamMessage, restoreMessage}),
     // withAuthRedirect
 )(Messages);
 
