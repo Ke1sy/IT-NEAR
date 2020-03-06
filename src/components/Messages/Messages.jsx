@@ -41,6 +41,7 @@ const Messages = ({
                     deletedMessages={deletedMessages}
                     spamedMessages={spamedMessages}
                     messages={messages}
+                    friendId={friendId}
                     sendMessage={sendMessage}
                     getMessages={getMessages}
                     userId={userId}
