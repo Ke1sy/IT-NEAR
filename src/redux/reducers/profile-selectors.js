@@ -1,5 +1,5 @@
 export const getProfile = (state) => {
-    return state.profileReducer.users
+    return state.profileReducer.profile
 };
 
 export const getStatus = (state) => {
