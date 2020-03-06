@@ -1,19 +1,14 @@
 import React from 'react';
 import styles from './search.module.scss';
 import SearchReduxForm from "./SearchForm";
-import queryString from 'query-string';
 
-const Search = ({history, location, onChangeSearchText}) => {
-    // const parsed = queryString.parse(location.search);
-
-    const onSubmit = ({searchText}) => {
-
-        // history.push({search: 'search=' + searchText});
-    };
+const Search = ({onChangeSearchText, searchRequest}) => {
 
     return (
         <div className={styles.search}>
-            {/*<p>Found on query: {parsed.search}</p>*/}
+            {searchRequest &&
+            <p>Found on query: {searchRequest}</p>
+            }
             <SearchReduxForm onSubmit={onChangeSearchText}/>
         </div>
     )

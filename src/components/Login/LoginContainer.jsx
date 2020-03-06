@@ -3,6 +3,7 @@ import Login from "./Login";
 import {connect} from "react-redux";
 import {login} from "../../redux/reducers/auth-reducer";
 import {Redirect} from "react-router-dom";
+import {getCaptchaUrl, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 
 const LoginContainer = ({login, isAuth, userId, captchaUrl}) => {
     const onSubmit = ({email, password, rememberMe, captcha}) => {
@@ -18,8 +19,12 @@ const LoginContainer = ({login, isAuth, userId, captchaUrl}) => {
     )
 };
 
-const mapStateToProps = ({authReducer: {isAuth, userId, captchaUrl}}) => {
-    return {isAuth, userId, captchaUrl}
+const mapStateToProps = (state) => {
+    return {
+        isAuth: getIsAuth(state),
+        userId: getCurrentUserId(state),
+        captchaUrl: getCaptchaUrl(state)
+    }
 };
 
 export default connect(mapStateToProps, {login})(LoginContainer);

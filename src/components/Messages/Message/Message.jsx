@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styles from './message.module.scss';
 import classNames from 'classnames';
 import deleteIcon from "../../../assets/images/trash.svg";
@@ -8,7 +8,7 @@ import readIcon from "../../../assets/images/read.svg";
 import unreadIcon from "../../../assets/images/unread.svg";
 
 
-const Message = ({message, userId, deleteMessage, spamMessage, friendId, restoreMessage, deletedMessages, spamedMessages}) => {
+const Message = ({message, userId, deleteMessage, spamMessage, restoreMessage, deletedMessages, spamedMessages}) => {
     const {addedAt, body, id, recipientId, senderId, senderName, translatedBody, viewed} = message;
     const messageDeleted = deletedMessages.includes(id);
     const messageSpamed = spamedMessages.includes(id);

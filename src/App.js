@@ -5,10 +5,10 @@ import {compose} from "redux";
 import {appInitialize} from "./redux/reducers/app-reducer";
 import Preloader from "./components/Preloader/Preloader";
 import Footer from "./components/Footer/Footer";
-import Navbar from "./components/Navbar/Navbar";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import withSuspense from "./components/HOC/Suspense";
 import NavbarContainer from "./components/Navbar/NavbarContainer";
+import {getAppInited} from "./redux/reducers/app-selectors";
 
 const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
@@ -56,8 +56,10 @@ class App extends React.Component {
     }
 }
 
-const mapStateToProps = ({app: {inited}}) => {
-    return {inited}
+const mapStateToProps = (state) => {
+    return {
+        inited: getAppInited(state)
+    }
 };
 
 export default compose(

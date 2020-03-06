@@ -1,9 +1,12 @@
 import React, {Component} from "react";
 import {Redirect} from "react-router-dom";
 import {connect} from "react-redux";
+import {getIsAuth} from "../../redux/reducers/auth-selectors";
 
-const mapStateToProps = ({authReducer: {isAuth}}) => {
-    return {isAuth}
+const mapStateToProps = (state) => {
+    return {
+        isAuth: getIsAuth(state)
+    }
 };
 
 export const withAuthRedirect = (WrappedComponent) => {

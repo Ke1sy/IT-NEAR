@@ -42,6 +42,8 @@ const dialogsReducer = (state = initialState, {type, messages, dialogs, count, u
             let selectedUser = [...state.dialogs].find(dialog => dialog.id === Number(userId));
             if (selectedUser !== undefined) {
                 return {...state, lastUserActivityDate: selectedUser.lastUserActivityDate};
+            } else {
+                return state;
             }
         default:
             return state;
@@ -107,7 +109,7 @@ export const spamMessage = (messageId) => async (dispatch) => {
     }
 };
 
-export const getNewMessagesCount = () => async (dispatch) => {
+export const requestNewMessagesCount = () => async (dispatch) => {
     const data = await dialogsAPI.newMessagesCount();
     dispatch(setNewMessagesCount(data));
 };

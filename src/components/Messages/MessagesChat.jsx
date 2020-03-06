@@ -1,4 +1,4 @@
-import React, {createRef, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import styles from './messages.module.scss';
 import Message from "./Message/Message";
 import MessageForm from "./Message/MessageForm";
@@ -16,11 +16,6 @@ const MessagesChat = ({
                           deletedMessages,
                           spamedMessages
                       }) => {
-    useEffect(() => {
-        if (friendId) {
-            updateMessages();
-        }
-    }, [friendId]);
 
     const updateMessages = () => {
         if (friendId !== undefined) {
@@ -28,6 +23,14 @@ const MessagesChat = ({
                 .then(() => scrollChatToBottom());
         }
     };
+
+    useEffect(() => {
+        if (friendId) {
+            updateMessages();
+        }
+    }, [friendId]);
+
+
 
     const scrollChatToBottom = () => {
         const wrapper = document.getElementById("wrapper");

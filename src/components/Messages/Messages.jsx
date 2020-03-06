@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import styles from './messages.module.scss';
 import Dialog from "./Dialogs/Dialog";
 import MessagesChat from "./MessagesChat";
@@ -40,7 +40,6 @@ const Messages = ({
                 {friendId && <MessagesChat
                     deletedMessages={deletedMessages}
                     spamedMessages={spamedMessages}
-                    friendId={friendId}
                     messages={messages}
                     sendMessage={sendMessage}
                     getMessages={getMessages}

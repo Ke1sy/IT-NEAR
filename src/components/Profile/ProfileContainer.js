@@ -10,6 +10,8 @@ import {
 } from "../../redux/reducers/profile-reducer";
 import {withRouter} from "react-router-dom";
 import {compose} from "redux";
+import {getProfile, getStatus} from "../../redux/reducers/profile-selectors";
+import {getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 
 const ProfileContainer = ({isAuth, userId, getUserProfile, getUserStatus, match, history, profile, status, setUserStatus, loadPhoto, setProfileInfo}) => {
     const isOwner = match.params.id === undefined || Number(match.params.id) === userId;
@@ -44,12 +46,13 @@ const ProfileContainer = ({isAuth, userId, getUserProfile, getUserStatus, match,
     )
 };
 
-const mapStateToProps = ({profileReducer: {profile, status}, authReducer: {isAuth, userId}}) => {
+const mapStateToProps = (state) => {
     return {
-        profile,
-        status,
-        userId,
-        isAuth}
+        profile: getProfile(state),
+        status: getStatus(state),
+        userId: getCurrentUserId(state),
+        isAuth: getIsAuth(state),
+    }
 };
 
 export default compose(

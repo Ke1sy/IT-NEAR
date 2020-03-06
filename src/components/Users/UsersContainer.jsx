@@ -39,8 +39,8 @@ class UsersContainer extends Component {
         this.props.history.replace(this.stringifyParams('', searchText));
     };
 
-    onSetCurrentPage = (page) => {
-        this.props.history.replace(this.stringifyParams(page, this.props.searchQuery));
+    onSetCurrentPage = ({selected}) => {
+        this.props.history.replace(this.stringifyParams(selected + 1, this.props.searchQuery));
     };
 
     render() {

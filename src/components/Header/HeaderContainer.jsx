@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import {logout} from "../../redux/reducers/auth-reducer";
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
+import {getCurrentUserId, getCurrentUserLogin, getIsAuth} from "../../redux/reducers/auth-selectors";
 
 const HeaderContainer = (props) => {
     return (
@@ -11,8 +12,12 @@ const HeaderContainer = (props) => {
     )
 };
 
-const mapStateToProps = ({authReducer: {userId, login, isAuth}}) => {
-    return {userId, login, isAuth}
+const mapStateToProps = (state) => {
+    return {
+        userId: getCurrentUserId(state),
+        login: getCurrentUserLogin(state),
+        isAuth: getIsAuth(state),
+    }
 };
 
 export default compose(
