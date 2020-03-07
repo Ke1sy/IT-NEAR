@@ -1,0 +1,98 @@
+import {authAPI, securityAPI} from "../../api/api";
+import {requestNewMessagesCount} from "./dialogs-reducer";
+import {stopSubmit} from "redux-form";
+
+const SET_USER_DATA = 'auth/SET_USER_DATA';
+const SET_CAPTCHA_URL = 'auth/SET_CAPTCHA_URL';
+
+const initialState = {
+    userId: null as number | null,
+    login: null as string | null,
+    email: null as string | null,
+    isAuth: false,
+    captchaUrl: null as string | null
+};
+
+export type InitialStateType = typeof initialState
+
+type PayloadType = {
+    type: any,
+    userId: number | null,
+    login: string | null,
+    email: string | null,
+    isAuth: boolean
+    captchaUrl: string
+}
+
+const authReducer = (
+    state: { isAuth: boolean; captchaUrl: string | null; login: string | null; userId: number | null; email: string | null } = initialState,
+    {type, userId, login, email, isAuth, captchaUrl}: PayloadType
+): InitialStateType => {
+    switch (type) {
+        case SET_USER_DATA:
+            return {
+                ...state,
+                userId,
+                login,
+                email, isAuth
+            };
+        case SET_CAPTCHA_URL:
+            return {...state, captchaUrl};
+        default:
+            return state;
+    }
+};
+
+type SetUserDataActionType = {
+    type: typeof SET_USER_DATA,
+    userId: number | null,
+    login: string | null,
+    email: string | null,
+    isAuth: boolean
+}
+
+export const setUserData = (userId: number | null, login: string | null, email: string | null, isAuth: boolean): SetUserDataActionType => ({
+    type: SET_USER_DATA, userId, login, email, isAuth
+});
+
+type SetCaptchaUrlActionType = {
+    type: typeof SET_CAPTCHA_URL,
+    captchaUrl: string,
+}
+
+export const setCaptchaUrl = (captchaUrl: string): SetCaptchaUrlActionType => ({
+    type: SET_CAPTCHA_URL,
+    captchaUrl
+});
+
+export const authenticate = () => async (dispatch: any) => {
+    const {data, resultCode} = await authAPI.auth();
+    if (resultCode === 0) {
+        const {id, login, email} = data;
+        dispatch(setUserData(id, login, email, true));
+        dispatch(requestNewMessagesCount());
+    }
+};
+
+export const login = (email: string, password: string, rememberMe: boolean, captcha: string) => async (dispatch: any) => {
+    const {resultCode, messages} = await authAPI.login(email, password, rememberMe, captcha);
+    if (resultCode === 0) {
+        dispatch(authenticate());
+    } else {
+        if (resultCode === 10) {
+            const {url} = await securityAPI.getCaptcha();
+            dispatch(setCaptchaUrl(url));
+        }
+        dispatch(stopSubmit("login", {_error: messages}));
+    }
+};
+
+export const logout = (history: any) => async (dispatch: any) => {
+    const {resultCode} = await authAPI.logout();
+    if (resultCode === 0) {
+        dispatch(setUserData(null, null, null, false));
+        history.push('/login')
+    }
+};
+
+export default authReducer;

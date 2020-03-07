@@ -28,14 +28,18 @@ let state = {
       }
     },
     ],
-  lastUserActivityDate: null
+  messages: [],
+  newMessagesCount: null ,
+  lastUserActivityDate: null ,
+  deletedMessages: [] ,
+  spamedMessages: [],
 };
 
 it('correct activity date is returned', () => {
   //1. test data
-  let action = setActivityDate(6138);
+  let type = setActivityDate(6138);
   //2. action
-  let newState = dialogsReducer(state, action);
+  let newState = dialogsReducer(state, type);
   //3. expectations
   expect(newState.lastUserActivityDate).toBe('2020-03-05T08:16:50.663');
 });
