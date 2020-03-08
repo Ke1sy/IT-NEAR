@@ -1,9 +1,14 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from './dialog.module.scss';
 import {NavLink} from "react-router-dom";
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
+import {DialogsType} from "../../../redux/reducers/types";
 
-const Dialog = ({user: {id, userName, photos, hasNewMessages, newMessagesCount}}) => {
+type PropsType = {
+    user: DialogsType
+}
+
+const Dialog: FC<PropsType> = ({user: {id, userName, photos, hasNewMessages, newMessagesCount}}) => {
     return (
         <div className={styles.dialog}>
             <NavLink

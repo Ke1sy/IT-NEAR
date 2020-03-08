@@ -1,8 +1,13 @@
-import React from 'react';
+import React, {FC, ReactNode} from 'react';
 import styles from './preloader.module.scss';
 import preloader from "../../assets/images/preloader.gif";
 
-const Preloader = ({showPreloader, children}) => {
+type PropsType = {
+    showPreloader: boolean,
+    children?: ReactNode
+}
+
+const Preloader: FC<PropsType> = ({showPreloader, children}) => {
     return (
         <div className={styles.preloader}>
             {showPreloader &&
@@ -10,7 +15,8 @@ const Preloader = ({showPreloader, children}) => {
                     <img src={preloader} alt=""/>
                 </div>
             }
-            {children}
+
+            {children && children}
         </div>
     )
 };

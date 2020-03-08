@@ -19,8 +19,28 @@ import Messages from "./Messages";
 import {connect} from "react-redux";
 import {withAuthRedirect} from '../Redirects/AuthRedirect'
 import {compose} from "redux";
+import {AppStateType} from "../../redux/redux-store";
+import {DialogsType, MessagesType} from "../../redux/reducers/types";
 
-const mapStateToProps = (state) => {
+type MapStatePropsType = {
+    dialogs: Array<DialogsType>
+    messages: Array<MessagesType>
+    userId: number | null
+    lastUserActivityDate: string | null
+    deletedMessages: Array<string>
+    spamedMessages: Array<string>
+}
+
+type MapDispatchPropsType = {
+    sendMessage: (userId: number, message: MessagesType) => void
+    getDialogs: () => void
+    getMessages: (userId: number) => void
+    deleteMessage: (messageId: string) => void
+    spamMessage: (messageId: string) => void
+    restoreMessage: (messageId: string) => void
+}
+
+const mapStateToProps = (state: AppStateType) => {
     return {
         messages: getMessagesList(state),
         dialogs: getDialogsList(state),
@@ -32,7 +52,7 @@ const mapStateToProps = (state) => {
 };
 
 const MessagesContainer = compose(
-    connect(mapStateToProps, {sendMessage, getDialogs, getMessages, deleteMessage, spamMessage, restoreMessage}),
+    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {sendMessage, getDialogs, getMessages, deleteMessage, spamMessage, restoreMessage}),
     withAuthRedirect
 )(Messages);
 

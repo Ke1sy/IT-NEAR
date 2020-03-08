@@ -17,6 +17,5 @@ export const withAuthRedirect = (WrappedComponent) => {
         }
     }
 
-    let ConnectedRedirectComponent = connect(mapStateToProps)(RedirectComponent);
-    return ConnectedRedirectComponent;
+    return connect(mapStateToProps)(RedirectComponent);
 };

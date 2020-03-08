@@ -1,5 +1,6 @@
 import {reset} from "redux-form";
 import {dialogsAPI} from "../../api/api";
+import {DialogsType, MessagesType} from "./types";
 
 const SET_DIALOGS = 'dialogs/SET_DIALOGS';
 const SET_MESSAGES = 'dialogs/SET_MESSAGES';
@@ -20,30 +21,6 @@ const initialState = {
 };
 
 export type InitialStateType = typeof initialState;
-
-type DialogsType = {
-    "id": number,
-    "userName": string,
-    "hasNewMessages": boolean,
-    "lastDialogActivityDate": string,
-    "lastUserActivityDate": string,
-    "newMessagesCount": number,
-    "photos": {
-        "small": any,
-        "large": any
-    }
-}
-
-type MessagesType = {
-    "id": string,
-    "body": string,
-    "translatedBody": any,
-    "addedAt": string,
-    "senderId": number,
-    "senderName": string,
-    "recipientId": number,
-    "viewed": boolean
-}
 
 const dialogsReducer = (
     state = initialState,
@@ -90,7 +67,7 @@ type SetMessagesActionType = {
     type: typeof SET_MESSAGES,
     messages: Array<MessagesType>
 }
-export const setMessages = (messages: Array<MessagesType>) : SetMessagesActionType =>  ({type: SET_MESSAGES, messages});
+export const setMessages = (messages: Array<MessagesType>): SetMessagesActionType => ({type: SET_MESSAGES, messages});
 
 type SetActivityDateActionType = {
     type: typeof SET_ACTIVITY_DATE,
@@ -102,7 +79,10 @@ type SetNewMessagesCountActionType = {
     type: typeof NEW_MESSAGES_COUNT,
     count: number
 }
-export const setNewMessagesCount = (count: number): SetNewMessagesCountActionType => ({type: NEW_MESSAGES_COUNT, count});
+export const setNewMessagesCount = (count: number): SetNewMessagesCountActionType => ({
+    type: NEW_MESSAGES_COUNT,
+    count
+});
 
 type AddMessageActionType = {
     type: typeof ADD_MESSAGE,
@@ -115,7 +95,10 @@ type AddMessageToDeletedActionType = {
     type: typeof DELETE_MESSAGE,
     messageId: string
 }
-export const addMessageToDeleted = (messageId: string): AddMessageToDeletedActionType => ({type: DELETE_MESSAGE, messageId});
+export const addMessageToDeleted = (messageId: string): AddMessageToDeletedActionType => ({
+    type: DELETE_MESSAGE,
+    messageId
+});
 
 type AddMessageToSpamActionType = {
     type: typeof SPAM_MESSAGE,
@@ -127,7 +110,10 @@ type RestoreFromSpamDeletedActionType = {
     type: typeof RESTORE_MESSAGE,
     messageId: string
 }
-export const restoreFromSpamDeleted = (messageId: string): RestoreFromSpamDeletedActionType => ({type: RESTORE_MESSAGE, messageId});
+export const restoreFromSpamDeleted = (messageId: string): RestoreFromSpamDeletedActionType => ({
+    type: RESTORE_MESSAGE,
+    messageId
+});
 
 
 export const getDialogs = () => async (dispatch: any) => {

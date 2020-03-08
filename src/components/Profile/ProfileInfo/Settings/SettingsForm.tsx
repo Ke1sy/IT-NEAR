@@ -1,19 +1,28 @@
-import React, {useEffect} from 'react';
-import {Field, reduxForm} from "redux-form";
+import React, {useEffect, FC} from 'react';
+import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {renderField} from "../../../Forms/components/FormControl";
 import styles from "./settings-form.module.scss";
 import Preloader from "../../../Preloader/Preloader";
 import {required} from "../../../../utils/validate";
+import {ProfileType} from "../../../../redux/reducers/types";
 
-const SettingsForm = ({handleSubmit, error, pristine, submitting, reset, profile, initialize}) => {
+type OwnPropsType = {
+    profile?: ProfileType
+}
+
+type PropsType = InjectedFormProps & OwnPropsType;
+
+const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting, reset, initialize, profile}) => {
 
     useEffect(() => {
         const initForm = () => {
-            const { aboutMe, contacts: {facebook, github, instagram, twitter, vk}, lookingForAJob, lookingForAJobDescription, fullName} = profile;
+            if(profile) {
+                const { aboutMe, contacts: {facebook, github, instagram, twitter, vk}, lookingForAJob, lookingForAJobDescription, fullName} = profile;
 
-            initialize({
-                fullName, aboutMe, facebook, github, instagram, twitter, vk, lookingForAJob, lookingForAJobDescription
-            });
+                initialize({
+                    fullName, aboutMe, facebook, github, instagram, twitter, vk, lookingForAJob, lookingForAJobDescription
+                });
+            }
         };
 
         if (profile) {
@@ -108,7 +117,7 @@ const SettingsForm = ({handleSubmit, error, pristine, submitting, reset, profile
     )
 };
 
-const SettingsReduxForm = reduxForm({
+const SettingsReduxForm = reduxForm<{}, OwnPropsType>({
     form: 'settings',
 })(SettingsForm);
 

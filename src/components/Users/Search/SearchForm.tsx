@@ -1,11 +1,11 @@
-import React from 'react';
-import {Field, reduxForm} from "redux-form";
+import React, {FC} from 'react';
+import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import styles from "./search-form.module.scss";
 import {renderField} from "../../Forms/components/FormControl";
 import {minLength, required} from "../../../utils/validate";
 
 const minLength3 = minLength(3);
-const SearchForm = ({handleSubmit, submitting}) => {
+const SearchForm: FC<InjectedFormProps> = ({handleSubmit, submitting}) => {
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
             <Field

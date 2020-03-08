@@ -1,7 +1,12 @@
-import React from "react";
+import React, {FC} from "react";
 import LoginReduxForm from "./LoginForm";
 
-const Login = ({onSubmit, captchaUrl}) => {
+type PropsType = {
+    onSubmit: any
+    captchaUrl: string | null
+}
+
+const Login: FC<PropsType> = ({onSubmit, captchaUrl}) => {
     return (
         <div>
            <h1 className="text-center">Login Page</h1>

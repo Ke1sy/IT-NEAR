@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from './navbar.module.scss';
 import {NavLink} from "react-router-dom";
 
@@ -22,14 +22,19 @@ const LINKS = [
     }
 ];
 
-const Navbar = ({newMessagesCount}) => {
+type PropsType = {
+    newMessagesCount: null | number
+}
+
+const Navbar: FC<PropsType> = ({newMessagesCount}) => {
+    let notNull = newMessagesCount !== null && newMessagesCount > 0;
     return (
         <nav className={styles.nav}>
             {LINKS.map(({id, text, url}) => (
                 <div className={styles.nav__item} key={id}>
                     <NavLink to={url} className={styles.nav__link} activeClassName={styles.active}>
                         {text}
-                        {url === '/dialogs' && newMessagesCount > 0 && <span> ({newMessagesCount})</span>}
+                        {url === '/dialogs' && notNull && <span> ({newMessagesCount})</span>}
                     </NavLink>
                 </div>
             ))}

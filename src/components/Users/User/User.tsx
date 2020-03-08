@@ -1,9 +1,20 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from './user.module.scss';
 import userPlaceholder from '../../../assets/images/user-placeholder.png';
 import {NavLink} from "react-router-dom";
+import {UserType} from "../../../redux/reducers/types";
 
-const User = ({unfollow, follow, user, followInProgress, startChat, history}) => {
+type PropsType = {
+    user: UserType,
+    followInProgress: Array<number>,
+    history: any,
+
+    follow: (id: number) => void,
+    unfollow: (id: number) => void,
+    startChat: (userId: number, history: any) => void,
+};
+
+const User: FC<PropsType> = ({unfollow, follow, user, followInProgress, startChat, history}) => {
     const {id, photos, name, status, followed} = user;
     return (
         <div className={styles.user}>

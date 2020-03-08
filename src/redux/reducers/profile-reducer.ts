@@ -1,10 +1,12 @@
 import {profileAPI} from "../../api/api";
 import {reset, stopSubmit} from 'redux-form';
+import {PostType, ProfileType, PhotosType} from "./types";
 
 const ADD_POST = 'profile/ADD_POST';
 const SET_STATUS = 'profile/SET_STATUS';
 const SET_USER_PROFILE = 'profile/SET_USER_PROFILE';
 const LOAD_PHOTO_SUCCESS = 'profile/LOAD_PHOTO_SUCCESS';
+
 
 const initialState = {
     posts: [
@@ -27,38 +29,6 @@ const initialState = {
 };
 
 export type InitialStateType = typeof initialState;
-
-type PostType = {
-    id: number,
-    text: string,
-    likesCount: number
-}
-
-type ProfileType = {
-    aboutMe: string | null,
-    contacts: ContactsType,
-    lookingForAJob: boolean,
-    lookingForAJobDescription: string | null,
-    fullName: string,
-    userId: number,
-    photos: PhotosType
-};
-
-type ContactsType = {
-    facebook: string | null,
-    website: string | null,
-    vk: string | null,
-    twitter: string | null,
-    instagram: string | null,
-    youtube: string | null,
-    github: string | null,
-    mainLink: string | null
-}
-
-type PhotosType = {
-    small: string | null,
-    large: string | null
-}
 
 const profileReducer = (state = initialState, action: any): InitialStateType => {
     const {type, text, profile, photos} = action;

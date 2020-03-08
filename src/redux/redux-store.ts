@@ -15,6 +15,11 @@ const rootReducer = combineReducers({
     app: appReducer,
     form: formReducer
 });
+
+type RootReducerType = typeof rootReducer;
+export type AppStateType =  ReturnType<RootReducerType>;
+
+// @ts-ignore
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 const store = createStore(rootReducer, composeEnhancers(
     applyMiddleware(thunkMiddleware)

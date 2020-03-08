@@ -1,13 +1,18 @@
-import React from "react";
-import {Field, reduxForm} from 'redux-form'
+import React, {FC} from "react";
+import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {renderField} from "../Forms/components/FormControl";
 import {required, email, minLength} from "../../utils/validate";
 import styles from './login-form.module.scss';
 
 const minLength5 = minLength(5);
 
-const LoginForm = ({handleSubmit, pristine, submitting, reset, error, captchaUrl}) => {
+type OwnPropsType = {
+    captchaUrl?: string | null
+}
 
+type PropsType = InjectedFormProps & OwnPropsType;
+
+const LoginForm: FC<PropsType> = ({handleSubmit, pristine, submitting, reset, error, captchaUrl}) => {
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
             <Field
@@ -61,7 +66,7 @@ const LoginForm = ({handleSubmit, pristine, submitting, reset, error, captchaUrl
 };
 
 
-const LoginReduxForm = reduxForm({
+const LoginReduxForm = reduxForm<{}, OwnPropsType>({
     form: 'login'
 })(LoginForm);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from './message.module.scss';
 import classNames from 'classnames';
 import deleteIcon from "../../../assets/images/trash.svg";
@@ -6,10 +6,21 @@ import spamIcon from "../../../assets/images/spam.svg";
 import restoreIcon from "../../../assets/images/restore.svg";
 import readIcon from "../../../assets/images/read.svg";
 import unreadIcon from "../../../assets/images/unread.svg";
+import {MessagesType} from "../../../redux/reducers/types";
 
+type PropsType = {
+    message: MessagesType
+    userId: number | null
+    deletedMessages: Array<string>
+    spamedMessages: Array<string>
 
-const Message = ({message, userId, deleteMessage, spamMessage, restoreMessage, deletedMessages, spamedMessages}) => {
-    const {addedAt, body, id, recipientId, senderId, senderName, translatedBody, viewed} = message;
+    deleteMessage: (messageId: string) => void
+    spamMessage: (messageId: string) => void
+    restoreMessage: (messageId: string) => void
+}
+
+const Message: FC<PropsType> = ({message, userId, deleteMessage, spamMessage, restoreMessage, deletedMessages, spamedMessages}) => {
+    const {addedAt, body, id, senderId, viewed} = message;
     const messageDeleted = deletedMessages.includes(id);
     const messageSpamed = spamedMessages.includes(id);
     const messageInactive = messageDeleted || messageSpamed;
@@ -52,7 +63,7 @@ const Message = ({message, userId, deleteMessage, spamMessage, restoreMessage, d
     )
 };
 
-const RestoreBtn = ({callback}) => {
+const RestoreBtn = ({callback} : {callback: () => void}) => {
     return (
         <button className={styles.restore} title="Restore" onClick={callback}>
             <img src={restoreIcon} alt="" className={styles.messageIcon}/>

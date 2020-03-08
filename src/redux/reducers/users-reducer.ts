@@ -1,5 +1,6 @@
 import {usersAPI} from "../../api/api";
 import {updateObjectInArray} from "../../utils/helpers";
+import {UserType} from "./types";
 
 const FOLLOW = 'users/FOLLOW';
 const UNFOLLOW = 'users/UNFOLLOW';
@@ -18,18 +19,6 @@ const initialState = {
     isLoading: true,
     followInProgress: [] as Array<number>,
     searchQuery: null as string | null
-};
-
-type UserType = {
-    name: string,
-    id: number,
-    uniqueUrlName: null | string,
-    photos: {
-        small: null | string,
-        large: null | string,
-    },
-    status: null | string,
-    followed: boolean
 };
 
 type PayloadType = {

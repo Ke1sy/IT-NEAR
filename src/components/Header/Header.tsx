@@ -1,8 +1,16 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {NavLink} from "react-router-dom";
 import classes from './header.module.scss';
 
-const Header = ({userId, login, logout, isAuth, history}) => {
+type PropsType = {
+    userId: number | null,
+    login: string | null,
+    isAuth: boolean,
+    logout: (history: any) => void
+    history: any
+}
+
+const Header: FC<PropsType> = ({userId, login, logout, isAuth, history}) => {
   return (
       <header className={classes.header}>
           <div>

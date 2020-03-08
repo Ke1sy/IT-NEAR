@@ -1,10 +1,16 @@
-import {Field, reduxForm} from "redux-form";
-import React from "react";
+import {Field, reduxForm, InjectedFormProps} from "redux-form";
+import React, {FC, ComponentProps} from "react";
 import {renderField} from "../../Forms/components/FormControl";
 import styles from './messages-form.module.scss';
 
+interface PassedProps extends ComponentProps<any> {
+    onSubmit: any
+}
 
-const MessageForm = ({handleSubmit, submitting}) => {
+type Props = PassedProps & InjectedFormProps;
+
+const MessageForm: FC<Props> = ({handleSubmit, submitting, onSubmit}) => {
+    debugger
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
             <Field
@@ -23,7 +29,7 @@ const MessageForm = ({handleSubmit, submitting}) => {
     )
 };
 
-const MessageReduxForm = reduxForm({
+const MessageReduxForm = reduxForm<{}, PassedProps>({
     form: 'message'
 })(MessageForm);
 
