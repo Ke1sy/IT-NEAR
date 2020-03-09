@@ -1,4 +1,4 @@
-import React, {useEffect, FC} from 'react';
+import React, {useEffect, FC, ComponentProps} from 'react';
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {renderField} from "../../../Forms/components/FormControl";
 import styles from "./settings-form.module.scss";
@@ -6,11 +6,12 @@ import Preloader from "../../../Preloader/Preloader";
 import {required} from "../../../../utils/validate";
 import {ProfileType} from "../../../../redux/reducers/types";
 
-type OwnPropsType = {
-    profile?: ProfileType
+interface PassedProps extends ComponentProps<any> {
+    profile: ProfileType,
+    onSubmit: any
 }
 
-type PropsType = InjectedFormProps & OwnPropsType;
+type PropsType = InjectedFormProps & PassedProps;
 
 const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting, reset, initialize, profile}) => {
 
@@ -117,7 +118,7 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
     )
 };
 
-const SettingsReduxForm = reduxForm<{}, OwnPropsType>({
+const SettingsReduxForm = reduxForm<{}, PassedProps>({
     form: 'settings',
 })(SettingsForm);
 

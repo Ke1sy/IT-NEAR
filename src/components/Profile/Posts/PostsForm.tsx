@@ -1,15 +1,18 @@
-import React from 'react';
+import React, {FC, ComponentProps} from 'react';
 import styles from './posts-form.module.scss';
-import * as PropTypes from "prop-types";
-import {Field, reduxForm} from "redux-form";
+import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import {minLength, required} from "../../../utils/validate";
 import {renderField} from "../../Forms/components/FormControl";
 
 const minLength5 = minLength(5);
 
-function PostsForm(props) {
-    const {handleSubmit, submitting, pristine} = props;
+interface PassedProps extends ComponentProps<any> {
+    onSubmit: any
+}
 
+type PropsType = InjectedFormProps & PassedProps
+
+const PostsForm: FC<PropsType> = ({handleSubmit, submitting, pristine}) => {
     return (
         <form className={styles.posts__form} onSubmit={handleSubmit}>
             <Field
@@ -25,18 +28,10 @@ function PostsForm(props) {
             </button>
         </form>
     );
-}
+};
 
-
-const PostsReduxForm = reduxForm({
+const PostsReduxForm = reduxForm<{}, PassedProps>({
     form: 'posts'
 })(PostsForm);
-
-
-PostsForm.propTypes = {
-    onChange: PropTypes.func,
-    value: PropTypes.any,
-    onClick: PropTypes.func
-};
 
 export default PostsReduxForm;

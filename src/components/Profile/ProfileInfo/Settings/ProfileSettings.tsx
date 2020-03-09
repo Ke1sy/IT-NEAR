@@ -1,9 +1,16 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from "./profile-settings.module.scss";
 import SettingsPhoto from "./SettingsPhoto";
 import SettingsReduxForm from "./SettingsForm";
+import {ProfileType} from "../../../../redux/reducers/types";
 
-const ProfileSettings = ({setProfileInfo, profile, loadPhoto}) => {
+type PropsType = {
+    profile: ProfileType,
+    loadPhoto: (photo: any) => void
+    setProfileInfo: (info: ProfileType, userId: number) => void
+}
+
+const ProfileSettings: FC<PropsType> = ({setProfileInfo, profile, loadPhoto}) => {
     return (
         <div className={styles.settings}>
             <div className={styles.settings__title}>

@@ -57,4 +57,4 @@ const MessagesContainer = compose(
 )(Messages);
 
 
-export default MessagesContainer;
+export default MessagesContainer as React.ComponentType<any>;

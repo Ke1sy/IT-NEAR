@@ -1,12 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, FC, ChangeEvent} from 'react';
 import editIcon from "../../../assets/images/edit.svg";
 import styles from "./profile-status.module.scss";
 
-const ProfileStatus = ({status, setUserStatus, isOwner}) => {
+type PropsType = {
+    status: string
+    isOwner: boolean
+    setUserStatus: (status: string) => void
+}
+
+const ProfileStatus: FC<PropsType> = ({status, setUserStatus, isOwner}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newStatus, setNewStatus] = useState(status);
 
-    const changeEditingMode = (val) => {
+    const changeEditingMode = (val: boolean) => {
         setIsEditing(val);
 
         if (!val) {
@@ -19,7 +25,7 @@ const ProfileStatus = ({status, setUserStatus, isOwner}) => {
     }, [status]);
 
 
-    const handleChange = ({target: {value}}) => {
+    const handleChange = ({target: {value}}: { target: {value: string}}) => {
         setNewStatus(value)
     };
 

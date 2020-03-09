@@ -1,10 +1,20 @@
-import React from 'react';
+import React, {FC} from 'react';
 import classes from './profile.module.scss';
 import PostsContainer from './Posts/PostsContainer';
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import Preloader from "../Preloader/Preloader";
+import {ProfileType} from "../../redux/reducers/types";
 
-const Profile = ({profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo}) => {
+type PropsType = {
+    profile: ProfileType | null
+    status: string
+    isOwner: boolean
+    setUserStatus: (status: string) => void
+    loadPhoto: (photo: any) => void
+    setProfileInfo: (info: ProfileType, userId: number) => void
+}
+
+const Profile: FC<PropsType> = ({profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo}) => {
     if (!profile) {
         return <Preloader showPreloader={true}/>
     }

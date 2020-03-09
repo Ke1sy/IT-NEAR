@@ -1,21 +1,34 @@
-import React from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import classes from './profile-info.module.scss';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import jobImage from "../../../assets/images/job-image.png";
 import ProfileStatus from "./ProfileStatus";
+import {ProfileType} from "../../../redux/reducers/types";
 
-const StaticProfileInfo = ({profile, status, setUserStatus, isOwner}) => {
-    let contactsArr = [];
-    const contacts = profile.contacts;
+type PropsType = {
+    profile: ProfileType
+    status: string
+    isOwner: boolean
+    setUserStatus: (status: string) => void
+}
+type ContactsArrType = {
+    name: string
+    url: string
+}
 
-    for (let key in contacts) {
-        if (contacts[key]) {
-            contactsArr.push({
-                name: key,
-                url: contacts[key]
-            })
-        }
-    }
+const StaticProfileInfo: FC<PropsType> = ({profile, status, setUserStatus, isOwner}) => {
+    const [contactsArr, setContactsArr] = useState<Array<ContactsArrType>>([]);
+
+    useEffect(() => {
+        let newArr: ContactsArrType[] = [];
+        Object.entries(profile.contacts).forEach(([key, value]) => {
+                if (value !== null && value.length) {
+                    newArr  = [...newArr, {name: key, url: value}];
+                }
+            }
+        );
+        setContactsArr(newArr);
+    }, [profile.contacts]);
 
     return (
         <>
@@ -29,7 +42,7 @@ const StaticProfileInfo = ({profile, status, setUserStatus, isOwner}) => {
 
                 <div className={classes.profile__contacts}>
                     {
-                        contactsArr.map(item =>
+                        contactsArr.map((item: any) =>
                             <a href={item.url} key={item.name} className={classes.profile__link} target="_blank"
                                rel="noopener noreferrer">
                                 {item.name}
@@ -52,7 +65,6 @@ const StaticProfileInfo = ({profile, status, setUserStatus, isOwner}) => {
                         className={classes.profile__img}/>
                     <p><b>Job Description: </b>{profile.lookingForAJobDescription}</p>
                 </div>
-
                 }
             </div>
         </>

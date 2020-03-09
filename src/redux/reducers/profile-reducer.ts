@@ -25,7 +25,7 @@ const initialState = {
         }
     ] as Array<PostType>,
     profile: null as ProfileType | null,
-    status: null as string | null
+    status: ''
 };
 
 export type InitialStateType = typeof initialState;

@@ -10,6 +10,7 @@ import './index.scss';
 ReactDOM.render(
     <Router>
         <Provider store={store}>
+            // @ts-ignore
             <App/>
         </Provider>
     </Router>, document.getElementById('root')

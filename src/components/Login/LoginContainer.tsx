@@ -5,6 +5,7 @@ import {login} from "../../redux/reducers/auth-reducer";
 import {Redirect} from "react-router-dom";
 import {getCaptchaUrl, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 import {AppStateType} from "../../redux/redux-store";
+import {compose} from "redux";
 
 type MapStatePropsType = {
     userId: number | null,
@@ -47,4 +48,4 @@ const mapStateToProps = (state: AppStateType) => {
     }
 };
 
-export default connect<MapStatePropsType, MapDispatchPropsType, null, AppStateType>(mapStateToProps, {login})(LoginContainer);
+export default connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {login})(LoginContainer);

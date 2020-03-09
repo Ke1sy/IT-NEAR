@@ -1,6 +1,6 @@
 import React from 'react';
 import {Switch, Route, withRouter, Redirect} from "react-router-dom";
-import {connect} from "react-redux";
+import {connect, Provider} from "react-redux";
 import {compose} from "redux";
 import {appInitialize} from "./redux/reducers/app-reducer";
 import Preloader from "./components/Preloader/Preloader";
@@ -9,6 +9,7 @@ import HeaderContainer from "./components/Header/HeaderContainer";
 import withSuspense from "./components/HOC/Suspense";
 import NavbarContainer from "./components/Navbar/NavbarContainer";
 import {getAppInited} from "./redux/reducers/app-selectors";
+import {AppStateType} from "./redux/redux-store";
 
 const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
@@ -18,24 +19,38 @@ const News = React.lazy(() => import(/* webpackChunkName: "News" */"./components
 const Music = React.lazy(() => import(/* webpackChunkName: "Music" */"./components/Music/Music"));
 const NotFound = React.lazy(() => import(/* webpackChunkName: "Music" */"./components/NotFound/NotFound"));
 
-class App extends React.Component {
+type MapStatePropsType = {
+    inited: boolean
+}
+
+type MapDispatchPropsType = {
+    appInitialize: () => void
+}
+
+type PropsType = MapStatePropsType & MapDispatchPropsType;
+
+
+class App extends React.Component<PropsType> {
     componentDidMount() {
         this.props.appInitialize();
-        window.addEventListener("unhandledrejection",  (event) => {
-            console.error(`Error has occured. Reason:  + ${event.reason}`);
-        });
+        window.addEventListener("unhandledrejection", this.globalError);
     }
 
+    globalError = (e: any) => {
+        console.error(`Error has occured. Reason:  + ${e.reason}`);
+    };
+
     componentWillUnmount() {
-        window.removeEventListener("unhandledrejection");
+        window.removeEventListener("unhandledrejection", this.globalError);
     }
 
     render() {
-        if(!this.props.inited) {
+        if (!this.props.inited) {
             return <Preloader showPreloader={true}/>
         }
         return (
             <div className="app">
+                // @ts-ignore
                 <HeaderContainer/>
                 <NavbarContainer/>
                 <div className="main">
@@ -56,14 +71,14 @@ class App extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: AppStateType) => {
     return {
         inited: getAppInited(state)
     }
 };
 
 export default compose(
-    connect(mapStateToProps, {appInitialize}),
+    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {appInitialize}),
     withRouter
 )(App);
 

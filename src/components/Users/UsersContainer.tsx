@@ -111,6 +111,5 @@ export default compose(
         startChat
     }),
     withRouter
-)(UsersContainer);
-
+)(UsersContainer) as React.ComponentType<any>;
 

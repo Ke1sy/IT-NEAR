@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styles from './post.module.scss';
+import {PostType} from "../../../redux/reducers/types";
 
-const Posts = ({id, text, likesCount}) => {
+const Posts: FC<PostType> = ({id, text, likesCount}) => {
     return (
         <div className={styles.post} key={id}>
             <div className={styles.post__content}>

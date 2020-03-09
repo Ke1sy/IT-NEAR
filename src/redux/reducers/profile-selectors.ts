@@ -7,3 +7,7 @@ export const getProfile = (state: AppStateType) => {
 export const getStatus = (state: AppStateType) => {
     return state.profileReducer.status
 };
+
+export const getPosts = (state: AppStateType) => {
+    return state.profileReducer.posts
+};

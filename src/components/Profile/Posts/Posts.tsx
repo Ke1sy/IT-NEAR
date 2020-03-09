@@ -1,11 +1,17 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from './posts.module.scss';
 import Post from './Post';
 import PostsForm from "./PostsForm";
+import {PostType} from "../../../redux/reducers/types";
 
-const Posts = React.memo(props => {
+type PropsType = {
+    posts: Array<PostType>
+    addPost: (text: string) => void
+}
+
+const Posts: FC<PropsType> = React.memo(props => {
     const {posts, addPost} = props;
-    const onAddPost = ({postText}) => {
+    const onAddPost = ({postText}: { postText: string }) => {
         if (postText.length > 0) {
             addPost(postText);
         }
