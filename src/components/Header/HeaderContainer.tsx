@@ -36,4 +36,4 @@ const mapStateToProps = (state: AppStateType) => {
 export default compose(
     connect<MapStatePropsType, MapDispatchPropsType, RouteComponentProps, AppStateType>(mapStateToProps, {logout}),
     withRouter
-)(HeaderContainer);
+)(HeaderContainer) as React.ComponentType<any>;

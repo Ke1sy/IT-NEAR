@@ -1,6 +1,6 @@
 import React from 'react';
 import {Switch, Route, withRouter, Redirect} from "react-router-dom";
-import {connect, Provider} from "react-redux";
+import {connect} from "react-redux";
 import {compose} from "redux";
 import {appInitialize} from "./redux/reducers/app-reducer";
 import Preloader from "./components/Preloader/Preloader";
@@ -29,7 +29,6 @@ type MapDispatchPropsType = {
 
 type PropsType = MapStatePropsType & MapDispatchPropsType;
 
-
 class App extends React.Component<PropsType> {
     componentDidMount() {
         this.props.appInitialize();
@@ -50,7 +49,6 @@ class App extends React.Component<PropsType> {
         }
         return (
             <div className="app">
-                // @ts-ignore
                 <HeaderContainer/>
                 <NavbarContainer/>
                 <div className="main">
@@ -77,10 +75,11 @@ const mapStateToProps = (state: AppStateType) => {
     }
 };
 
+
 export default compose(
     connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {appInitialize}),
     withRouter
-)(App);
+)(App) as React.ComponentType<any>;
 
 
 

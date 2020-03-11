@@ -10,7 +10,6 @@ interface PassedProps extends ComponentProps<any> {
 type Props = PassedProps & InjectedFormProps;
 
 const MessageForm: FC<Props> = ({handleSubmit, submitting, onSubmit}) => {
-    debugger
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
             <Field

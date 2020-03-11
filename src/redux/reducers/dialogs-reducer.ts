@@ -1,6 +1,8 @@
 import {reset} from "redux-form";
 import {dialogsAPI} from "../../api/api";
 import {DialogsType, MessagesType} from "./types";
+import { ThunkAction } from 'redux-thunk'
+import {AppStateType} from "../redux-store";
 
 const SET_DIALOGS = 'dialogs/SET_DIALOGS';
 const SET_MESSAGES = 'dialogs/SET_MESSAGES';
@@ -63,6 +65,7 @@ type SetDialogsActionType = {
     dialogs: Array<DialogsType>
 };
 export const setDialogs = (dialogs: Array<DialogsType>): SetDialogsActionType => ({type: SET_DIALOGS, dialogs});
+
 type SetMessagesActionType = {
     type: typeof SET_MESSAGES,
     messages: Array<MessagesType>
@@ -75,7 +78,7 @@ type SetActivityDateActionType = {
 }
 export const setActivityDate = (userId: number): SetActivityDateActionType => ({type: SET_ACTIVITY_DATE, userId});
 
-type SetNewMessagesCountActionType = {
+export type SetNewMessagesCountActionType = {
     type: typeof NEW_MESSAGES_COUNT,
     count: number
 }
@@ -88,7 +91,6 @@ type AddMessageActionType = {
     type: typeof ADD_MESSAGE,
     message: MessagesType
 }
-
 export const addMessage = (message: MessagesType): AddMessageActionType => ({type: ADD_MESSAGE, message});
 
 type AddMessageToDeletedActionType = {
@@ -115,20 +117,33 @@ export const restoreFromSpamDeleted = (messageId: string): RestoreFromSpamDelete
     messageId
 });
 
+type FormResetType = ReturnType<typeof reset>
 
-export const getDialogs = () => async (dispatch: any) => {
+type ActionsTypes =
+    SetDialogsActionType
+    | SetMessagesActionType
+    | SetActivityDateActionType
+    | SetNewMessagesCountActionType
+    | AddMessageActionType
+    | AddMessageToDeletedActionType
+    | AddMessageToSpamActionType
+    | RestoreFromSpamDeletedActionType
+    | FormResetType;
+type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>
+
+export const getDialogs = (): ThunkType => async (dispatch) => {
     const response = await dialogsAPI.getDialogs();
     dispatch(setDialogs(response));
 };
 
-export const startChat = (userId: number, history: any) => async (dispatch: any) => {
+export const startChat = (userId: number, history: any): ThunkType => async () => {
     const {resultCode} = await dialogsAPI.startChat(userId);
     if (resultCode === 0) {
         history.push(`/dialogs/${userId}`)
     }
 };
 
-export const sendMessage = (userId: number, message: MessagesType) => async (dispatch: any) => {
+export const sendMessage = (userId: number, message: MessagesType): ThunkType => async (dispatch) => {
     const {data, resultCode} = await dialogsAPI.sendMessage(userId, message);
     if (resultCode === 0) {
         dispatch(addMessage(data.message));
@@ -136,7 +151,7 @@ export const sendMessage = (userId: number, message: MessagesType) => async (dis
     }
 };
 
-export const getMessages = (userId: number) => async (dispatch: any) => {
+export const getMessages = (userId: number): ThunkType => async (dispatch) => {
     const {error, items} = await dialogsAPI.getMessages(userId);
     if (!error) {
         dispatch(setMessages(items));
@@ -144,28 +159,28 @@ export const getMessages = (userId: number) => async (dispatch: any) => {
     }
 };
 
-export const deleteMessage = (messageId: string) => async (dispatch: any) => {
+export const deleteMessage = (messageId: string): ThunkType => async (dispatch) => {
     const {resultCode} = await dialogsAPI.deleteMessage(messageId);
     if (resultCode === 0) {
         dispatch(addMessageToDeleted(messageId));
     }
 };
 
-export const restoreMessage = (messageId: string) => async (dispatch: any) => {
+export const restoreMessage = (messageId: string): ThunkType => async (dispatch) => {
     const {resultCode} = await dialogsAPI.restoreMessage(messageId);
     if (resultCode === 0) {
         dispatch(restoreFromSpamDeleted(messageId));
     }
 };
 
-export const spamMessage = (messageId: string) => async (dispatch: any) => {
+export const spamMessage = (messageId: string): ThunkType => async (dispatch) => {
     const data = await dialogsAPI.spamMessage(messageId);
     if (data.resultCode === 0) {
         dispatch(addMessageToSpam(messageId));
     }
 };
 
-export const requestNewMessagesCount = () => async (dispatch: any) => {
+export const requestNewMessagesCount = (): ThunkType => async (dispatch) => {
     const data = await dialogsAPI.newMessagesCount();
     dispatch(setNewMessagesCount(data));
 };
