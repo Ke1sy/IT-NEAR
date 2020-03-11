@@ -14,7 +14,7 @@ type MapStatePropsType = {
 }
 
 type MapDispatchPropsType = {
-    sendMessage: (userId: number, message: MessagesType) => void
+    sendMessage: (userId: number, message: string) => void
     getDialogs: () => void
     getMessages: (userId: number) => Promise<void>
     deleteMessage: (messageId: string) => void

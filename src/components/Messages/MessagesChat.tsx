@@ -11,7 +11,7 @@ type PropsType = {
     deletedMessages: Array<string>
     spamedMessages: Array<string>
     friendId: number
-    sendMessage: (userId: number, message: MessagesType) => void
+    sendMessage: (userId: number, message: string) => void
     getMessages: (userId: number) => Promise<void>
     deleteMessage: (messageId: string) => void
     spamMessage: (messageId: string) => void
@@ -53,7 +53,7 @@ const MessagesChat: FC<PropsType> = ({
         }
     };
 
-    const onAddMessage = ({message}: { message: MessagesType }) => {
+    const onAddMessage = ({message}: { message: string }) => {
         sendMessage(friendId, message);
     };
 

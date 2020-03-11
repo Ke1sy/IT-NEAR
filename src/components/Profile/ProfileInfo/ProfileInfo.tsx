@@ -2,7 +2,7 @@ import React, {useState, FC} from 'react';
 import classes from './profile-info.module.scss';
 import StaticProfileInfo from "./StaticProfileInfo";
 import withSuspense from "../../HOC/Suspense";
-import {ProfileType} from "../../../redux/reducers/types";
+import {ProfileType, UpdatedProfileType} from "../../../redux/reducers/types";
 
 const ProfileSettings = React.lazy(() => import(/* webpackChunkName: "ProfileSettings" */"./Settings/ProfileSettings"));
 
@@ -12,7 +12,7 @@ type PropsType = {
     isOwner: boolean
     setUserStatus: (status: string) => void
     loadPhoto: (photo: any) => void
-    setProfileInfo: (info: ProfileType, userId: number) => void
+    setProfileInfo: (info: UpdatedProfileType, userId: number) => void
 }
 
 const ProfileInfo: FC<PropsType> = ({profile, status, setUserStatus, isOwner, setProfileInfo, loadPhoto}) => {

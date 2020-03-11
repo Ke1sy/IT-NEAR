@@ -15,6 +15,17 @@ export type ProfileType = {
     photos: PhotosType
 };
 
+export type UpdatedProfileType = {
+    aboutMe: string | null,
+    facebook: string | null,
+    vk: string | null,
+    twitter: string | null,
+    instagram: string | null,
+    github: string | null,
+    lookingForAJob: boolean,
+    lookingForAJobDescription: string | null,
+    fullName: string,
+}
 export type ContactsType = {
     facebook: string | null,
     website: string | null,

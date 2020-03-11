@@ -3,7 +3,7 @@ import classes from './profile.module.scss';
 import PostsContainer from './Posts/PostsContainer';
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import Preloader from "../Preloader/Preloader";
-import {ProfileType} from "../../redux/reducers/types";
+import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
 
 type PropsType = {
     profile: ProfileType | null
@@ -11,7 +11,7 @@ type PropsType = {
     isOwner: boolean
     setUserStatus: (status: string) => void
     loadPhoto: (photo: any) => void
-    setProfileInfo: (info: ProfileType, userId: number) => void
+    setProfileInfo: (info: UpdatedProfileType, userId: number) => void
 }
 
 const Profile: FC<PropsType> = ({profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo}) => {

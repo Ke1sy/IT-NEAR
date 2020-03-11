@@ -1,4 +1,4 @@
-import {authAPI, securityAPI} from "../../api/api";
+import {authAPI, ResultCodeForCaptcha, ResultCodes, securityAPI} from "../../api/api";
 import {requestNewMessagesCount, SetNewMessagesCountActionType} from "./dialogs-reducer";
 import {stopSubmit} from "redux-form";
 import {ThunkAction} from "redux-thunk";
@@ -73,19 +73,19 @@ type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>
 
 export const authenticate = (): ThunkType => async (dispatch) => {
     const {data, resultCode} = await authAPI.auth();
-    if (resultCode === 0) {
+    if (resultCode === ResultCodes.Success) {
         const {id, login, email} = data;
         dispatch(setUserData(id, login, email, true));
         dispatch(requestNewMessagesCount());
     }
 };
 
-export const login = (email: string, password: string, rememberMe: boolean, captcha: string): ThunkType => async (dispatch) => {
+export const login = (email: string, password: string, rememberMe: boolean, captcha: string | null): ThunkType => async (dispatch) => {
     const {resultCode, messages} = await authAPI.login(email, password, rememberMe, captcha);
-    if (resultCode === 0) {
+    if (resultCode === ResultCodes.Success) {
         dispatch(authenticate());
     } else {
-        if (resultCode === 10) {
+        if (resultCode === ResultCodeForCaptcha.CaptchaRequired) {
             const {url} = await securityAPI.getCaptcha();
             dispatch(setCaptchaUrl(url));
         }
@@ -95,7 +95,7 @@ export const login = (email: string, password: string, rememberMe: boolean, capt
 
 export const logout = (history: any): ThunkType => async (dispatch) => {
     const {resultCode} = await authAPI.logout();
-    if (resultCode === 0) {
+    if (resultCode === ResultCodes.Success) {
         dispatch(setUserData(null, null, null, false));
         history.push('/login')
     }

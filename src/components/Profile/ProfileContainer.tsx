@@ -13,7 +13,7 @@ import {compose} from "redux";
 import {getProfile, getStatus} from "../../redux/reducers/profile-selectors";
 import {getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 import {AppStateType} from "../../redux/redux-store";
-import {ProfileType} from "../../redux/reducers/types";
+import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
 
 type MapStatePropsType = {
     profile: ProfileType | null
@@ -67,14 +67,28 @@ const ProfileContainer: FC<PropsType> = ({
         checkProfile();
     }, [match.params.id, isAuth, getUserProfile, userId, getUserStatus, history]);
 
-    const updateProfileInfo = (info: ProfileType) => {
-        if(userId) {
-            setProfileInfo(info, userId)
+    const updateProfileInfo = (info: UpdatedProfileType) => {
+        const {aboutMe, lookingForAJob, lookingForAJobDescription, fullName, ...contacts} = info;
+
+        if (userId && profile) {
+            let updatedProfile = {
+                ...profile,
+                aboutMe,
+                lookingForAJob,
+                lookingForAJobDescription,
+                fullName,
+                contacts: {
+                    ...profile.contacts,
+                    ...contacts
+                }
+            };
+            setProfileInfo(updatedProfile, userId)
         }
     };
 
     return (
-        <Profile profile={profile} status={status} setUserStatus={setUserStatus} isOwner={isOwner} loadPhoto={loadPhoto} setProfileInfo={updateProfileInfo} />
+        <Profile profile={profile} status={status} setUserStatus={setUserStatus} isOwner={isOwner} loadPhoto={loadPhoto}
+                 setProfileInfo={updateProfileInfo}/>
     )
 };
 

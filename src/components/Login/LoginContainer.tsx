@@ -5,7 +5,6 @@ import {login} from "../../redux/reducers/auth-reducer";
 import {Redirect} from "react-router-dom";
 import {getCaptchaUrl, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 import {AppStateType} from "../../redux/redux-store";
-import {compose} from "redux";
 
 type MapStatePropsType = {
     userId: number | null,

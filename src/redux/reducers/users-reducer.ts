@@ -1,4 +1,4 @@
-import {usersAPI} from "../../api/api";
+import {ResultCodes, usersAPI} from "../../api/api";
 import {updateObjectInArray} from "../../utils/helpers";
 import {UserType} from "./types";
 import {Dispatch} from "redux";
@@ -149,7 +149,7 @@ export const requestUsers = (currentPage: number, pageSize: number, searchText: 
 const _followUnfollow = async (dispatch: DispatchType, id: number, apiMethod: any, actionCreator: typeof acceptFollow | typeof acceptUnfollow) => {
     dispatch(toggleFollowInProgress(true, id));
     const {resultCode} = await apiMethod(id);
-    if (resultCode === 0) {
+    if (resultCode === ResultCodes.Success) {
         dispatch(actionCreator(id));
     }
     dispatch(toggleFollowInProgress(false, id));

@@ -1,5 +1,5 @@
 import {reset} from "redux-form";
-import {dialogsAPI} from "../../api/api";
+import {dialogsAPI, ResultCodes} from "../../api/api";
 import {DialogsType, MessagesType} from "./types";
 import { ThunkAction } from 'redux-thunk'
 import {AppStateType} from "../redux-store";
@@ -138,14 +138,14 @@ export const getDialogs = (): ThunkType => async (dispatch) => {
 
 export const startChat = (userId: number, history: any): ThunkType => async () => {
     const {resultCode} = await dialogsAPI.startChat(userId);
-    if (resultCode === 0) {
+    if (resultCode === ResultCodes.Success) {
         history.push(`/dialogs/${userId}`)
     }
 };
 
-export const sendMessage = (userId: number, message: MessagesType): ThunkType => async (dispatch) => {
+export const sendMessage = (userId: number, message: string): ThunkType => async (dispatch) => {
     const {data, resultCode} = await dialogsAPI.sendMessage(userId, message);
-    if (resultCode === 0) {
+    if (resultCode === ResultCodes.Success) {
         dispatch(addMessage(data.message));
         dispatch(reset('message'));
     }
@@ -161,21 +161,21 @@ export const getMessages = (userId: number): ThunkType => async (dispatch) => {
 
 export const deleteMessage = (messageId: string): ThunkType => async (dispatch) => {
     const {resultCode} = await dialogsAPI.deleteMessage(messageId);
-    if (resultCode === 0) {
+    if (resultCode === ResultCodes.Success) {
         dispatch(addMessageToDeleted(messageId));
     }
 };
 
 export const restoreMessage = (messageId: string): ThunkType => async (dispatch) => {
     const {resultCode} = await dialogsAPI.restoreMessage(messageId);
-    if (resultCode === 0) {
+    if (resultCode === ResultCodes.Success) {
         dispatch(restoreFromSpamDeleted(messageId));
     }
 };
 
 export const spamMessage = (messageId: string): ThunkType => async (dispatch) => {
     const data = await dialogsAPI.spamMessage(messageId);
-    if (data.resultCode === 0) {
+    if (data.resultCode === ResultCodes.Success) {
         dispatch(addMessageToSpam(messageId));
     }
 };

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, FC, ChangeEvent} from 'react';
+import React, {useEffect, useState, FC} from 'react';
 import editIcon from "../../../assets/images/edit.svg";
 import styles from "./profile-status.module.scss";
 

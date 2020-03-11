@@ -1,6 +1,6 @@
-import {profileAPI} from "../../api/api";
+import {profileAPI, ResultCodes} from "../../api/api";
 import {reset, stopSubmit} from 'redux-form';
-import {PostType, ProfileType, PhotosType} from "./types";
+import {PhotosType, PostType, ProfileType} from "./types";
 import {ThunkAction} from "redux-thunk";
 import {AppStateType} from "../redux-store";
 
@@ -99,7 +99,7 @@ export const getUserStatus = (id: number): ThunkType => async (dispatch) => {
 export const setUserStatus = (status: string): ThunkType => async (dispatch) => {
     try {
         const response = await profileAPI.setStatus(status);
-        if (response.resultCode === 0) {
+        if (response.resultCode === ResultCodes.Success) {
             dispatch(setStatus(status));
         }
     } catch (error) {
@@ -110,7 +110,7 @@ export const setUserStatus = (status: string): ThunkType => async (dispatch) => 
 
 export const setProfileInfo = (info: ProfileType, userId: number) => async (dispatch: any) => {
     const {resultCode, messages} = await profileAPI.setProfileInfo(info);
-    if (resultCode === 0) {
+    if (resultCode === ResultCodes.Success) {
         dispatch(getUserProfile(userId));
     } else {
         dispatch(stopSubmit("settings", {_error: messages}));
