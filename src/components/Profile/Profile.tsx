@@ -11,7 +11,7 @@ type PropsType = {
     isOwner: boolean
     setUserStatus: (status: string) => void
     loadPhoto: (photo: any) => void
-    setProfileInfo: (info: UpdatedProfileType, userId: number) => void
+    setProfileInfo: (info: UpdatedProfileType) => void
 }
 
 const Profile: FC<PropsType> = ({profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo}) => {

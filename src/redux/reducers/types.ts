@@ -74,3 +74,10 @@ export type MessagesType = {
     recipientId: number,
     viewed: boolean
 }
+
+export type LoginFormDataPropsType = {
+    email: string,
+    password: string,
+    rememberMe: boolean,
+    captcha: string | null
+}

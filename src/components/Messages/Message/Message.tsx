@@ -26,7 +26,7 @@ const Message: FC<PropsType> = ({message, userId, deleteMessage, spamMessage, re
     const messageInactive = messageDeleted || messageSpamed;
 
 
-    const date = new Date(addedAt).toLocaleTimeString();
+    const date = new Date(addedAt).toLocaleString();
     const inactiveText = messageDeleted ?  'Message was deleted' : 'Message added to spam';
 
     return (

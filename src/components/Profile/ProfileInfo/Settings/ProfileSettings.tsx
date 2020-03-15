@@ -7,7 +7,7 @@ import {ProfileType, UpdatedProfileType} from "../../../../redux/reducers/types"
 type PropsType = {
     profile: ProfileType,
     loadPhoto: (photo: any) => void
-    setProfileInfo: (info: UpdatedProfileType, userId: number) => void
+    setProfileInfo: (info: UpdatedProfileType) => void
 }
 
 const ProfileSettings: FC<PropsType> = ({setProfileInfo, profile, loadPhoto}) => {

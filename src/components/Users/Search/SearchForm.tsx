@@ -5,7 +5,12 @@ import {renderField} from "../../Forms/components/FormControl";
 import {minLength, required} from "../../../utils/validate";
 
 const minLength3 = minLength(3);
-const SearchForm: FC<InjectedFormProps> = ({handleSubmit, submitting}) => {
+
+type FormDataType = {
+    searchText: string
+}
+
+const SearchForm: FC<InjectedFormProps<FormDataType>> = ({handleSubmit, submitting}) => {
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
             <Field
@@ -23,7 +28,7 @@ const SearchForm: FC<InjectedFormProps> = ({handleSubmit, submitting}) => {
     )
 };
 
-const SearchReduxForm = reduxForm({
+const SearchReduxForm = reduxForm<FormDataType>({
     form: 'search'
 })(SearchForm);
 

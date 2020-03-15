@@ -5,6 +5,7 @@ import {login} from "../../redux/reducers/auth-reducer";
 import {Redirect} from "react-router-dom";
 import {getCaptchaUrl, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 import {AppStateType} from "../../redux/redux-store";
+import { LoginFormDataPropsType } from "../../redux/reducers/types";
 
 type MapStatePropsType = {
     userId: number | null,
@@ -12,21 +13,14 @@ type MapStatePropsType = {
     captchaUrl: string | null
 }
 
-type OnSubmitPropsType = {
-    email: string,
-    password: string,
-    rememberMe: boolean,
-    captcha: string
-}
-
 type MapDispatchPropsType = {
-    login: any
+    login: (email: string, password: string, rememberMe: boolean, captcha: string | null) => void
 }
 
-type PropsType = MapStatePropsType & MapDispatchPropsType & OnSubmitPropsType
+type PropsType = MapStatePropsType & MapDispatchPropsType
 
 const LoginContainer: FC<PropsType> = ({login, isAuth, userId, captchaUrl}) => {
-    const onSubmit = ({email, password, rememberMe, captcha}: OnSubmitPropsType) => {
+    const onSubmit = ({email, password, rememberMe, captcha}: LoginFormDataPropsType) => {
         login(email, password, rememberMe, captcha);
     };
 
@@ -35,7 +29,7 @@ const LoginContainer: FC<PropsType> = ({login, isAuth, userId, captchaUrl}) => {
     }
 
     return (
-        <Login onSubmit={onSubmit} captchaUrl={captchaUrl}/>
+        <Login login={onSubmit} captchaUrl={captchaUrl}/>
     )
 };
 

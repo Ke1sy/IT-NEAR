@@ -52,7 +52,14 @@ const mapStateToProps = (state: AppStateType) => {
 };
 
 const MessagesContainer = compose(
-    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {sendMessage, getDialogs, getMessages, deleteMessage, spamMessage, restoreMessage}),
+    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {
+        sendMessage,
+        getDialogs,
+        getMessages,
+        deleteMessage,
+        spamMessage,
+        restoreMessage
+    }),
     withAuthRedirect
 )(Messages);
 

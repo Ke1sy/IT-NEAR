@@ -3,7 +3,7 @@ import styles from './search.module.scss';
 import SearchReduxForm from "./SearchForm";
 
 type PropsType = {
-    onChangeSearchText: any
+    onChangeSearchText: ({searchText}: {searchText: string}) => void
     searchRequest: string | string[] | null | undefined
 }
 

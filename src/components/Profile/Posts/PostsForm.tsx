@@ -1,4 +1,4 @@
-import React, {FC, ComponentProps} from 'react';
+import React, {FC} from 'react';
 import styles from './posts-form.module.scss';
 import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import {minLength, required} from "../../../utils/validate";
@@ -6,11 +6,11 @@ import {renderField} from "../../Forms/components/FormControl";
 
 const minLength5 = minLength(5);
 
-interface PassedProps extends ComponentProps<any> {
-    onSubmit: any
+type FormDataType = {
+    postText: string
 }
 
-type PropsType = InjectedFormProps & PassedProps
+type PropsType = InjectedFormProps<FormDataType>
 
 const PostsForm: FC<PropsType> = ({handleSubmit, submitting, pristine}) => {
     return (
@@ -30,7 +30,7 @@ const PostsForm: FC<PropsType> = ({handleSubmit, submitting, pristine}) => {
     );
 };
 
-const PostsReduxForm = reduxForm<{}, PassedProps>({
+const PostsReduxForm = reduxForm<FormDataType>({
     form: 'posts'
 })(PostsForm);
 
