@@ -11,7 +11,7 @@ type PropsType = {
     isOwner: boolean
     setUserStatus: (status: string) => void
     loadPhoto: (photo: any) => void
-    setProfileInfo: (info: UpdatedProfileType) => void
+    setProfileInfo: (info: UpdatedProfileType) => void,
 }
 
 const Profile: FC<PropsType> = ({profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo}) => {
@@ -28,8 +28,8 @@ const Profile: FC<PropsType> = ({profile, status, setUserStatus, isOwner, loadPh
                 loadPhoto={loadPhoto}
                 setProfileInfo={setProfileInfo}
             />
-            {isOwner &&
-            <PostsContainer/>
+            {profile &&
+                <PostsContainer authorId={profile.userId} isOwner={isOwner}/>
             }
         </div>
     )

@@ -6,12 +6,20 @@ import {BrowserRouter as Router} from "react-router-dom";
 import {Provider} from 'react-redux';
 import './index.scss';
 import App from './App';
+import ApolloClient from 'apollo-boost';
+import {ApolloProvider} from 'react-apollo';
+
+const client = new ApolloClient({
+    uri: '/graphql'
+});
 
 ReactDOM.render(
     <Router>
-        <Provider store={store}>
-            <App/>
-        </Provider>
+        <ApolloProvider client={client}>
+            <Provider store={store}>
+                <App/>
+            </Provider>
+        </ApolloProvider>
     </Router>, document.getElementById('root')
 );
 

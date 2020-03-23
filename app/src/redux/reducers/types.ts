@@ -2,7 +2,9 @@
 export type PostType = {
     id: number,
     text: string,
-    likesCount: number
+    likesCount: number,
+    date: Date,
+    authorId: number
 }
 
 export type ProfileType = {

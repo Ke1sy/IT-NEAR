@@ -1,5 +1,6 @@
 import React, {FC} from "react";
 import styles from './form.module.scss';
+import { WrappedFieldProps } from "redux-form/lib/Field";
 
 const inputTypes = [
     'text',
@@ -8,17 +9,13 @@ const inputTypes = [
     'password'
 ];
 
-type PropsType = {
-    input : any
+type OwnPropsType = {
     groupClasses?: string
     label?: string,
     type: string,
-    meta: {
-        touched: boolean
-        error: boolean
-    },
     rest?: any
 };
+type PropsType = WrappedFieldProps & OwnPropsType;
 
 export const renderField:FC<PropsType> = ({input, groupClasses, label, type, meta: {touched, error}, ...rest}) => {
     return (
@@ -32,7 +29,7 @@ export const renderField:FC<PropsType> = ({input, groupClasses, label, type, met
             <input {...input} {...rest} type={type} className={styles.form__input}/>
             }
             {type === 'textarea' &&
-            <textarea {...input} {...rest} type={type} className={styles.form__textarea}/>
+            <textarea {...input} {...rest} className={styles.form__textarea}/>
             }
             {touched && (error && <span className={styles.error__text}>{error}</span>)}
         </div>

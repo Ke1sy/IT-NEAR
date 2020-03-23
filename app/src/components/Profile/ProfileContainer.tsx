@@ -6,7 +6,7 @@ import {
     getUserStatus,
     loadPhoto, setProfileInfo,
     setUserProfile,
-    setUserStatus
+    setUserStatus,
 } from "../../redux/reducers/profile-reducer";
 import {withRouter} from "react-router-dom";
 import {compose} from "redux";
@@ -18,8 +18,8 @@ import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
 type MapStatePropsType = {
     profile: ProfileType | null
     status: string
-    userId?: number | null
-    isAuth: boolean
+    userId?: number | null | undefined
+    isAuth: boolean,
 }
 
 type MapDispatchPropsType = {

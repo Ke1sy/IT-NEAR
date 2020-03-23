@@ -2,7 +2,8 @@ import React, { FC } from 'react';
 import styles from './post.module.scss';
 import {PostType} from "../../../redux/reducers/types";
 
-const Posts: FC<PostType> = ({id, text, likesCount}) => {
+const Posts: FC<PostType> = ({id, text, likesCount, date, }) => {
+    const postDate = new Date(+date);
     return (
         <div className={styles.post} key={id}>
             <div className={styles.post__content}>
@@ -11,6 +12,9 @@ const Posts: FC<PostType> = ({id, text, likesCount}) => {
             </div>
             <div className={styles.post__likes}>
                 Likes: {likesCount}
+            </div>
+            <div className={styles.post__likes}>
+                Posted: {postDate.toLocaleString()}
             </div>
         </div>
     )
