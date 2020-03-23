@@ -23,7 +23,7 @@ const Query = new GraphQLObjectType({
                 authorId: {type: GraphQLNonNull(GraphQLInt)}
             },
             resolve(parent, {authorId}) {
-                return Posts.find({authorId})
+                return Posts.find({authorId}).sort({date:-1})
             }
         },
     }
