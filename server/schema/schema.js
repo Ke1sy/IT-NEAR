@@ -44,6 +44,29 @@ const Mutations = new GraphQLObjectType({
                 const post = new Posts({text, likesCount, date, authorId});
                 return post.save()
             }
+        },
+        deletePost: {
+            type: PostType,
+            args: {
+                id: {type: GraphQLID},
+            },
+            resolve(parent, {id}) {
+                return Posts.findByIdAndRemove(id);
+            }
+        },
+        updatePost: {
+            type: PostType,
+            args: {
+                id: {type: GraphQLID},
+                text: {type: GraphQLNonNull(GraphQLString)},
+            },
+            resolve(parent, {id, text}) {
+                return Posts.findByIdAndUpdate(
+                    id,
+                    {$set: {text}},
+                    {new: true}
+                );
+            }
         }
     }
 });

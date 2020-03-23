@@ -11,3 +11,20 @@ export const addPostMutation = gql`
 }
 `;
 
+export const deletePostMutation = gql`
+   mutation deletePostMutation($id: ID) {
+    deletePost(id: $id) {
+        text
+    }
+}
+`;
+
+export const updatePostMutation = gql`
+   mutation updatePostMutation($id: ID, $text: String!) {
+   updatePost(id: $id, text: $text) {
+        id
+        text
+    }
+}
+`;
+

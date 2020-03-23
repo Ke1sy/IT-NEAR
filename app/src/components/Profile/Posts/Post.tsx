@@ -2,7 +2,11 @@ import React, { FC } from 'react';
 import styles from './post.module.scss';
 import {PostType} from "../../../redux/reducers/types";
 
-const Posts: FC<PostType> = ({id, text, likesCount, date, }) => {
+type PropsType = PostType & {
+    onDeletePost: (id: string) => void
+}
+
+const Posts: FC<PropsType> = ({id, text, likesCount, date, onDeletePost }) => {
     const postDate = new Date(+date);
     return (
         <div className={styles.post} key={id}>
@@ -16,6 +20,7 @@ const Posts: FC<PostType> = ({id, text, likesCount, date, }) => {
             <div className={styles.post__likes}>
                 Posted: {postDate.toLocaleString()}
             </div>
+            <button onClick={() => onDeletePost(id)}>Delete</button>
         </div>
     )
 };
