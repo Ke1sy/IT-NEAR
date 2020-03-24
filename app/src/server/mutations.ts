@@ -1,7 +1,7 @@
 import {gql} from 'apollo-boost';
 
-export const addPostMutation = gql`
-   mutation addPostMutation($text: String!, $likesCount: Int!, $date: String!, $authorId: Int!) {
+export const ADD_POST = gql`
+   mutation AddPostMutation($text: String!, $likesCount: Int!, $date: String!, $authorId: Int!) {
     addPost(text: $text, likesCount: $likesCount, date: $date, authorId: $authorId) {
         text
         date
@@ -11,16 +11,16 @@ export const addPostMutation = gql`
 }
 `;
 
-export const deletePostMutation = gql`
-   mutation deletePostMutation($id: ID) {
+export const DELETE_POST = gql`
+   mutation DeletePostMutation($id: ID) {
     deletePost(id: $id) {
         text
     }
 }
 `;
 
-export const updatePostMutation = gql`
-   mutation updatePostMutation($id: ID, $text: String!) {
+export const UPDATE_POST = gql`
+   mutation UpdatePostMutation($id: ID, $text: String!) {
    updatePost(id: $id, text: $text) {
         id
         text

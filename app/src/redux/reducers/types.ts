@@ -1,12 +1,3 @@
-
-export type PostType = {
-    id: string,
-    text: string,
-    likesCount: number,
-    date: Date,
-    authorId: number
-}
-
 export type ProfileType = {
     aboutMe: string | null,
     contacts: ContactsType,

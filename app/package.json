@@ -40,7 +40,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "apollo:generate": "apollo codegen:generate --target=typescript --excludes=node_modules/* --includes=src/server/*.ts --endpoint=http://localhost:3005/graphql  --tagName=gql --outputFlat src/server/types --passthroughCustomScalars --customScalarsPrefix=Custom"
   },
   "eslintConfig": {
     "extends": "react-app"

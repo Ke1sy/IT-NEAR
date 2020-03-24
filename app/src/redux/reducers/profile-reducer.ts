@@ -1,10 +1,9 @@
 import {profileAPI, ResultCodes} from "../../api/api";
 import {reset, stopSubmit} from 'redux-form';
-import {PhotosType, PostType, ProfileType} from "./types";
+import {PhotosType, ProfileType} from "./types";
 import {ThunkAction} from "redux-thunk";
 import {AppStateType} from "../redux-store";
 
-// const ADD_POST = 'profile/ADD_POST';
 const SET_STATUS = 'profile/SET_STATUS';
 const SET_USER_PROFILE = 'profile/SET_USER_PROFILE';
 const LOAD_PHOTO_SUCCESS = 'profile/LOAD_PHOTO_SUCCESS';
@@ -29,9 +28,6 @@ const profileReducer = (state = initialState, action: any): InitialStateType => 
             return state;
     }
 };
-
-// type AddPostTextActionType = { type: typeof ADD_POST, text: string };
-// export const addPostText = (text: string): AddPostTextActionType => ({type: ADD_POST, text});
 
 type SetUserProfileActionType = { type: typeof SET_USER_PROFILE, profile: ProfileType };
 export const setUserProfile = (profile: ProfileType): SetUserProfileActionType => ({type: SET_USER_PROFILE, profile});
@@ -58,11 +54,6 @@ export const loadPhoto = (photo: any): ThunkType => async (dispatch) => {
     const {data} = await profileAPI.loadPhoto(photo);
     dispatch(loadPhotoSuccess(data.photos));
 };
-
-// export const addPost = (text: string): ThunkAction<void, AppStateType, unknown, ActionsTypes> => (dispatch) => {
-//     dispatch(addPostText(text));
-//     dispatch(reset('posts'));
-// };
 
 export const getUserStatus = (id: number): ThunkType => async (dispatch) => {
     const data = await profileAPI.getStatus(id);

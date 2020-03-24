@@ -6,7 +6,7 @@ const Posts = require("../models/posts");
 const PostType = new GraphQLObjectType({
     name: 'Post',
     fields: () => ({
-        id: {type: GraphQLID},
+        id: {type: GraphQLNonNull(GraphQLID)},
         text: {type: GraphQLNonNull(GraphQLString)},
         likesCount: {type: GraphQLNonNull(GraphQLInt)},
         date: {type: GraphQLNonNull(GraphQLString)},
@@ -18,7 +18,7 @@ const Query = new GraphQLObjectType({
     name: 'Query',
     fields: {
         posts: {
-            type: new GraphQLList(PostType),
+            type: new GraphQLList(GraphQLNonNull(PostType)),
             args: {
                 authorId: {type: GraphQLNonNull(GraphQLInt)}
             },
@@ -33,7 +33,7 @@ const Mutations = new GraphQLObjectType({
     name: 'Mutations',
     fields: {
         addPost: {
-            type: PostType,
+            type: GraphQLNonNull(PostType),
             args: {
                 text: {type: GraphQLNonNull(GraphQLString)},
                 likesCount: {type: GraphQLNonNull(GraphQLInt)},
@@ -46,7 +46,7 @@ const Mutations = new GraphQLObjectType({
             }
         },
         deletePost: {
-            type: PostType,
+            type: GraphQLNonNull(PostType),
             args: {
                 id: {type: GraphQLID},
             },
@@ -55,7 +55,7 @@ const Mutations = new GraphQLObjectType({
             }
         },
         updatePost: {
-            type: PostType,
+            type: GraphQLNonNull(PostType),
             args: {
                 id: {type: GraphQLID},
                 text: {type: GraphQLNonNull(GraphQLString)},

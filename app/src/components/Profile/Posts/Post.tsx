@@ -1,18 +1,22 @@
 import React, { FC } from 'react';
 import styles from './post.module.scss';
-import {PostType} from "../../../redux/reducers/types";
+import {Typography} from "@material-ui/core";
+import {PostsData_posts} from "../../../server/types/PostsData";
 
-type PropsType = PostType & {
+type PropsType = {
     onDeletePost: (id: string) => void
+    post: PostsData_posts
 }
 
-const Posts: FC<PropsType> = ({id, text, likesCount, date, onDeletePost }) => {
+const Posts: FC<PropsType> = ({post: {id, text, likesCount, date}, onDeletePost }) => {
     const postDate = new Date(+date);
     return (
-        <div className={styles.post} key={id}>
+        <div className={styles.post}>
             <div className={styles.post__content}>
                 <img src="https://imgur.com/I80W1Q0.png" className={styles.post__avatar} alt=""/>
-                {text}
+                <Typography variant="body2">
+                    {text}
+                </Typography>
             </div>
             <div className={styles.post__likes}>
                 Likes: {likesCount}

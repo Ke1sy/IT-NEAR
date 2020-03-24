@@ -6,11 +6,14 @@ html, body {
   height: 100%;
   font-family: 'Roboto', sans-serif;
   color: #333;
+  font-size: 18px;
 }
 
 a {
   text-decoration: none;
-  color: #333;
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 input, textarea, div {
@@ -50,36 +53,19 @@ img {
           "f f";
 }
 
-button {
-  padding: 10px 15px;
-  font-size: 20px;
-  background: $theme-color;
-  color: #fff;
-  border: 1px solid transparent;
-  cursor: pointer;
-  text-transform: uppercase;
-  max-width: 100%;
-
-  &:hover {
-    color: $theme-color;
-    background: #fff;
-    border-color: $theme-color;
-  }
-}
-
 .main {
   grid-area: c;
 }
-
-.footer {
-  font-size: 40px;
-  font-weight: 700;
-  background: $theme-color;
-  color: #ffffff;
-  height: 100px;
-  padding: 0 20px;
-  grid-area: f;
-}
+//
+//.footer {
+//  font-size: 40px;
+//  font-weight: 700;
+//  background: $theme-color;
+//  color: #ffffff;
+//  height: 100px;
+//  padding: 0 20px;
+//  grid-area: f;
+//}
 
 h1 {
   text-align: center;
