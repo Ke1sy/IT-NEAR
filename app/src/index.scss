@@ -1,72 +1,72 @@
-$theme-color: lightsteelblue !default; //#3f51b5
-
+//$theme-color: lightsteelblue !default; //#3f51b5
+//
 html, body {
-  padding: 0;
-  margin: 0;
-  height: 100%;
-  font-family: 'Roboto', sans-serif;
-  color: #333;
+    //padding: 0;
+    //margin: 0;
+    //height: 100%;
+    //font-family: 'Roboto', sans-serif;
+    //color: #333;
   font-size: 18px;
 }
-
+//
 a {
   text-decoration: none;
-  &:hover {
-    text-decoration: none;
-  }
-}
-
-input, textarea, div {
-  box-sizing: border-box;
-}
-
-input[type="text"],
-textarea {
-  border-radius: 3px;
-  border: 1px solid #ddd;
-  padding: 5px;
-
-  &:focus,
-  &:active {
-    border-color: $theme-color;
-    outline-color: $theme-color;
-  }
-}
-
-img {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-#root {
-  height: 100%;
-}
-.app {
-  display: grid;
-  height: 100%;
-  grid-template-columns: 200px 1fr;
-  grid-template-rows: 100px 1fr;
-  grid-gap: 10px;
-  grid-template-areas:
-          "h h"
-          "n c"
-          "f f";
-}
-
-.main {
-  grid-area: c;
+  //&:hover {
+  //  text-decoration: none;
+  //}
 }
 //
-//.footer {
-//  font-size: 40px;
-//  font-weight: 700;
-//  background: $theme-color;
-//  color: #ffffff;
-//  height: 100px;
-//  padding: 0 20px;
-//  grid-area: f;
+//input, textarea, div {
+//  box-sizing: border-box;
 //}
-
-h1 {
-  text-align: center;
-}
+//
+//input[type="text"],
+//textarea {
+//  border-radius: 3px;
+//  border: 1px solid #ddd;
+//  padding: 5px;
+//
+//  &:focus,
+//  &:active {
+//    border-color: $theme-color;
+//    outline-color: $theme-color;
+//  }
+//}
+//
+//img {
+//  max-width: 100%;
+//  max-height: 100%;
+//}
+//
+//#root {
+//  height: 100%;
+//}
+//.app {
+//  display: grid;
+//  height: 100%;
+//  grid-template-columns: 200px 1fr;
+//  grid-template-rows: 100px 1fr;
+//  grid-gap: 10px;
+//  grid-template-areas:
+//          "h h"
+//          "n c"
+//          "f f";
+//}
+//
+//.main {
+//  grid-area: c;
+//}
+////
+////.footer {
+////  font-size: 40px;
+////  font-weight: 700;
+////  background: $theme-color;
+////  color: #ffffff;
+////  height: 100px;
+////  padding: 0 20px;
+////  grid-area: f;
+////}
+//
+//h1 {
+//  text-align: center;
+//}

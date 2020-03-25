@@ -1,39 +1,39 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {NavLink} from "react-router-dom";
 import logoImg from '../../assets/images/logo.png';
-import classes from './header.module.scss';
 import {
-    Drawer,
     AppBar,
     Toolbar,
     Typography,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Divider,
     makeStyles,
-    IconButton, Grid,
-    Link, Button
+    IconButton,
+    Grid,
+    Container,
+    Divider
 } from '@material-ui/core';
+import Navbar from "./Navbar";
+import {PhotosType} from "../../redux/reducers/types";
+import AuthBtn from "./AuthBtn";
 
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
 type PropsType = {
     userId: number | null,
     login: string | null,
     isAuth: boolean,
     logout: (history: any) => void
-    history: any
+    history: any,
+    newMessagesCount: number | null
+    avatar: PhotosType | null
 }
 
-const drawerWidth = 200;
-
 const useStyles = makeStyles((theme) => ({
-        root: {
+        grid: {
             display: 'flex',
         },
+
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
+            color: theme.palette.common.white,
         },
         content: {
             flexGrow: 1,
@@ -53,52 +53,57 @@ const useStyles = makeStyles((theme) => ({
         },
         logoutBtn: {
             padding: theme.spacing(1),
-            color: '#fff'
         },
         logoTxt: {
             padding: theme.spacing(1),
-            color: '#fff'
-        }
-    })
-);
+            color: theme.palette.common.white,
+        },
+        rightColumn: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end'
+        },
+        avatar: {
+            display: 'flex',
+            alignItems: 'center',
+            paddingLeft: 20,
+            paddingRight: 20,
+            textTransform: 'none'
+        },
 
-const Header: FC<PropsType> = ({userId, login, logout, isAuth, history}) => {
+        avatarText: {
+            padding: '0 5px'
+        }
+    }));
+
+const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessagesCount, avatar}) => {
     const classes = useStyles();
     return (
         <AppBar position="fixed" component="header" className={classes.appBar}>
-            <Toolbar variant="dense">
-                <Grid container justify="space-between" className={classes.root} spacing={2}>
-                    <Grid item>
+            <Container maxWidth="lg">
+                <Toolbar variant="dense" disableGutters>
+                <Grid container className={classes.grid} spacing={0}>
+                    <Grid item sm={6}>
                         <div>
                             <NavLink to="/" className={classes.logo}>
                                 <IconButton aria-label="logo" className={classes.logoBtn}>
                                     <img src={logoImg} alt="" className={classes.logoImg}/>
                                 </IconButton>
-                                <Typography variant="body1" className={classes.logoTxt}>Social Network</Typography>
+                                <Typography variant="body1" className={classes.logoTxt}>IT-NEAR</Typography>
                             </NavLink>
                         </div>
                     </Grid>
-                    <Grid item>
-                        {
-                            isAuth &&
-                            <>
-                                <Link component={NavLink} to={`/profile/${userId}`} color="inherit">
-                                   {login}
-                                </Link>
-                                <IconButton aria-label="logout" onClick={() => logout(history)} className={classes.logoutBtn}>
-                                    <ExitToAppIcon color="inherit"/>
-                                </IconButton>
-                            </>
-                        }
-                      {
-                          !isAuth &&
-                          <Link component={NavLink} to="/login">
-                              Login
-                          </Link>
-                      }
+                    <Grid item sm={6}>
+                        <div className={classes.rightColumn}>
+                            <Navbar newMessagesCount={newMessagesCount}/>
+                            <Divider orientation="vertical" flexItem light={true}/>
+                            <AuthBtn login={login} history={history} isAuth={isAuth} avatar={avatar} userId={userId} logout={logout}/>
+                            <Divider orientation="vertical" flexItem light={true} />
+                        </div>
                     </Grid>
                 </Grid>
             </Toolbar>
+            </Container>
         </AppBar>
     )
 };

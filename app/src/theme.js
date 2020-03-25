@@ -6,9 +6,17 @@ export default createMuiTheme({
         useNextVariants: true,
         color: '#333',
     },
+    mixins: {
+        toolbar: {
+            minHeight: 48
+        }
+    },
     palette: {
         type: 'light',
-        primary: {main: '#3d4977'},
+        primary: {
+            main: '#3d4977'
+            // main: '#3f51b5'
+        },
         secondary: {
             main: '#5383ff',
         },
@@ -16,5 +24,9 @@ export default createMuiTheme({
         contrastThreshold: 3,
         tonalOffset: 0.2,
         contrastText: '#fff',
+        text: {
+            primary: '#333',
+            // secondary: string
+        }
     },
 });

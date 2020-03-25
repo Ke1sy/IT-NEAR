@@ -43,11 +43,15 @@ export const loadPhotoSuccess = (photos: PhotosType): LoadPhotoSuccessActionType
 
 type FormResetType = ReturnType<typeof reset>
 type ActionsTypes = SetUserProfileActionType | SetStatusActionType | LoadPhotoSuccessActionType | FormResetType;
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>
+type ThunkType = ThunkAction<Promise<void | PhotosType | undefined>, AppStateType, unknown, ActionsTypes>
 
-export const getUserProfile = (id: number): ThunkType => async (dispatch) => {
+export const getUserProfile = (id: number, onlyPhoto: boolean = false): ThunkType => async (dispatch) => {
     const data = await profileAPI.getProfile(id);
-    dispatch(setUserProfile(data));
+    if (onlyPhoto) {
+        return data.photos;
+    } else {
+        dispatch(setUserProfile(data));
+    }
 };
 
 export const loadPhoto = (photo: any): ThunkType => async (dispatch) => {
