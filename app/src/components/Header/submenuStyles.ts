@@ -6,7 +6,8 @@ const styles = createStyles((theme: Theme) => ({
         borderTopRightRadius: 0
     },
     list: {
-        padding: 0
+        padding: 0,
+        backgroundColor: theme.palette.common.white
     },
     link: {
         display: 'flex',

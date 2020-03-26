@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import Post from './Post';
 import PostsForm from "./PostsForm";
 import { PostsData_posts } from '../../../server/types/PostsData';
+import Typography from "@material-ui/core/Typography";
 
 type PropsType = {
     posts: PostsData_posts[] | null,
@@ -17,6 +18,12 @@ const Posts: FC<PropsType> = (({posts = [], authorId, isOwner, onAddPost, onDele
         <div>
             {isOwner &&
             <PostsForm onSubmit={onAddPost}/>
+            }
+            {
+                posts && !posts.length &&
+                <Typography variant="subtitle1" style={{textAlign: 'center', paddingTop: 30}}>
+                    There are no posts here...
+                </Typography>
             }
             {posts && posts.length > 0 && posts.map((post, index) => (
               <Post post={post} key={post.id} onDeletePost={onDeletePost}/>

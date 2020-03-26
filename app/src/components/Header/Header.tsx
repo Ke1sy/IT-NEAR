@@ -12,7 +12,7 @@ import {
     Divider
 } from '@material-ui/core';
 import Navbar from "./Navbar";
-import {PhotosType} from "../../redux/reducers/types";
+import {ProfileType} from "../../redux/reducers/types";
 import AuthBtn from "./AuthBtn";
 
 
@@ -23,7 +23,7 @@ type PropsType = {
     logout: (history: any) => void
     history: any,
     newMessagesCount: number | null
-    avatar: PhotosType | null
+    currentUserInfo: ProfileType | null
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
         }
     }));
 
-const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessagesCount, avatar}) => {
+const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessagesCount, currentUserInfo}) => {
     const classes = useStyles();
     return (
         <AppBar position="fixed" component="header" className={classes.appBar}>
@@ -97,7 +97,7 @@ const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessa
                         <div className={classes.rightColumn}>
                             <Navbar newMessagesCount={newMessagesCount}/>
                             <Divider orientation="vertical" flexItem light={true}/>
-                            <AuthBtn login={login} history={history} isAuth={isAuth} avatar={avatar} userId={userId} logout={logout}/>
+                            <AuthBtn login={login} history={history} isAuth={isAuth} avatar={currentUserInfo ? currentUserInfo.photos: null} userId={userId} logout={logout}/>
                             <Divider orientation="vertical" flexItem light={true} />
                         </div>
                     </Grid>

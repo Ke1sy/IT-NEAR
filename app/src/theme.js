@@ -18,7 +18,8 @@ export default createMuiTheme({
             // main: '#3f51b5'
         },
         secondary: {
-            main: '#5383ff',
+            // main: '#5383ff',
+            main: '#f83245',
         },
         error: red,
         contrastThreshold: 3,
@@ -27,6 +28,7 @@ export default createMuiTheme({
         text: {
             primary: '#333',
             // secondary: string
-        }
+        },
+        background: '#f2f2f2'
     },
 });

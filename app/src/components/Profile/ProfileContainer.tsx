@@ -10,16 +10,21 @@ import {
 } from "../../redux/reducers/profile-reducer";
 import {withRouter} from "react-router-dom";
 import {compose} from "redux";
-import {getProfile, getStatus} from "../../redux/reducers/profile-selectors";
-import {getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
+import {getProfile, getProfileError, getStatus, getProfileIsLoading} from "../../redux/reducers/profile-selectors";
+import {getCurrentUserInfo, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 import {AppStateType} from "../../redux/redux-store";
-import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
+import {PhotosType, ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
+import ProfileError from './ProfileError/ProfileError';
+import Preloader from "../Preloader/Preloader";
 
 type MapStatePropsType = {
     profile: ProfileType | null
     status: string
     userId?: number | null | undefined
     isAuth: boolean,
+    profileError: string | null,
+    profileIsLoading: boolean,
+    currentUserInfo: ProfileType | null
 }
 
 type MapDispatchPropsType = {
@@ -49,10 +54,12 @@ const ProfileContainer: FC<PropsType> = ({
                                              status,
                                              setUserStatus,
                                              loadPhoto,
-                                             setProfileInfo
+                                             setProfileInfo,
+                                             profileError,
+                                             profileIsLoading,
+                                             currentUserInfo
                                          }) => {
     const isOwner = match.params.id === undefined || Number(match.params.id) === userId;
-
     useEffect(() => {
         let id = match.params.id;
 
@@ -86,9 +93,19 @@ const ProfileContainer: FC<PropsType> = ({
         }
     };
 
+    if (profileIsLoading) {
+        return <Preloader showPreloader={true}/>
+    }
+
+    if (profileError) {
+        return (
+            <ProfileError profileError={profileError}/>
+        )
+    }
+
     return (
         <Profile profile={profile} status={status} setUserStatus={setUserStatus} isOwner={isOwner} loadPhoto={loadPhoto}
-                 setProfileInfo={updateProfileInfo}/>
+                 setProfileInfo={updateProfileInfo} ownerId={userId} currentUserInfo={currentUserInfo}/>
     )
 };
 
@@ -98,6 +115,9 @@ const mapStateToProps = (state: AppStateType) => {
         status: getStatus(state),
         userId: getCurrentUserId(state),
         isAuth: getIsAuth(state),
+        profileError: getProfileError(state),
+        profileIsLoading: getProfileIsLoading(state),
+        currentUserInfo: getCurrentUserInfo(state)
     }
 };
 

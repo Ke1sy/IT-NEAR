@@ -3,11 +3,12 @@ import {requestNewMessagesCount, SetNewMessagesCountActionType} from "./dialogs-
 import {stopSubmit} from "redux-form";
 import {ThunkAction} from "redux-thunk";
 import {AppStateType} from "../redux-store";
-import {PhotosType} from "./types";
+import {PhotosType, ProfileType} from "./types";
 import {getUserProfile} from "./profile-reducer";
 
 const SET_USER_DATA = 'auth/SET_USER_DATA';
 const SET_CAPTCHA_URL = 'auth/SET_CAPTCHA_URL';
+const SET_CURRENT_USER_INFO = 'auth/SET_CURRENT_USER_INFO';
 
 const initialState = {
     userId: null as number | null,
@@ -15,7 +16,7 @@ const initialState = {
     email: null as string | null,
     isAuth: false,
     captchaUrl: null as string | null,
-    avatar: null as PhotosType | null
+    currentUserInfo: null as ProfileType | null
 };
 
 export type InitialStateType = typeof initialState
@@ -27,12 +28,12 @@ type PayloadType = {
     email: string | null,
     isAuth: boolean
     captchaUrl: string,
-    avatar: PhotosType | null
+    currentUserInfo: ProfileType | null
 }
 
 const authReducer = (
     state = initialState,
-    {type, userId, login, email, isAuth, captchaUrl, avatar}: PayloadType
+    {type, userId, login, email, isAuth, captchaUrl, currentUserInfo}: PayloadType
 ): InitialStateType => {
     switch (type) {
         case SET_USER_DATA:
@@ -42,7 +43,11 @@ const authReducer = (
                 login,
                 email,
                 isAuth,
-                avatar
+            };
+        case SET_CURRENT_USER_INFO:
+            return {
+                ...state,
+                currentUserInfo
             };
         case SET_CAPTCHA_URL:
             return {...state, captchaUrl};
@@ -57,15 +62,13 @@ type SetUserDataActionType = {
     login: string | null,
     email: string | null,
     isAuth: boolean,
-    avatar: PhotosType | null
 }
-export const setUserData = (userId: number | null, login: string | null, email: string | null, isAuth: boolean, avatar: PhotosType | null): SetUserDataActionType => ({
+export const setUserData = (userId: number | null, login: string | null, email: string | null, isAuth: boolean): SetUserDataActionType => ({
     type: SET_USER_DATA,
     userId,
     login,
     email,
     isAuth,
-    avatar
 });
 
 type SetCaptchaUrlActionType = {
@@ -87,15 +90,17 @@ export const authenticate = (): ThunkType => async (dispatch) => {
     const {data, resultCode} = await authAPI.auth();
     if (resultCode === ResultCodes.Success) {
         const {id, login, email} = data;
-        let avatar = null;
-        await dispatch(getUserProfile(id, true))
-            .then((photos) => {
-                avatar = photos
-            }).catch(e => console.error(e));
-        dispatch(setUserData(id, login, email, true, avatar));
+        dispatch(setUserData(id, login, email, true));
+        dispatch(getUserProfile(id, true));
         dispatch(requestNewMessagesCount());
     }
 };
+
+export const setCurrentUserInfo = (currentUserInfo: ProfileType | null)  => ({
+    type: SET_CURRENT_USER_INFO,
+    currentUserInfo
+});
+
 
 export const login = (email: string, password: string, rememberMe: boolean, captcha: string | null): ThunkType => async (dispatch) => {
     const {resultCode, messages} = await authAPI.login(email, password, rememberMe, captcha);
@@ -113,7 +118,7 @@ export const login = (email: string, password: string, rememberMe: boolean, capt
 export const logout = (history: any): ThunkType => async (dispatch) => {
     const {resultCode} = await authAPI.logout();
     if (resultCode === ResultCodes.Success) {
-        dispatch(setUserData(null, null, null, false, null));
+        dispatch(setUserData(null, null, null, false));
         history.push('/login')
     }
 };

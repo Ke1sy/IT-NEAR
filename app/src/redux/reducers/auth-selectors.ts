@@ -12,8 +12,8 @@ export const getIsAuth = (state: AppStateType) => {
     return state.authReducer.isAuth
 };
 
-export const getCurrentUserAvatar = (state: AppStateType) => {
-    return state.authReducer.avatar
+export const getCurrentUserInfo = (state: AppStateType) => {
+    return state.authReducer.currentUserInfo
 };
 
 export const getCaptchaUrl = (state: AppStateType) => {

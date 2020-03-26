@@ -10,6 +10,7 @@ import withSuspense from "./components/HOC/Suspense";
 import {getAppInited} from "./redux/reducers/app-selectors";
 import {AppStateType} from "./redux/redux-store";
 import {createStyles, StyleRules, Theme, WithStyles, withStyles, CssBaseline, Container} from "@material-ui/core";
+import PostsContainer from "./components/Profile/Posts/PostsContainer";
 
 const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
@@ -59,11 +60,10 @@ class App extends React.Component<PropsType> {
             return <Preloader showPreloader={true}/>
         }
         return (
-            <div className={classes.root}>
+            <>
                 <CssBaseline/>
                 <HeaderContainer/>
-                <Container maxWidth="lg" component="main">
-                    <div className={classes.content}>
+                <Container maxWidth="lg" component="main" className={classes.content}>
                         <div className={classes.toolbar}/>
                         <Switch>
                             <Route exact path='/' render={() => <Redirect to={"/profile"}/>}/>
@@ -73,10 +73,9 @@ class App extends React.Component<PropsType> {
                             <Route path="/users" component={withSuspense(UsersContainer)}/>
                             <Route path="*" component={withSuspense(NotFound)}/>
                         </Switch>
-                    </div>
                 </Container>
                 {/*<Footer/>*/}
-            </div>
+            </>
         );
     }
 }

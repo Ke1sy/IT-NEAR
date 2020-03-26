@@ -26,7 +26,6 @@ const ProfileInfo: FC<PropsType> = ({profile, status, setUserStatus, isOwner, se
 
     return (
         <>
-            <div className={classes.image}/>
             <div className={classes.profile}>
                 {isOwner && editMode  &&
                     <span className={classes.profile__edit} onClick={() => changeEditMode(false)}>
