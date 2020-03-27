@@ -1,6 +1,6 @@
 import React, {FC} from "react";
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
-import {renderField} from "../Forms/components/FormControl";
+import {RenderField} from "../Forms/components/FormControl";
 import {required, email, minLength} from "../../utils/validate";
 import styles from './login-form.module.scss';
 import {LoginFormDataPropsType} from "../../redux/reducers/types";
@@ -26,7 +26,7 @@ const LoginForm: FC<PropsType> = (
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
             <Field
-                component={renderField}
+                component={RenderField}
                 type="email"
                 name="email"
                 label="Email:"
@@ -34,7 +34,7 @@ const LoginForm: FC<PropsType> = (
                 validate={[required, email]}
             />
             <Field
-                component={renderField}
+                component={RenderField}
                 type="password"
                 name="password"
                 label="Password:"
@@ -46,7 +46,7 @@ const LoginForm: FC<PropsType> = (
                 groupClasses={styles.form__group_inline}
                 name="rememberMe"
                 id="rememberMe"
-                component={renderField}
+                component={RenderField}
                 type="checkbox"
                 label={"Remember me"}
             />
@@ -56,7 +56,7 @@ const LoginForm: FC<PropsType> = (
                 <img src={captchaUrl} alt=""/>
                 <Field
                     name="captcha"
-                    component={renderField}
+                    component={RenderField}
                     type="text"
                     label={"Type the symbols from image above: "}
                     validate={[required]}

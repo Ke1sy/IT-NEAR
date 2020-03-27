@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import styles from './posts-form.module.scss';
 import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import {minLength, required} from "../../../utils/validate";
-import {renderField} from "../../Forms/components/FormControl";
+import {RenderField} from "../../Forms/components/FormControl";
 
 const minLength5 = minLength(5);
 
@@ -17,7 +17,7 @@ const PostsForm: FC<PropsType> = ({handleSubmit, submitting, pristine}) => {
         <form className={styles.posts__form} onSubmit={handleSubmit}>
             <Field
                 placeholder="Type text..."
-                component={renderField}
+                component={RenderField}
                 type="textarea"
                 name="postText"
                 validate={[required, minLength5]}

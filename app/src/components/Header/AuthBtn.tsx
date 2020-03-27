@@ -20,13 +20,18 @@ type PropsType = {
     history: any,
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     avatar: {
         display: 'flex',
         alignItems: 'center',
         paddingLeft: 20,
         paddingRight: 20,
         textTransform: 'none'
+    },
+    loginLink: {
+        paddingLeft: 20,
+        paddingRight: 20,
+        color: theme.palette.common.white
     },
 
     avatarText: {
@@ -79,7 +84,7 @@ const AuthBtn: FC<PropsType> = ({isAuth, login, logout, avatar, userId, history}
 
             {
                 !isAuth &&
-                <Link component={NavLink} to="/login">
+                <Link component={NavLink} to="/login" className={classes.loginLink}>
                     Login
                 </Link>
             }

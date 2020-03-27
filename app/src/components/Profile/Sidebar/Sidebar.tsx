@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {PhotosType, ProfileType} from "../../../redux/reducers/types";
+import {ProfileType} from "../../../redux/reducers/types";
 import withSidebarStyles from './sidebarStyles'
 import {WithStyles, Paper, Avatar, Typography} from '@material-ui/core';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";

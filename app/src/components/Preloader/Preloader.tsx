@@ -1,6 +1,6 @@
 import React, {FC, ReactNode} from 'react';
 import styles from './preloader.module.scss';
-import preloader from "../../assets/images/preloader.gif";
+import {CircularProgress} from "@material-ui/core";
 
 type PropsType = {
     showPreloader: boolean,
@@ -12,7 +12,7 @@ const Preloader: FC<PropsType> = ({showPreloader, children}) => {
         <div className={styles.preloader}>
             {showPreloader &&
                 <div className={styles.preloader__icon}>
-                    <img src={preloader} alt=""/>
+                    <CircularProgress color="secondary"/>
                 </div>
             }
 

@@ -1,6 +1,6 @@
 import React, {useEffect, FC} from 'react';
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import {renderField} from "../../../Forms/components/FormControl";
+import {RenderField} from "../../../Forms/components/FormControl";
 import styles from "./settings-form.module.scss";
 import Preloader from "../../../Preloader/Preloader";
 import {required} from "../../../../utils/validate";
@@ -48,14 +48,14 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
             <Field
-                component={renderField}
+                component={RenderField}
                 type="text"
                 name="fullName"
                 label="Full Name: "
                 groupClasses={styles.form__group_inline}
             />
             <Field
-                component={renderField}
+                component={RenderField}
                 type="textarea"
                 name="aboutMe"
                 label="About Me: "
@@ -63,42 +63,42 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
                 validate={required}
             />
             <Field
-                component={renderField}
+                component={RenderField}
                 type="text"
                 name="facebook"
                 label="Facebook: "
                 groupClasses={styles.form__group_inline}
             />
             <Field
-                component={renderField}
+                component={RenderField}
                 type="text"
                 name="github"
                 label="Github: "
                 groupClasses={styles.form__group_inline}
             />
             <Field
-                component={renderField}
+                component={RenderField}
                 type="text"
                 name="instagram"
                 label="Instagram: "
                 groupClasses={styles.form__group_inline}
             />
             <Field
-                component={renderField}
+                component={RenderField}
                 type="text"
                 name="twitter"
                 label="Twitter: "
                 groupClasses={styles.form__group_inline}
             />
             <Field
-                component={renderField}
+                component={RenderField}
                 type="text"
                 name="vk"
                 label="Vkontakte: "
                 groupClasses={styles.form__group_inline}
             />
             <Field
-                component={renderField}
+                component={RenderField}
                 type="checkbox"
                 name="lookingForAJob"
                 label="I'm looking for a job: "
@@ -107,7 +107,7 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
                 validate={required}
             />
             <Field
-                component={renderField}
+                component={RenderField}
                 type="text"
                 name="lookingForAJobDescription"
                 label="Job description: "

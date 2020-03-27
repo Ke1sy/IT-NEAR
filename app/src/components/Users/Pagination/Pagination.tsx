@@ -1,31 +1,29 @@
 import React, {FC} from 'react';
-import styles from './pagination.module.scss';
-import ReactPaginate from 'react-paginate';
+import PaginationComponent, { usePagination } from '@material-ui/lab/Pagination';
+import {makeStyles} from "@material-ui/core";
 
 type PropsType = {
     totalPages: number,
     currentPage: number,
-    onSetCurrentPage: ({selected}: {selected: number}) => void,
+    onSetCurrentPage: (event: React.ChangeEvent<unknown>, page: number) => void
 }
 
+const useStyles = makeStyles(theme => ({
+    root: {
+     margin: '30px 0',
+        "& .Mui-selected": {
+         pointerEvents: 'none'
+        },
+
+        "& .MuiPagination-ul": {
+         justifyContent: 'center'
+        }
+    },
+}));
 const Pagination: FC<PropsType> = ({totalPages, currentPage, onSetCurrentPage}) => {
+    const classes = useStyles();
     return (
-        <div className={styles.pagination}>
-            <ReactPaginate
-                previousLabel={'previous'}
-                nextLabel={'next'}
-                breakLabel={'...'}
-                breakClassName={'break-me'}
-                pageCount={totalPages}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                forcePage={currentPage - 1}
-                onPageChange={onSetCurrentPage}
-                containerClassName={styles.pagination}
-                pageLinkClassName={styles.pagination__btn}
-                activeLinkClassName={styles.active}
-            />
-        </div>
+        <PaginationComponent count={totalPages} page={currentPage} onChange={onSetCurrentPage} color="primary" className={classes.root}/>
     )
 };
 

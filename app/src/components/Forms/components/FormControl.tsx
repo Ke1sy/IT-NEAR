@@ -1,6 +1,6 @@
 import React, {FC} from "react";
-import styles from './form.module.scss';
-import { WrappedFieldProps } from "redux-form/lib/Field";
+import {WrappedFieldProps} from "redux-form/lib/Field";
+import {TextField, TextFieldProps, FormHelperText, makeStyles} from "@material-ui/core";
 
 const inputTypes = [
     'text',
@@ -9,29 +9,44 @@ const inputTypes = [
     'password'
 ];
 
+const useStyles = makeStyles(theme => ({
+    textInput: {
+        marginBottom: 20,
+        '& .MuiFormHelperText-root': {
+            fontSize: 10,
+            position: 'absolute',
+            bottom: 0,
+            transform: 'translateY(100%)',
+        }
+    }
+}));
+
 type OwnPropsType = {
     groupClasses?: string
     label?: string,
     type: string,
     rest?: any
 };
-type PropsType = WrappedFieldProps & OwnPropsType;
+type PropsType = WrappedFieldProps & OwnPropsType & TextFieldProps;
 
-export const renderField:FC<PropsType> = ({input, groupClasses, label, type, meta: {touched, error}, ...rest}) => {
+export const RenderField: FC<PropsType> = ({input, groupClasses, label, type, meta: {touched, error}, ...rest}) => {
+    const classes = useStyles();
+
     return (
-        <div
-            className={touched && error ? `${styles.form__group} ${styles.error} ${groupClasses}` : `${styles.form__group} ${groupClasses}`}>
-            {label &&
-            <label className={styles.form__label} htmlFor={input.name}>{label}</label>
-            }
-
+        <>
             {inputTypes.includes(type) &&
-            <input {...input} {...rest} type={type} className={styles.form__input}/>
+            <TextField
+                error={touched && error}
+                helperText={touched && error ? error : ''}
+                label={label}
+                {...input}
+                {...rest}
+                type={type}
+                fullWidth={true}
+                className={classes.textInput}
+                multiline={type === 'textarea'}
+            />
             }
-            {type === 'textarea' &&
-            <textarea {...input} {...rest} className={styles.form__textarea}/>
-            }
-            {touched && (error && <span className={styles.error__text}>{error}</span>)}
-        </div>
+        </>
     )
 };

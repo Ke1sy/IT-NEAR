@@ -61,7 +61,8 @@ const useStyles = makeStyles((theme) => ({
         rightColumn: {
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'flex-end'
+            justifyContent: 'flex-end',
+            height: '100%'
         },
         avatar: {
             display: 'flex',

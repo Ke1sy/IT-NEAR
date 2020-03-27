@@ -74,7 +74,6 @@ class App extends React.Component<PropsType> {
                             <Route path="*" component={withSuspense(NotFound)}/>
                         </Switch>
                 </Container>
-                {/*<Footer/>*/}
             </>
         );
     }

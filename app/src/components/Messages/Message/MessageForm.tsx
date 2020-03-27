@@ -1,6 +1,6 @@
 import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import React, {FC} from "react";
-import {renderField} from "../../Forms/components/FormControl";
+import {RenderField} from "../../Forms/components/FormControl";
 import styles from './messages-form.module.scss';
 
 type FormDataType = {
@@ -13,7 +13,7 @@ const MessageForm: FC<InjectedFormProps<FormDataType>> = ({handleSubmit, submitt
             <Field
                 name="message"
                 type="textarea"
-                component={renderField}
+                component={RenderField}
                 placeholder="Type message..."
                 required={true}
                 groupClasses={styles.textarea}

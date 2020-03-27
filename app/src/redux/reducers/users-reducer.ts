@@ -16,7 +16,7 @@ const SET_SEARCH_TEXT = 'users/SET_SEARCH_TEXT';
 
 const initialState = {
     users: [] as Array<UserType>,
-    pageSize: 5 as number,
+    pageSize: 12 as number,
     totalUsersCount: 20 as number,
     currentPage: 1 as number,
     isLoading: true,

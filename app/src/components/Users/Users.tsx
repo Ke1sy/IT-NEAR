@@ -1,9 +1,10 @@
 import React, {FC} from 'react';
-import styles from './users.module.scss';
 import User from "./User/User";
 import Pagination from "./Pagination/Pagination";
 import SearchContainer from "./Search/SearchContainer";
 import {UserType} from "../../redux/reducers/types";
+import {Grid, Typography} from "@material-ui/core";
+import Preloader from "../Preloader/Preloader";
 
 type PropsType = {
     users: Array<UserType>,
@@ -12,33 +13,56 @@ type PropsType = {
     currentPage: number,
     followInProgress: Array<number>,
     history: any,
-
     follow: (id: number) => void,
     unfollow: (id: number) => void,
-    onSetCurrentPage: ({selected}: {selected: number}) => void,
+    onSetCurrentPage: (event: React.ChangeEvent<unknown>, page: number) => void
     startChat: (userId: number, history: any) => void,
-    onChangeSearchText: ({searchText}: {searchText: string}) => void
+    onChangeSearchText: ({searchText}: { searchText: string }) => void,
+    onResetSearch: () => void,
+    isLoading: boolean
 }
 
-const Users: FC<PropsType> = ({users, pageSize, totalUsersCount, currentPage, follow, unfollow, onSetCurrentPage, followInProgress, startChat, history, onChangeSearchText}) => {
+const Users: FC<PropsType> = ({
+                                  users,
+                                  pageSize,
+                                  totalUsersCount,
+                                  currentPage,
+                                  follow,
+                                  onResetSearch,
+                                  unfollow,
+                                  onSetCurrentPage,
+                                  followInProgress,
+                                  startChat,
+                                  history,
+                                  onChangeSearchText,
+                                  isLoading
+                              }) => {
     const totalPages = Math.ceil(totalUsersCount / pageSize);
-    const userItems = users.map((user: UserType) =>
-        <User
-            key={user.id}
-            user={user}
-            follow={follow}
-            unfollow={unfollow}
-            followInProgress={followInProgress}
-            startChat={startChat}
-            history={history}
-        />
-    );
 
     return (
-        <div className={styles.users}>
-            <h3>Users</h3>
-            <SearchContainer onChangeSearchText={onChangeSearchText}/>
-            {userItems}
+        <div>
+            <Typography gutterBottom variant="h3" style={{paddingTop: 30, textAlign: 'center'}}>
+                Users
+            </Typography>
+            <SearchContainer onChangeSearchText={onChangeSearchText} onResetSearch={onResetSearch}/>
+            <Preloader showPreloader={isLoading}>
+
+            <Grid container spacing={3}>
+                    {users.map((user: UserType) =>
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                            <User
+                                key={user.id}
+                                user={user}
+                                follow={follow}
+                                unfollow={unfollow}
+                                followInProgress={followInProgress}
+                                startChat={startChat}
+                                history={history}
+                            />
+                        </Grid>
+                    )}
+                </Grid>
+            </Preloader>
             <Pagination totalPages={totalPages} currentPage={Number(currentPage)} onSetCurrentPage={onSetCurrentPage}/>
         </div>
     )

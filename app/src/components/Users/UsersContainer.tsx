@@ -65,14 +65,17 @@ class UsersContainer extends Component<PropsType> {
         this.props.history.replace(this.stringifyParams(undefined, searchText));
     };
 
-    onSetCurrentPage = ({selected}: { selected: number }) => {
-        this.props.history.replace(this.stringifyParams(selected + 1, this.props.searchQuery));
+    onResetSearch = () => {
+        this.props.history.replace(this.stringifyParams(undefined, ''));
+    };
+
+    onSetCurrentPage = (e: React.ChangeEvent<unknown>, value: number) => {
+        this.props.history.replace(this.stringifyParams(value, this.props.searchQuery));
     };
 
     render() {
         const {users, pageSize, totalUsersCount, currentPage, isLoading, followInProgress, follow, unfollow, startChat, history} = this.props;
         return (
-            <Preloader showPreloader={isLoading}>
                 <Users
                     follow={follow}
                     unfollow={unfollow}
@@ -85,8 +88,9 @@ class UsersContainer extends Component<PropsType> {
                     startChat={startChat}
                     history={history}
                     onChangeSearchText={this.onChangeSearchText}
+                    onResetSearch={this.onResetSearch}
+                    isLoading={isLoading}
                 />
-            </Preloader>
         )
     }
 }
