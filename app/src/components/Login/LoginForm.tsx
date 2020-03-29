@@ -4,7 +4,10 @@ import {RenderField} from "../Forms/components/FormControl";
 import {required, email, minLength} from "../../utils/validate";
 import styles from './login-form.module.scss';
 import {LoginFormDataPropsType} from "../../redux/reducers/types";
-
+import {Button} from "@material-ui/core";
+import InputIcon from '@material-ui/icons/Input';
+import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
+import {Alert} from "@material-ui/lab";
 const minLength5 = minLength(5);
 
 type OwnPropsType = {
@@ -29,8 +32,9 @@ const LoginForm: FC<PropsType> = (
                 component={RenderField}
                 type="email"
                 name="email"
-                label="Email:"
+                label="Email"
                 required={true}
+                variant="outlined"
                 validate={[required, email]}
             />
             <Field
@@ -39,38 +43,56 @@ const LoginForm: FC<PropsType> = (
                 name="password"
                 label="Password:"
                 required={true}
+                variant="outlined"
                 validate={[required, minLength5]}
             />
 
             <Field
-                groupClasses={styles.form__group_inline}
                 name="rememberMe"
                 id="rememberMe"
                 component={RenderField}
                 type="checkbox"
-                label={"Remember me"}
+                label="Remember me"
             />
 
             {captchaUrl &&
-            <>
+            <div className={styles.captcha}>
                 <img src={captchaUrl} alt=""/>
                 <Field
                     name="captcha"
                     component={RenderField}
                     type="text"
-                    label={"Type the symbols from image above: "}
+                    variant="outlined"
+                    label="Captcha"
                     validate={[required]}
                 />
-            </>
-            }
-            {error && <div className={styles.form__error}>{error}</div>}
-
-            <div className={styles.form__btns}>
-                <button type="submit" disabled={pristine || submitting}>Submit</button>
-                <button type="button" disabled={pristine || submitting} onClick={reset}>
-                    Clear Values
-                </button>
             </div>
+            }
+            <div className={styles.form__btns}>
+                <Button
+                    type="submit"
+                    disabled={pristine || submitting}
+                    variant="contained"
+                    color="primary"
+                    startIcon={<InputIcon/>}
+                >
+                    Submit
+                </Button>
+                <Button
+                    type="button"
+                    disabled={pristine || submitting}
+                    onClick={reset}
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<CancelOutlinedIcon/>}
+                >
+                    Clear
+                </Button>
+            </div>
+
+            {error &&
+            <Alert severity="error" className={styles.error}>{error}</Alert>
+            }
         </form>
     )
 };

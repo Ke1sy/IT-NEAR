@@ -3,7 +3,7 @@ import {requestNewMessagesCount, SetNewMessagesCountActionType} from "./dialogs-
 import {stopSubmit} from "redux-form";
 import {ThunkAction} from "redux-thunk";
 import {AppStateType} from "../redux-store";
-import {PhotosType, ProfileType} from "./types";
+import {ProfileType} from "./types";
 import {getUserProfile} from "./profile-reducer";
 
 const SET_USER_DATA = 'auth/SET_USER_DATA';

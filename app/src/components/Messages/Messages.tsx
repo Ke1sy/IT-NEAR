@@ -3,6 +3,7 @@ import styles from './messages.module.scss';
 import Dialog from "./Dialogs/Dialog";
 import MessagesChat from "./MessagesChat";
 import {DialogsType, MessagesType} from "../../redux/reducers/types";
+import {Paper, List, ListItem, ListItemAvatar, Avatar, ListItemText, makeStyles, Theme} from "@material-ui/core";
 
 type MapStatePropsType = {
     dialogs: Array<DialogsType>
@@ -25,6 +26,17 @@ type MapDispatchPropsType = {
 type RoutePropsType = {
     match: any
 }
+const useStyles = makeStyles((theme: Theme) =>
+    ({
+        root: {
+            width: '27%',
+            borderRight: '1px solid #eeeeee',
+            backgroundColor: theme.palette.background.paper,
+            overflow: 'auto',
+            maxHeight: '100%',
+        },
+    }),
+);
 
 type PropsType = MapStatePropsType & MapDispatchPropsType & RoutePropsType;
 
@@ -43,25 +55,24 @@ const Messages: FC<PropsType> = ({
                                      restoreMessage,
                                      spamedMessages
                                  }) => {
+    const classes = useStyles();
     let friendId = match.params.id;
 
     useEffect(() => {
         getDialogs()
     }, []);
 
-    let dialogsElems = dialogs.map(user =>
-        <Dialog
-            key={user.id}
-            user={user}
-        />
-    );
-
     return (
-        <>
-            <div className={styles.content}>
-                <div className={styles.dialogs}>
-                    {dialogsElems}
-                </div>
+        <Paper className={styles.content}>
+            <List className={classes.root} component="div">
+                {dialogs.map(user =>
+                    <Dialog
+                        key={user.id}
+                        user={user}
+                    />
+                )
+                }
+            </List>
                 {friendId && <MessagesChat
                     deletedMessages={deletedMessages}
                     spamedMessages={spamedMessages}
@@ -75,10 +86,7 @@ const Messages: FC<PropsType> = ({
                     lastUserActivityDate={lastUserActivityDate}
                     restoreMessage={restoreMessage}
                 />}
-
-            </div>
-        </>
-
+        </Paper>
     )
 };
 

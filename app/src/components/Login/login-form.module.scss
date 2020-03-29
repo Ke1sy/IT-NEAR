@@ -15,17 +15,27 @@
 
   &__btns {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 
     button {
-      font-size: 14px;
-      width: 40%;
+      width: 48%;
     }
   }
+}
 
-  &__error {
-    color: red;
-    font-size: 12px;
-    margin-bottom: 20px;
+.captcha {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0 20px;
+  align-items: center;
+
+  & > * {
+    width: 48%;
+    margin-bottom: 0;
+
   }
+}
+
+.error {
+  margin-top: 20px;
 }

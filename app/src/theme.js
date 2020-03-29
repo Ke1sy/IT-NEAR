@@ -14,8 +14,8 @@ export default createMuiTheme({
     palette: {
         type: 'light',
         primary: {
+            // main: '#3f5377'
             main: '#3d4977'
-            // main: '#3f51b5'
         },
         secondary: {
             // main: '#5383ff',
@@ -25,7 +25,7 @@ export default createMuiTheme({
         success: {
             main: '#00B294',
         },
-        background: '#f2f2f2',
+        background: '#f5f5f5',
         error: {
             main: '#E81123'
         },

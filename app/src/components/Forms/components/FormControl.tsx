@@ -1,11 +1,10 @@
 import React, {FC} from "react";
 import {WrappedFieldProps} from "redux-form/lib/Field";
-import {TextField, TextFieldProps, FormHelperText, makeStyles} from "@material-ui/core";
+import {TextField, TextFieldProps, FormHelperText, makeStyles, Checkbox, FormControlLabel} from "@material-ui/core";
 
 const inputTypes = [
     'text',
     'email',
-    'checkbox',
     'password'
 ];
 
@@ -22,14 +21,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 type OwnPropsType = {
-    groupClasses?: string
     label?: string,
     type: string,
     rest?: any
 };
 type PropsType = WrappedFieldProps & OwnPropsType & TextFieldProps;
 
-export const RenderField: FC<PropsType> = ({input, groupClasses, label, type, meta: {touched, error}, ...rest}) => {
+export const RenderField: FC<PropsType> = ({input, label, type, meta: {touched, error}, ...rest}) => {
     const classes = useStyles();
 
     return (
@@ -45,6 +43,17 @@ export const RenderField: FC<PropsType> = ({input, groupClasses, label, type, me
                 fullWidth={true}
                 className={classes.textInput}
                 multiline={type === 'textarea'}
+            />
+            }
+            {type === 'checkbox' &&
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={!!input.value}
+                        onChange={input.onChange}
+                    />
+                }
+                label={label}
             />
             }
         </>

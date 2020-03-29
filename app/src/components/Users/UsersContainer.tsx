@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import Users from "./Users";
-import Preloader from "../Preloader/Preloader";
 import {
     getCurrentPage,
     getFollowInProgress,

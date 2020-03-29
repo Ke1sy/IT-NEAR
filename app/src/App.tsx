@@ -4,13 +4,11 @@ import {connect} from "react-redux";
 import {compose} from "redux";
 import {appInitialize} from "./redux/reducers/app-reducer";
 import Preloader from "./components/Preloader/Preloader";
-import Footer from "./components/Footer/Footer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import withSuspense from "./components/HOC/Suspense";
 import {getAppInited} from "./redux/reducers/app-selectors";
 import {AppStateType} from "./redux/redux-store";
 import {createStyles, StyleRules, Theme, WithStyles, withStyles, CssBaseline, Container} from "@material-ui/core";
-import PostsContainer from "./components/Profile/Posts/PostsContainer";
 
 const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
