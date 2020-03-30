@@ -1,6 +1,6 @@
 import {reset} from "redux-form";
-import {dialogsAPI, ResultCodes} from "../../api/api";
-import {DialogsType, MessagesType} from "./types";
+import {dialogsAPI, profileAPI, ResultCodes} from "../../api/api";
+import {DialogsType, MessagesType, ProfileType} from "./types";
 import { ThunkAction } from 'redux-thunk'
 import {AppStateType} from "../redux-store";
 
@@ -12,6 +12,8 @@ const ADD_MESSAGE = 'dialogs/ADD_MESSAGE';
 const DELETE_MESSAGE = 'dialogs/DELETE_MESSAGE';
 const RESTORE_MESSAGE = 'dialogs/RESTORE_MESSAGE';
 const SPAM_MESSAGE = 'dialogs/SPAM_MESSAGE';
+const SET_SELECTED_FRIEND = 'dialogs/SET_SELECTED_FRIEND';
+const SET_MESSAGES_LOADING = 'dialogs/SET_MESSAGES_LOADING';
 
 const initialState = {
     dialogs: [] as Array<DialogsType>,
@@ -20,6 +22,8 @@ const initialState = {
     lastUserActivityDate: null as string | null,
     deletedMessages: [] as Array<string>,
     spamedMessages: [] as Array<string>,
+    selectedFriend: null as ProfileType | null,
+    messagesLoading: false
 };
 
 export type InitialStateType = typeof initialState;
@@ -28,12 +32,16 @@ const dialogsReducer = (
     state = initialState,
     action: any
 ): InitialStateType => {
-    const {type, messages, dialogs, count, userId, message, messageId} = action;
+    const {type, messages, dialogs, count, userId, message, messageId, selectedFriend, messagesLoading} = action;
     switch (type) {
         case SET_DIALOGS:
             return {...state, dialogs};
         case SET_MESSAGES:
             return {...state, messages};
+        case SET_MESSAGES_LOADING:
+            return {...state, messagesLoading};
+        case SET_SELECTED_FRIEND:
+            return {...state, selectedFriend};
         case ADD_MESSAGE:
             return {...state, messages: [...state.messages, message]};
         case DELETE_MESSAGE:
@@ -60,16 +68,28 @@ const dialogsReducer = (
     }
 };
 
+type SetMessagesLoadingActionType = {
+    type: typeof SET_MESSAGES_LOADING,
+    messagesLoading: boolean
+};
+export const setMessagesLoading = (messagesLoading: boolean): SetMessagesLoadingActionType => ({type: SET_MESSAGES_LOADING, messagesLoading});
+
 type SetDialogsActionType = {
     type: typeof SET_DIALOGS,
     dialogs: Array<DialogsType>
 };
 export const setDialogs = (dialogs: Array<DialogsType>): SetDialogsActionType => ({type: SET_DIALOGS, dialogs});
 
+export const setSelectedFriend = (selectedFriend: ProfileType) => ({
+    type: SET_SELECTED_FRIEND,
+    selectedFriend
+});
+
 type SetMessagesActionType = {
     type: typeof SET_MESSAGES,
     messages: Array<MessagesType>
 }
+
 export const setMessages = (messages: Array<MessagesType>): SetMessagesActionType => ({type: SET_MESSAGES, messages});
 
 type SetActivityDateActionType = {
@@ -128,6 +148,7 @@ type ActionsTypes =
     | AddMessageToDeletedActionType
     | AddMessageToSpamActionType
     | RestoreFromSpamDeletedActionType
+    | SetMessagesLoadingActionType
     | FormResetType;
 type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>
 
@@ -152,11 +173,16 @@ export const sendMessage = (userId: number, message: string): ThunkType => async
 };
 
 export const getMessages = (userId: number): ThunkType => async (dispatch) => {
+    dispatch(setMessagesLoading(true));
     const {error, items} = await dialogsAPI.getMessages(userId);
+    const data = await profileAPI.getProfile(userId);
     if (!error) {
         dispatch(setMessages(items));
         dispatch(setActivityDate(userId));
+        dispatch(setSelectedFriend(data));
     }
+    dispatch(setMessagesLoading(false));
+
 };
 
 export const deleteMessage = (messageId: string): ThunkType => async (dispatch) => {

@@ -15,7 +15,6 @@ const styles = createStyles((theme: Theme) => ({
         alignItems: 'center'
     },
     menuItemTxt: {
-        fontSize: '0.8rem',
         lineHeight: 1
     },
     menuItem: {

@@ -2,7 +2,8 @@ import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import React, {FC} from "react";
 import {RenderField} from "../../Forms/components/FormControl";
 import styles from './messages-form.module.scss';
-
+import Button from "@material-ui/core/Button";
+import SendIcon from '@material-ui/icons/Send';
 type FormDataType = {
     message: string
 };
@@ -16,12 +17,19 @@ const MessageForm: FC<InjectedFormProps<FormDataType>> = ({handleSubmit, submitt
                 component={RenderField}
                 placeholder="Type message..."
                 required={true}
-                groupClasses={styles.textarea}
+                classes={{
+                        root: styles.root,
+                    }}
+                InputProps={{
+                    className: styles.textarea
+                }}
+                variant="outlined"
+                rowsMax="2"
             />
 
-            <button type="submit" disabled={submitting} className={styles.button}>
-                Send
-            </button>
+            <Button type="submit" disabled={submitting} className={styles.button} color="primary" variant="contained">
+                <SendIcon/>
+            </Button>
         </form>
     )
 };

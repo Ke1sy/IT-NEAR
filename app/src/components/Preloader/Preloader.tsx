@@ -7,7 +7,10 @@ type PropsType = {
     children?: ReactNode
 }
 
-const Preloader: FC<PropsType> = ({showPreloader, children}) => {
+const Preloader: FC<PropsType> = ({showPreloader}) => {
+    if (!showPreloader) {
+        return null
+    }
     return (
         <div className={styles.preloader}>
             {showPreloader &&
@@ -15,8 +18,6 @@ const Preloader: FC<PropsType> = ({showPreloader, children}) => {
                     <CircularProgress color="secondary"/>
                 </div>
             }
-
-            {children && children}
         </div>
     )
 };

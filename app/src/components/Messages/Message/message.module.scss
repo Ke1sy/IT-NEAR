@@ -1,15 +1,27 @@
 .message {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   font-size: 16px;
-  color: #ffffff;
   font-weight: 400;
   position: relative;
   max-width: 80%;
+  display: flex;
+  align-items: flex-end;
 }
 
 .messageSended {
   align-self: flex-end;
   padding-left: 22px;
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  .messageSended & {
+    margin-left: 10px;
+  }
+
+  .messageRecieved & {
+    margin-right: 10px;
+  }
 }
 
 .messageRecieved {
@@ -18,17 +30,19 @@
 
 
 .messageItem {
+  font-size: 0.9rem;
   padding: 9px 15px;
   border-radius: 10px;
 
   .messageSended & {
-    background: #5F658B;
-    border-top-right-radius: 0;
+    background: #3d4977;
+    color: #fff;
+    border-bottom-right-radius: 0;
   }
 
   .messageRecieved & {
-    background: rgba(#646772, 0.8);
-    border-top-left-radius: 0;
+    background: #efefef;
+    border-bottom-left-radius: 0;
   }
 
   .messageInactive & {
@@ -44,11 +58,12 @@
   height: 12px;
 
   .messageRecieved & {
-      left: 5px;
+      left: 55px;
+      filter: invert(0.5);
   }
 
   .messageSended & {
-      right: 5px;
+      right: 55px;
   }
 
   .messageInactive & {
@@ -57,14 +72,15 @@
 }
 
 .messageIcon {
-  max-width: 15px;
-  max-height: 15px;
+  max-width: 17px;
+  max-height: 17px;
   opacity: 0.5;
 }
 
 .delete,
 .spam,
 .restore {
+  cursor: pointer;
   width: 20px;
   height: 20px;
   position: absolute;
@@ -106,16 +122,17 @@
 
 .date {
   position: absolute;
-  bottom: -11px;
-  font-size: 9px;
-  color: #5F658B;
+  bottom: -20px;
+  font-size: 12px;
+  color: #b2b2b2;
   letter-spacing: -0.4px;
+  white-space: nowrap;
 
   .messageRecieved &  {
-    right: 30px;
+    left: 50px;
   }
 
   .messageSended &  {
-    left: 30px;
+    right: 50px;
   }
 }

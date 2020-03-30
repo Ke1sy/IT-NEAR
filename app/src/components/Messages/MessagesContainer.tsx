@@ -1,3 +1,4 @@
+import React, {FC, useEffect} from "react";
 import {
     sendMessage,
     getDialogs,
@@ -10,25 +11,28 @@ import {
     getDeletedMessages,
     getDialogsList,
     getLastUserActivityDate,
-    getMessagesList,
-    getSpamedMessages
+    getMessagesList, getSelectedFriend,
+    getSpamedMessages,
+    getMessagesLoading
 } from "../../redux/reducers/dialogs-selectors";
-import {getCurrentUserId} from "../../redux/reducers/auth-selectors";
+import {getCurrentUserInfo} from "../../redux/reducers/auth-selectors";
 
-import Messages from "./Messages";
 import {connect} from "react-redux";
 import {withAuthRedirect} from '../Redirects/AuthRedirect'
 import {compose} from "redux";
 import {AppStateType} from "../../redux/redux-store";
-import {DialogsType, MessagesType} from "../../redux/reducers/types";
+import {DialogsType, MessagesType, ProfileType} from "../../redux/reducers/types";
+import Messages from "./Messages";
 
 type MapStatePropsType = {
     dialogs: Array<DialogsType>
     messages: Array<MessagesType>
-    userId: number | null
     lastUserActivityDate: string | null
     deletedMessages: Array<string>
-    spamedMessages: Array<string>
+    spamedMessages: Array<string>,
+    selectedFriend: ProfileType | null,
+    currentUserInfo: ProfileType | null,
+    messagesLoading: boolean
 }
 
 type MapDispatchPropsType = {
@@ -40,19 +44,38 @@ type MapDispatchPropsType = {
     restoreMessage: (messageId: string) => void
 }
 
+type RouteProps = {
+    match: any
+};
+
+type PropsType = MapStatePropsType & MapDispatchPropsType & RouteProps;
+
+const MessagesContainer:FC<PropsType> = ({getDialogs, match, ...props}) => {
+    let friendId = match.params.id;
+
+    useEffect(() => {
+        getDialogs()
+    }, []);
+
+    return <Messages {...props} friendId={friendId}/>
+};
+
+
 const mapStateToProps = (state: AppStateType) => {
     return {
         messages: getMessagesList(state),
         dialogs: getDialogsList(state),
-        userId: getCurrentUserId(state),
         lastUserActivityDate: getLastUserActivityDate(state),
         deletedMessages: getDeletedMessages(state),
-        spamedMessages: getSpamedMessages(state)
+        spamedMessages: getSpamedMessages(state),
+        selectedFriend: getSelectedFriend(state),
+        currentUserInfo: getCurrentUserInfo(state),
+        messagesLoading: getMessagesLoading(state)
     }
 };
 
-const MessagesContainer = compose(
-    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {
+export default compose(
+    connect<MapStatePropsType, MapDispatchPropsType, RouteProps, AppStateType>(mapStateToProps, {
         sendMessage,
         getDialogs,
         getMessages,
@@ -61,7 +84,4 @@ const MessagesContainer = compose(
         restoreMessage
     }),
     withAuthRedirect
-)(Messages);
-
-
-export default MessagesContainer as React.ComponentType<any>;
+)(MessagesContainer) as React.ComponentType<any>;

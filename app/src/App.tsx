@@ -29,7 +29,9 @@ const styles = (theme: Theme): StyleRules => createStyles({
         display: 'flex',
     },
     content: {
-        flexGrow: 1
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column'
     },
 
     toolbar: theme.mixins.toolbar,
@@ -55,7 +57,7 @@ class App extends React.Component<PropsType> {
     render() {
         const { classes } = this.props;
         if (!this.props.inited) {
-            return <Preloader showPreloader={true}/>
+            return <Preloader showPreloader={!this.props.inited}/>
         }
         return (
             <>

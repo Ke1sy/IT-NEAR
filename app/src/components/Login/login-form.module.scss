@@ -19,6 +19,7 @@
 
     button {
       width: 48%;
+      padding: 14px 10px;
     }
   }
 }
@@ -26,7 +27,7 @@
 .captcha {
   display: flex;
   justify-content: space-between;
-  margin: 10px 0 20px;
+  margin-bottom: 30px;
   align-items: center;
 
   & > * {

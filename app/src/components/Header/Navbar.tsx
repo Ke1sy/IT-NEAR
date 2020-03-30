@@ -9,7 +9,8 @@ import {
     makeStyles,
     Link,
     IconButton,
-    Tooltip
+    Tooltip,
+    Badge
 } from "@material-ui/core";
 import MailIcon from '@material-ui/icons/Mail';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
@@ -20,17 +21,17 @@ const LINKS = [
         id: 1,
         text: 'Profile',
         url: '/profile',
-        icon: <HomeIcon fontSize="small"/>
+        icon: <HomeIcon/>
     }, {
         id: 2,
         text: 'Dialogs',
         url: '/dialogs',
-        icon: <MailIcon fontSize="small"/>
+        icon: <MailIcon/>
     }, {
         id: 3,
         text: 'Users',
         url: '/users',
-        icon: <PeopleAltIcon fontSize="small"/>
+        icon: <PeopleAltIcon/>
     }
 ];
 
@@ -70,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 const Navbar: FC<PropsType> = ({newMessagesCount}) => {
     const classes = useStyles();
 
-    let notNull = newMessagesCount !== null && newMessagesCount > 0;
+    let areNewMessages = newMessagesCount && newMessagesCount > 0;
 
     return (
         <List className={classes.list}>
@@ -80,11 +81,15 @@ const Navbar: FC<PropsType> = ({newMessagesCount}) => {
                           underline="none" color="textSecondary">
                         <Tooltip title={text} aria-label={text}>
                             <IconButton aria-label={text} className={classes.icon}>
-                                {icon}
+                                {url === '/dialogs' && areNewMessages ?
+                                <Badge badgeContent={newMessagesCount} max={99} color="secondary">
+                                    {icon}
+                                </Badge> : icon
+                                }
                             </IconButton>
                         </Tooltip>
                         {/*todo count for new messages*/}
-                        {url === '/dialogs' && notNull && <span> ({newMessagesCount})</span>}
+
                     </Link>
                 </ListItem>
             ))}

@@ -101,7 +101,6 @@ export const setCurrentUserInfo = (currentUserInfo: ProfileType | null)  => ({
     currentUserInfo
 });
 
-
 export const login = (email: string, password: string, rememberMe: boolean, captcha: string | null): ThunkType => async (dispatch) => {
     const {resultCode, messages} = await authAPI.login(email, password, rememberMe, captcha);
     if (resultCode === ResultCodes.Success) {

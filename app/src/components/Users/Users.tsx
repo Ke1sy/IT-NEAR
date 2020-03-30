@@ -44,10 +44,10 @@ const Users: FC<PropsType> = ({
             <Typography gutterBottom variant="h3" style={{paddingTop: 30, textAlign: 'center'}}>
                 Users
             </Typography>
-            <SearchContainer onChangeSearchText={onChangeSearchText} onResetSearch={onResetSearch}/>
-            <Preloader showPreloader={isLoading}>
-
-            <Grid container spacing={3}>
+            <div style={{position: 'relative'}}>
+                <Preloader showPreloader={isLoading}/>
+                <SearchContainer onChangeSearchText={onChangeSearchText} onResetSearch={onResetSearch}/>
+                <Grid container spacing={3}>
                     {users.map((user: UserType) =>
                         <Grid item xs={12} sm={6} md={4} lg={3}>
                             <User
@@ -62,7 +62,7 @@ const Users: FC<PropsType> = ({
                         </Grid>
                     )}
                 </Grid>
-            </Preloader>
+            </div>
             <Pagination totalPages={totalPages} currentPage={Number(currentPage)} onSetCurrentPage={onSetCurrentPage}/>
         </div>
     )
