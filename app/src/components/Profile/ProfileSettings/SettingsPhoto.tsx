@@ -1,7 +1,7 @@
 import React, {useEffect, useState, FC, FormEvent, ChangeEvent} from 'react';
 import styles from './settings-photo.module.scss';
-import userPlaceholder from "../../../../assets/images/user-placeholder.png";
-import {ProfileType} from "../../../../redux/reducers/types";
+import userPlaceholder from "../../../assets/images/user-placeholder.png";
+import {ProfileType} from "../../../redux/reducers/types";
 
 type PropsType = {
     profile: ProfileType

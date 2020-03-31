@@ -65,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
                 backgroundColor: theme.palette.primary.light
             }
         },
+        tooltip: {
+            backgroundColor: theme.palette.primary.light,
+        },
     })
 );
 
@@ -79,7 +82,7 @@ const Navbar: FC<PropsType> = ({newMessagesCount}) => {
                 <ListItem key={id} className={classes.listItem}>
                     <Link component={NavLink} to={url} activeClassName={classes.activeLink} className={classes.link}
                           underline="none" color="textSecondary">
-                        <Tooltip title={text} aria-label={text}>
+                        <Tooltip title={text} aria-label={text} classes={{tooltip: classes.tooltip}}>
                             <IconButton aria-label={text} className={classes.icon}>
                                 {url === '/dialogs' && areNewMessages ?
                                 <Badge badgeContent={newMessagesCount} max={99} color="secondary">

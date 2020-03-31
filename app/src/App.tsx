@@ -16,6 +16,7 @@ const LoginContainer = React.lazy(() => import(/* webpackChunkName: "LoginContai
 const UsersContainer = React.lazy(() => import(/* webpackChunkName: "UsersContainer" */"./components/Users/UsersContainer"));
 const NotFound = React.lazy(() => import(/* webpackChunkName: "Music" */"./components/NotFound/NotFound"));
 
+
 type MapStatePropsType = {
     inited: boolean
 }
@@ -68,6 +69,7 @@ class App extends React.Component<PropsType> {
                         <Switch>
                             <Route exact path='/' render={() => <Redirect to={"/profile"}/>}/>
                             <Route path="/profile/:id?" component={withSuspense(ProfileContainer)}/>
+                            <Route path="/settings" component={withSuspense(ProfileContainer)}/>
                             <Route path="/dialogs/:id?" component={withSuspense(MessagesContainer)}/>
                             <Route path="/login" component={withSuspense(LoginContainer)}/>
                             <Route path="/users" component={withSuspense(UsersContainer)}/>

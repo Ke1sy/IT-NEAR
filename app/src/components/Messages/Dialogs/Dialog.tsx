@@ -8,7 +8,7 @@ import {Avatar, Button, List, ListItem, ListItemAvatar, ListItemText} from "@mat
 type PropsType = {
     user: DialogsType
 }
-
+//todo change UserName for FullName
 const Dialog: FC<PropsType> = ({user: {id, userName, photos, hasNewMessages, newMessagesCount, lastDialogActivityDate}}) => {
     const lastMessageDate = new Date(lastDialogActivityDate).toLocaleDateString();
 
@@ -19,7 +19,7 @@ const Dialog: FC<PropsType> = ({user: {id, userName, photos, hasNewMessages, new
             <ListItemAvatar>
                 <Avatar src={userAvatar} alt={userName} sizes="40"/>
             </ListItemAvatar>
-            <ListItemText primary={userName} secondary={lastMessageDate} primaryTypographyProps={{noWrap: true}} classes={{
+            <ListItemText primary={'@' + userName} secondary={lastMessageDate} primaryTypographyProps={{noWrap: true}} classes={{
                 secondary: styles.date
             }}/>
             {hasNewMessages && <span className={styles.newMessages}> {newMessagesCount > 99 ? '99+' : newMessagesCount}</span>}

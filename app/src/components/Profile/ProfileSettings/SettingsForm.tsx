@@ -1,10 +1,10 @@
 import React, {useEffect, FC} from 'react';
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import {RenderField} from "../../../Forms/components/FormControl";
 import styles from "./settings-form.module.scss";
-import Preloader from "../../../Preloader/Preloader";
-import {required} from "../../../../utils/validate";
-import {ProfileType, UpdatedProfileType} from "../../../../redux/reducers/types";
+import Preloader from "../../Preloader/Preloader";
+import {required} from "../../../utils/validate";
+import { RenderField } from '../../Forms/components/FormControl';
+import {ProfileType, UpdatedProfileType} from "../../../redux/reducers/types";
 
 type OwnPropsType = {
     profile: ProfileType,
@@ -104,7 +104,6 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
                 label="I'm looking for a job: "
                 id="lookingForAJob"
                 groupClasses={`${styles.form__group_inline} ${styles.form__group_checkbox}`}
-                validate={required}
             />
             <Field
                 component={RenderField}

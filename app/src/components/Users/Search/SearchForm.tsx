@@ -9,7 +9,7 @@ const minLength3 = minLength(3);
 
 const useStyles = makeStyles(theme => ({
     root: {
-        margin: '15px 0',
+        margin: '15px 0 40px',
         padding: '2px 20px',
         display: 'flex',
         alignItems: 'center',
@@ -27,16 +27,6 @@ const useStyles = makeStyles(theme => ({
         padding: 10,
         color: theme.palette.primary.main
     },
-    resetBtn: {
-        position: 'absolute',
-        right: 15,
-        cursor: 'pointer',
-        opacity: 0.5,
-
-        '&:hover': {
-            opacity: 1
-        }
-    }
 }));
 
 type FormDataType = {
@@ -49,7 +39,7 @@ type OwnPropsType = {
 
 type PropsType = InjectedFormProps<FormDataType> & OwnPropsType;
 
-const SearchForm: FC<PropsType> = ({handleSubmit, submitting, reset, onResetSearch}) => {
+const SearchForm: FC<PropsType> = ({handleSubmit, submitting}) => {
     const classes = useStyles();
 
     return (
@@ -59,14 +49,13 @@ const SearchForm: FC<PropsType> = ({handleSubmit, submitting, reset, onResetSear
             </IconButton>
             <Field
                 name="searchText"
-                type="text"
+                type="search"
                 label="Search"
                 component={RenderField}
                 autocomplete="off"
                 placeholder="Type search request..."
                 validate={[required, minLength3]}
             />
-            <ClearIcon color="secondary" onClick={reset} className={classes.resetBtn}/>
         </Paper>
     )
 };

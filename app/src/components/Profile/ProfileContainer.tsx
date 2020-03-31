@@ -104,8 +104,15 @@ const ProfileContainer: FC<PropsType> = ({
     }
 
     return (
-        <Profile profile={profile} status={status} setUserStatus={setUserStatus} isOwner={isOwner} loadPhoto={loadPhoto}
-                 setProfileInfo={updateProfileInfo} ownerId={userId} currentUserInfo={currentUserInfo}/>
+        <Profile
+            profile={profile}
+            status={status}
+            setUserStatus={setUserStatus}
+            isOwner={isOwner}
+            loadPhoto={loadPhoto}
+            setProfileInfo={updateProfileInfo}
+            currentUserInfo={currentUserInfo}
+        />
     )
 };
 

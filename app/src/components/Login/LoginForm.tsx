@@ -8,7 +8,7 @@ import {Button} from "@material-ui/core";
 import InputIcon from '@material-ui/icons/Input';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import {Alert} from "@material-ui/lab";
-const minLength5 = minLength(5);
+const minLength4 = minLength(4);
 
 type OwnPropsType = {
     captchaUrl?: string | null
@@ -44,7 +44,7 @@ const LoginForm: FC<PropsType> = (
                 label="Password:"
                 required={true}
                 variant="outlined"
-                validate={[required, minLength5]}
+                validate={[required, minLength4]}
             />
 
             <Field

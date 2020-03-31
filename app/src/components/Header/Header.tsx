@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
         logoTxt: {
             padding: theme.spacing(1),
             color: theme.palette.common.white,
+            fontWeight: 300
         },
         rightColumn: {
             display: 'flex',
@@ -90,7 +91,7 @@ const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessa
                                 <IconButton aria-label="logo" className={classes.logoBtn}>
                                     <img src={logoImg} alt="" className={classes.logoImg}/>
                                 </IconButton>
-                                <Typography variant="body1" className={classes.logoTxt}>IT-NEAR</Typography>
+                                <Typography variant="h5" className={classes.logoTxt}>IT-NEAR</Typography>
                             </NavLink>
                         </div>
                     </Grid>

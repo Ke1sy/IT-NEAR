@@ -1,12 +1,13 @@
 import React, {FC} from 'react';
-import classes from './profile.module.scss';
 import PostsContainer from './Posts/PostsContainer';
-import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
-import {Route, Switch, withRouter, RouteComponentProps} from "react-router-dom";
-import {Grid, makeStyles} from "@material-ui/core";
+import {Route, Switch, withRouter, RouteComponentProps, NavLink} from "react-router-dom";
+import {Link, makeStyles} from "@material-ui/core";
 import Sidebar from "./Sidebar/Sidebar";
 import ProfileCover from './Cover/ProfileCover';
+import StaticProfileInfo from "./ProfileInfo/StaticProfileInfo";
+import ProfileLayout from "./ProfileLayout";
+import ProfileSettings from "./ProfileSettings/ProfileSettings";
 
 type PropsType = {
     profile: ProfileType | null
@@ -15,67 +16,44 @@ type PropsType = {
     setUserStatus: (status: string) => void
     loadPhoto: (photo: any) => void
     setProfileInfo: (info: UpdatedProfileType) => void,
-    ownerId:  number | null | undefined,
     currentUserInfo: ProfileType | null
 }
 
-const useStyles = makeStyles((theme) => ({
-    profile: {
-        paddingTop: 30,
-        display: 'flex'
-    },
-    profileLeft: {
-        width: 250
-    },
-    profileRight: {
-        flexGrow: 1,
-        marginLeft: theme.spacing(2)
-    }
-}));
-
-const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo,profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo, ownerId}) => {
-   const classes = useStyles();
+const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo}) => {
     return (
-        <div>
-            <Switch>
-                {isOwner &&
-                <Route exact path={`/profile/${ownerId}/edit`}>
-                    <h1> Edit page</h1>
-                </Route>
-                }
+        <>
+            <ProfileLayout
+                profile={profile}
+                status={status}
+                isOwner={isOwner}
+                setUserStatus={setUserStatus}
+                loadPhoto={loadPhoto}
+            >
 
-                {profile &&
-                <Route exact path={`/profile/${profile.userId}/posts`}>
-                    <PostsContainer authorId={profile.userId} isOwner={isOwner}/>
-                </Route>
-                }
-                <Route exact path="/profile/:id?">
-                    <ProfileCover/>
+                <Switch>
+                    {isOwner &&
+                    <Route exact path={`/settings`}>
+                        {currentUserInfo &&
+                        <ProfileSettings setProfileInfo={setProfileInfo} profile={currentUserInfo} loadPhoto={loadPhoto}/>
+                        }
+                    </Route>
+                    }
+                    <Route exact path="/profile/:id?">
+                        {profile &&
+                        <StaticProfileInfo
+                            profile={profile}
+                            setUserStatus={setUserStatus}
+                            isOwner={isOwner}
+                        />
+                            //     {/*<PostsContainer authorId={profile.userId} isOwner={isOwner}/>*/}
 
-                    <div className={classes.profile}>
-                        <div className={classes.profileLeft}>
-                            {profile !== null &&
-                            <Sidebar profile={profile} status={status}/>
-                            }
-                        </div>
-                        <div className={classes.profileRight}>
-                        <ProfileInfo
-                                profile={profile}
-                                status={status}
-                                setUserStatus={setUserStatus}
-                                isOwner={isOwner}
-                                loadPhoto={loadPhoto}
-                                setProfileInfo={setProfileInfo}
-                            />
-                        </div>
-                    </div>
-                </Route>
-            </Switch>
-            {/*{profile &&*/}
-            {/*     <PostsContainer authorId={profile.userId} isOwner={isOwner}/>*/}
-            {/*}*/}
-        </div>
+                        }
+                    </Route>
+                </Switch>
+            </ProfileLayout>
+        </>
     )
 };
 
 export default withRouter(Profile);
+

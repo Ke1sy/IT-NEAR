@@ -1,10 +1,23 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import {createMuiTheme} from '@material-ui/core/styles';
 import {red, grey, indigo} from '@material-ui/core/colors';
 
 export default createMuiTheme({
     typography: {
         useNextVariants: true,
         color: '#333',
+        h2: {
+            fontSize: '3rem'
+        },
+        h3: {
+            fontSize: '2.5rem'
+        },
+        h4: {
+            fontSize: '1.75rem'
+        },
+        subtitle1: {
+            fontWeight: 500
+        }
+
     },
     mixins: {
         toolbar: {
@@ -14,11 +27,9 @@ export default createMuiTheme({
     palette: {
         type: 'light',
         primary: {
-            // main: '#3f5377'
             main: '#3d4977'
         },
         secondary: {
-            // main: '#5383ff',
             main: '#ab003c',
         },
         grey: grey,
@@ -34,7 +45,6 @@ export default createMuiTheme({
         contrastText: '#fff',
         text: {
             primary: '#333',
-            // secondary: string
         },
 
     },

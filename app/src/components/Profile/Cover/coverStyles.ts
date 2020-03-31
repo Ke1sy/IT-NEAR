@@ -2,7 +2,7 @@ import {withStyles, createStyles, Theme} from '@material-ui/core/styles';
 
 const styles = createStyles((theme: Theme) => ({
     cover: {
-        height: 250,
+        height: 200,
         objectFit: 'cover',
         overflow: 'hidden',
     },

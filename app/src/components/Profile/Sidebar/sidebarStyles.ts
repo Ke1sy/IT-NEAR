@@ -3,12 +3,8 @@ import {withStyles, createStyles, Theme} from '@material-ui/core/styles';
 const styles = createStyles((theme: Theme) => ({
     paper: {
         borderRadius: 0,
-        backgroundColor: theme.palette.common.white,
-        paddingBottom: 30
-    },
-    head: {
-        height: 100,
-        backgroundColor: theme.palette.primary.main
+        paddingBottom: 30,
+        backgroundColor: theme.palette.common.white
     },
     body: {
         textAlign: 'center'
@@ -17,15 +13,14 @@ const styles = createStyles((theme: Theme) => ({
 
     },
     avatarImg: {
-        marginTop: '-65px',
-        height: 130,
-        width: 130,
+        marginBottom: '-100px',
+        height: 200,
+        width: 200,
         border: '3px solid #fff',
-        margin: '0 auto'
+        margin: '0 auto',
+        position: 'relative',
+        top:' -100px'
     },
-    profileLeft: {
-        width: 250
-    }
 }));
 
 export default withStyles(styles, {withTheme: true})

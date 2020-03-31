@@ -6,6 +6,7 @@ import classNames from 'classnames';
 const inputTypes = [
     'text',
     'email',
+    'search',
     'password',
     'textarea'
 ];

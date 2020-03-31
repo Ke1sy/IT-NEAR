@@ -45,11 +45,12 @@ const useStyles = makeStyles(theme => ({
         margin: '0 auto'
     },
     content: {
-        padding: '15px 20px'
+        padding: '15px 20px',
+        flexGrow: 1
     },
 
     buttons: {
-        padding: '15px 0',
+        padding: '0 0 25px',
         display: 'flex',
         justifyContent: 'space-between',
         margin: '0 auto'
@@ -70,7 +71,6 @@ const useStyles = makeStyles(theme => ({
     },
     btnLabel: {
         fontSize: 14,
-        fontWeight: 400
     },
     bottom: {
         marginTop: 'auto',
@@ -80,7 +80,7 @@ const useStyles = makeStyles(theme => ({
     bottomLink: {
         display: 'block',
         width: '100%',
-        padding: '15px 0',
+        padding: '1rem 0',
         color: theme.palette.secondary.light
     }
 }));
@@ -91,12 +91,14 @@ const User: FC<PropsType> = ({unfollow, follow, user, followInProgress, startCha
     const userAvatar = photos.small !== null ? photos.small : userPlaceholder;
     return (
         <Card className={classes.root}>
-            <Avatar src={userAvatar} alt={name ? name : 'avatar'} className={classes.avatarImg}/>
+            <Link component={NavLink} to={`/profile/${id}`}  underline="none">
+                <Avatar src={userAvatar} alt={name ? name : 'avatar'} className={classes.avatarImg} component="span"/>
+            </Link>
             <CardContent className={classes.content}>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h5" component="div" noWrap>
                     {name}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography variant="body2" color="textSecondary" component="p" noWrap>
                     {status}
                 </Typography>
             </CardContent>
@@ -131,7 +133,7 @@ const User: FC<PropsType> = ({unfollow, follow, user, followInProgress, startCha
             </CardActions>
             <CardActionArea className={classes.bottom}>
                 <Link component={NavLink} to={`/profile/${id}`} className={classes.bottomLink} underline="none">
-                    <Typography variant="body2" component="span">
+                    <Typography variant="body1" component="span">
                         View Profile
                     </Typography>
                 </Link>

@@ -11,10 +11,14 @@ type PropsType = {
 
 const useStyles = makeStyles(theme => ({
     searchTxt: {
-        // color: theme.palette.secondary.main,
         marginLeft: 10
-    }
+    },
+    search: {
+        marginBottom: 40,
+        width: '100%'
+    },
 }));
+
 
 
 const Search: FC<PropsType> = ({onChangeSearchText, searchRequest, onResetSearch}) => {

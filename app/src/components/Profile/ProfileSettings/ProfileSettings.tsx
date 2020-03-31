@@ -2,7 +2,9 @@ import React, {FC} from 'react';
 import styles from "./profile-settings.module.scss";
 import SettingsPhoto from "./SettingsPhoto";
 import SettingsReduxForm from "./SettingsForm";
-import {ProfileType, UpdatedProfileType} from "../../../../redux/reducers/types";
+import {Link} from "@material-ui/core";
+import {NavLink, Route} from "react-router-dom";
+import {UpdatedProfileType, ProfileType} from "../../../redux/reducers/types";
 
 type PropsType = {
     profile: ProfileType,
@@ -13,6 +15,9 @@ type PropsType = {
 const ProfileSettings: FC<PropsType> = ({setProfileInfo, profile, loadPhoto}) => {
     return (
         <div className={styles.settings}>
+            <Link component={NavLink} to={`/profile/${profile.userId}`}>
+                Profile
+            </Link>
             <div className={styles.settings__title}>
                 Profile Photo:
             </div>
