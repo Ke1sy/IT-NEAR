@@ -1,31 +1,18 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC} from 'react';
 import jobImage from "../../../assets/images/job-image.png";
 import {ProfileType} from "../../../redux/reducers/types";
 import Paper from '@material-ui/core/Paper';
-import {Box, Button, Grid, makeStyles, Typography} from "@material-ui/core";
-import {NavLink} from "react-router-dom";
-import EmailRoundedIcon from "@material-ui/icons/EmailRounded";
-import PersonAddDisabledRoundedIcon from "@material-ui/icons/PersonAddDisabledRounded";
-// import classes from "./profile-info.module.scss";
+import {makeStyles, Typography} from "@material-ui/core";
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
-import ControlPointOutlinedIcon from '@material-ui/icons/ControlPointOutlined';
-import CancelIcon from '@material-ui/icons/Cancel';
 import classNames from "classnames";
-import SettingsIcon from '@material-ui/icons/Settings';
-import styles from "../../Messages/Message/message.module.scss";
 
 type PropsType = {
     profile: ProfileType
     isOwner: boolean
-    setUserStatus: (status: string) => void
 }
 
 const useStyles = makeStyles(theme => ({
-    content: {
-        paddingTop: 25
-    },
-
     paper: {
         backgroundColor: theme.palette.common.white,
         padding: 25,
@@ -44,7 +31,8 @@ const useStyles = makeStyles(theme => ({
             height: 100,
             position: 'absolute',
             zIndex: 2,
-            backgroundSize: 100
+            backgroundSize: 100,
+            borderTopRightRadius: 4
         }
     },
 
@@ -53,9 +41,6 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'right',
         right: 15,
         top: 15
-    },
-    title: {
-        marginBottom: theme.spacing(2)
     },
     status: {
         marginBottom: theme.spacing(2)
@@ -81,11 +66,7 @@ const useStyles = makeStyles(theme => ({
 const StaticProfileInfo: FC<PropsType> = ({profile, isOwner}) => {
     const classes = useStyles();
     const {fullName, lookingForAJobDescription, aboutMe, lookingForAJob} = profile;
-
     return (
-        <div className={classes.content}>
-            <Typography variant="h6" className={classes.title}>Personal Info</Typography>
-
             <Paper className={classNames(`${classes.paper}`, {[`${classes.withBg}`]: lookingForAJob})}>
                 <div className={classes.block}>
                     <Typography variant="subtitle1" component="span">Full Name: </Typography>
@@ -118,7 +99,6 @@ const StaticProfileInfo: FC<PropsType> = ({profile, isOwner}) => {
                 </div>
                 }
             </Paper>
-        </div>
     )
 };
 

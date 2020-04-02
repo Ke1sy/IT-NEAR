@@ -5,6 +5,7 @@ import StaticProfileInfo from "./ProfileInfo/StaticProfileInfo";
 import ProfileLayout from "./ProfileLayout";
 // import ProfileSettings from "./ProfileSettings/ProfileSettings";
 import SettingsReduxForm from "./ProfileSettings/SettingsForm";
+import ProfileInfoTabs from "./Tabs/ProfileInfoTabs";
 
 type PropsType = {
     profile: ProfileType | null
@@ -37,13 +38,10 @@ const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile,
                     }
                     <Route path="/profile/:id?">
                         {profile &&
-                        <StaticProfileInfo
+                        <ProfileInfoTabs
                             profile={profile}
-                            setUserStatus={setUserStatus}
                             isOwner={isOwner}
                         />
-                            //     {/*<PostsContainer authorId={profile.userId} isOwner={isOwner}/>*/}
-
                         }
                     </Route>
                 </Switch>

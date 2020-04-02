@@ -40,9 +40,8 @@ const ProfileActions: FC<PropsType> = ({isOwner}) => {
                 </Button>
             </>
             }
-            {/*todo remove*/}
             {isOwner &&
-            <div>
+            <>
                 {pathname === '/settings' ?
                     <Button
                         size="large"
@@ -69,8 +68,7 @@ const ProfileActions: FC<PropsType> = ({isOwner}) => {
                         Settings
                     </Button>
                 }
-
-            </div>
+            </>
             }
         </div>
     )

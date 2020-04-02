@@ -3,6 +3,7 @@ import Post from './Post';
 import PostsForm from "./PostsForm";
 import { PostsData_posts } from '../../../server/types/PostsData';
 import Typography from "@material-ui/core/Typography";
+import Paper from '@material-ui/core/Paper';
 
 type PropsType = {
     posts: PostsData_posts[] | null,
@@ -15,7 +16,7 @@ type PropsType = {
 
 const Posts: FC<PropsType> = (({posts = [], authorId, isOwner, onAddPost, onDeletePost, onUpdatePost}) => {
     return (
-        <div>
+        <Paper>
             {isOwner &&
             <PostsForm onSubmit={onAddPost}/>
             }
@@ -28,7 +29,7 @@ const Posts: FC<PropsType> = (({posts = [], authorId, isOwner, onAddPost, onDele
             {posts && posts.length > 0 && posts.map((post, index) => (
               <Post post={post} key={post.id} onDeletePost={onDeletePost}/>
             ))}
-        </div>
+        </Paper>
     )
 });
 
