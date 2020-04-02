@@ -1,14 +1,14 @@
 import React, {useEffect, FC} from 'react';
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
-// import styles from "./settings-form.module.scss";
 import Preloader from "../../Preloader/Preloader";
 import {required} from "../../../utils/validate";
 import {RenderField} from '../../Forms/components/FormControl';
 import {ProfileType, UpdatedProfileType} from "../../../redux/reducers/types";
 import {Alert} from "@material-ui/lab";
-import {Button, Divider, makeStyles, Paper, Typography} from '@material-ui/core';
+import {Button, makeStyles, Paper, Typography} from '@material-ui/core';
 import CheckCircleOutlineOutlinedIcon from "@material-ui/icons/CheckCircleOutlineOutlined";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
+import StyledDivider from "../Posts/StyledDivider";
 
 type OwnPropsType = {
     profile: ProfileType,
@@ -30,7 +30,8 @@ const useStyles = makeStyles(theme => ({
     },
     buttons: {
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        margin: '25px 0 15px'
     },
     error: {
         marginBottom: 15
@@ -44,7 +45,10 @@ const useStyles = makeStyles(theme => ({
         '&:first-of-type': {
             marginLeft: 0
         },
-
+    },
+    divider: {
+        position: 'relative',
+        top: 4
     }
 }));
 
@@ -84,6 +88,7 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
     return (
         <div>
             <form onSubmit={handleSubmit}>
+                <StyledDivider customClasses={classes.divider}/>
                 <Paper className={classes.paper}>
                     <Typography variant="body1" className={classes.title}>
                         Profile:
@@ -137,12 +142,9 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
                         label="Job description"
                     />
                 </Paper>
-
-
                 {error &&
                 <Alert severity="error" className={classes.error}>{error}</Alert>
                 }
-
                 <div className={classes.buttons}>
                     <Button
                         size="large"

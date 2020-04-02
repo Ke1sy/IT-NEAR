@@ -8,17 +8,15 @@ import {PostsData, PostsDataVariables} from '../../../server/types/PostsData';
 import {AddPostMutation, AddPostMutationVariables} from '../../../server/types/AddPostMutation';
 import {DeletePostMutation, DeletePostMutationVariables} from '../../../server/types/DeletePostMutation';
 import {UpdatePostMutation, UpdatePostMutationVariables} from '../../../server/types/UpdatePostMutation';
+import {ProfileType} from "../../../redux/reducers/types";
 
 type PropsType = {
     authorId: number,
-    isOwner: boolean
+    isOwner: boolean,
+    author: ProfileType
 }
 
-const PostsContainer: FC<PropsType> = ({
-                                           authorId,
-                                           isOwner
-                                       }) => {
-
+const PostsContainer: FC<PropsType> = ({authorId, isOwner, author}) => {
     const {data, loading: dataLoading, error: dataError} = useQuery<PostsData, PostsDataVariables>(GET_POSTS, {
         variables: {authorId},
     });
@@ -54,6 +52,7 @@ const PostsContainer: FC<PropsType> = ({
             }]
         });
     };
+
     const onUpdatePost = (id: string, text: string) => {
         updatePost({
             variables: {id, text},
@@ -64,8 +63,7 @@ const PostsContainer: FC<PropsType> = ({
         });
     };
 
-    if (dataLoading || addPostLoading || deletePostLoading || updatePostLoading || !data) return <Preloader
-        showPreloader={true}/>;
+    if (dataLoading  || !data) return <Preloader showPreloader={true}/>;
     if (dataError || addPostError || deletePostError || updatePostError) return <h1>Error </h1>;
     const {posts} = data;
     return (
@@ -76,6 +74,7 @@ const PostsContainer: FC<PropsType> = ({
             onAddPost={onAddPost}
             onDeletePost={onDeletePost}
             onUpdatePost={onUpdatePost}
+            author={author}
         />
     )
 };

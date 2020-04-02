@@ -1,32 +1,67 @@
 import React, {FC} from 'react';
-import styles from './posts-form.module.scss';
 import {Field, reduxForm, InjectedFormProps} from "redux-form";
-import {minLength, required} from "../../../utils/validate";
+import {required} from "../../../utils/validate";
 import {RenderField} from "../../Forms/components/FormControl";
-
-const minLength5 = minLength(5);
+import {Divider, IconButton, makeStyles, Paper} from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import SendIcon from "@material-ui/icons/Send";
+import StyledDivider from "./StyledDivider";
 
 type FormDataType = {
     postText: string
 }
 
+
+const useStyles = makeStyles(theme => ({
+    paper: {
+        padding: '30px 25px',
+        backgroundColor: theme.palette.common.white,
+        marginBottom: 20
+    },
+    form: {
+        display: 'flex',
+        alignItems: 'flex-start'
+    },
+    root: {
+        flexGrow: 1,
+        marginBottom: 0,
+    },
+    button: {
+        marginLeft: 10
+    },
+    buttonIcon: {
+        fontSize: '1.7rem'
+    },
+}));
+
 type PropsType = InjectedFormProps<FormDataType>
 
 const PostsForm: FC<PropsType> = ({handleSubmit, submitting, pristine}) => {
+    const classes = useStyles();
     return (
-        <form className={styles.posts__form} onSubmit={handleSubmit}>
-            <Field
-                placeholder="Type text..."
-                component={RenderField}
-                type="textarea"
-                name="postText"
-                validate={[required, minLength5]}
-            />
+        <>
+            <StyledDivider/>
+            <Paper square className={classes.paper}>
+                <form className={classes.form} onSubmit={handleSubmit}>
+                    <Field
+                        placeholder="What's on your mind?"
+                        name="postText"
+                        type="textarea"
+                        component={RenderField}
+                        required={true}
+                        validate={[required]}
+                        classes={{
+                            root: classes.root,
+                        }}
+                        variant="outlined"
+                    />
+                    <IconButton type="submit" disabled={submitting} aria-label="send" className={classes.button}>
+                        <SendIcon color="primary" className={classes.buttonIcon}/>
+                    </IconButton>
+                </form>
+            </Paper>
+        </>
 
-            <button type="submit" disabled={pristine || submitting}>
-                Add Post
-            </button>
-        </form>
     );
 };
 

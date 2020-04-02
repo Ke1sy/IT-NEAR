@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {ProfileType} from "../../../redux/reducers/types";
 import Paper from '@material-ui/core/Paper';
-import {makeStyles, Tab, Tabs} from "@material-ui/core";
+import {Grid, makeStyles, Tab, Tabs} from "@material-ui/core";
 import PhoneIcon from '@material-ui/icons/Phone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import TabPanel from "./TabPanel";
@@ -22,20 +22,12 @@ const useStyles = makeStyles(theme => ({
     tab: {
         fontWeight: 400,
         textTransform: 'none',
-        minWidth: 90
+        minWidth: 90,
+        color: theme.palette.primary.light
     },
-    body: {
-        marginTop: 20,
-    },
-
     indicator: {
         backgroundColor: 'transparent'
     },
-
-    container: {
-        display: 'inline-flex',
-        justifyContent: 'flex-start'
-    }
 }));
 
 const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner}) => {
@@ -51,50 +43,51 @@ const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner}) => {
 
     return (
         <>
-            <Paper elevation={0}>
-                <Tabs
-                    value={selectedTab}
-                    onChange={handleChange}
-                    variant="fullWidth"
-                    indicatorColor="secondary"
-                    textColor="secondary"
-                    aria-label="icon label tabs example"
-                    TabIndicatorProps={{
-                        className: classes.indicator,
-                    }}
-                    classes={{
-                        flexContainer: classes.container
-                    }}
+            <Grid container>
+                <Grid item xs={10}>
+                    <SwipeableViews
+                        axis='x'
+                        index={selectedTab}
+                        onChangeIndex={handleChangeIndex}
+                    >
+                        <TabPanel selectedTab={selectedTab} index={0}>
+                            <PostsContainer
+                                author={profile}
+                                authorId={profile.userId}
+                                isOwner={isOwner}
+                            />
 
-                >
-                    <Tab icon={<AssignmentOutlinedIcon/>} label="Info" disableRipple classes={{
-                        root: classes.tab
-                    }}/>
-                    <Tab icon={<ListAltOutlinedIcon/>} label="Posts" disableRipple classes={{
-                        root: classes.tab
-                    }}/>
-                </Tabs>
-            </Paper>
-            <Paper className={classes.body} elevation={0}>
-                <SwipeableViews
-                    axis='x'
-                    index={selectedTab}
-                    onChangeIndex={handleChangeIndex}
-                >
-                    <TabPanel selectedTab={selectedTab} index={0}>
-                        <StaticProfileInfo
-                            profile={profile}
-                            isOwner={isOwner}
-                        />
-                    </TabPanel>
-                    <TabPanel selectedTab={selectedTab} index={1}>
-                        <PostsContainer
-                            authorId={profile.userId}
-                            isOwner={isOwner}
-                        />
-                    </TabPanel>
-                </SwipeableViews>
-            </Paper>
+                        </TabPanel>
+                        <TabPanel selectedTab={selectedTab} index={1}>
+                            <StaticProfileInfo
+                                profile={profile}
+                                isOwner={isOwner}
+                            />
+                        </TabPanel>
+                    </SwipeableViews>
+                </Grid>
+                <Grid item xs={2}>
+                    <Tabs
+                        value={selectedTab}
+                        onChange={handleChange}
+                        indicatorColor="secondary"
+                        textColor="secondary"
+                        aria-label="profile tabs"
+                        orientation="vertical"
+                        TabIndicatorProps={{
+                            className: classes.indicator,
+                        }}
+                    >
+                        <Tab icon={<AssignmentOutlinedIcon/>} label="Info" disableRipple classes={{
+                            root: classes.tab
+                        }}/>
+                        <Tab icon={<ListAltOutlinedIcon/>} label="Posts" disableRipple classes={{
+                            root: classes.tab
+                        }}/>
+                    </Tabs>
+                </Grid>
+            </Grid>
+
         </>
     )
 };

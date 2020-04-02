@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
     },
     profileLeft: {
-        width: 300
+        width: 300,
+        minWidth: 300
     },
     profileRight: {
         flexGrow: 1,

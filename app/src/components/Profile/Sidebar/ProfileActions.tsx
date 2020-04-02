@@ -16,7 +16,6 @@ const useStyles = makeStyles(theme => ({
         marginBottom: 15,
         display: 'flex',
         flexDirection: 'column'
-
     },
     actionsBtn: {
         marginBottom: 20,

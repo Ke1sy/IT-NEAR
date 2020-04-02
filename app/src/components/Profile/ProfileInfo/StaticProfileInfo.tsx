@@ -6,6 +6,7 @@ import {makeStyles, Typography} from "@material-ui/core";
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import classNames from "classnames";
+import StyledDivider from "../Posts/StyledDivider";
 
 type PropsType = {
     profile: ProfileType
@@ -16,6 +17,8 @@ const useStyles = makeStyles(theme => ({
     paper: {
         backgroundColor: theme.palette.common.white,
         padding: 25,
+        borderTopRightRadius: 0,
+        borderTopLeftRadius: 0,
     },
 
     withBg: {
@@ -25,14 +28,13 @@ const useStyles = makeStyles(theme => ({
             content: '\'\'',
             background: `url(${jobImage}) no-repeat`,
             opacity: 0.5,
-            top: 0,
-            right: 0,
+            top: 4,
+            right: 1,
             width: 100,
             height: 100,
             position: 'absolute',
             zIndex: 2,
             backgroundSize: 100,
-            borderTopRightRadius: 4
         }
     },
 
@@ -60,14 +62,21 @@ const useStyles = makeStyles(theme => ({
         '&.success': {
             color: theme.palette.success.main
         }
+    },
+    divider: {
+        position: 'relative',
+        top: 4,
+        zIndex: 2
     }
 }));
 
 const StaticProfileInfo: FC<PropsType> = ({profile, isOwner}) => {
     const classes = useStyles();
     const {fullName, lookingForAJobDescription, aboutMe, lookingForAJob} = profile;
-    return (
-            <Paper className={classNames(`${classes.paper}`, {[`${classes.withBg}`]: lookingForAJob})}>
+    return (<>
+        <StyledDivider customClasses={classes.divider}/>
+
+        <Paper className={classNames(`${classes.paper}`, {[`${classes.withBg}`]: lookingForAJob})}>
                 <div className={classes.block}>
                     <Typography variant="subtitle1" component="span">Full Name: </Typography>
                     <Typography variant="body1" component="span">{fullName}</Typography>
@@ -99,6 +108,7 @@ const StaticProfileInfo: FC<PropsType> = ({profile, isOwner}) => {
                 </div>
                 }
             </Paper>
+        </>
     )
 };
 

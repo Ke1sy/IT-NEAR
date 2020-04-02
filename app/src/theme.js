@@ -3,6 +3,18 @@ import {red, grey, indigo} from '@material-ui/core/colors';
 
 export default createMuiTheme({
     typography: {
+        fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(','),
         useNextVariants: true,
         color: '#333',
         h2: {
