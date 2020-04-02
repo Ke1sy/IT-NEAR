@@ -52,7 +52,7 @@ const SearchForm: FC<PropsType> = ({handleSubmit, submitting}) => {
                 type="search"
                 label="Search"
                 component={RenderField}
-                autocomplete="off"
+                autoComplete="off"
                 placeholder="Type search request..."
                 validate={[required, minLength3]}
             />

@@ -1,9 +1,10 @@
 import React, {FC} from 'react';
 import PostsContainer from './Posts/PostsContainer';
 import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
-import {makeStyles} from "@material-ui/core";
+import {Grid, makeStyles} from "@material-ui/core";
 import Sidebar from "./Sidebar/Sidebar";
 import ProfileCover from './Cover/ProfileCover';
+import ProfileActions from "./Sidebar/ProfileActions";
 
 type PropsType = {
     profile: ProfileType | null
@@ -22,8 +23,9 @@ const useStyles = makeStyles((theme) => ({
     },
     profileRight: {
         flexGrow: 1,
-        marginLeft: theme.spacing(2)
-    }
+        marginLeft: theme.spacing(3),
+        paddingTop: 30
+    },
 }));
 
 const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, children}) => {
@@ -43,7 +45,16 @@ const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, 
                     }
                 </div>
                 <div className={classes.profileRight}>
-                    {children}
+                    <Grid container spacing={3}>
+                        <Grid item sm={8} md={9}>
+                            {children}
+                        </Grid>
+                        <Grid item sm={4} md={3}>
+                            <ProfileActions
+                                isOwner={isOwner}
+                            />
+                        </Grid>
+                    </Grid>
                 </div>
             </div>
         </div>

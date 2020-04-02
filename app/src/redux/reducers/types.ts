@@ -14,6 +14,8 @@ export type UpdatedProfileType = {
     vk: string | null,
     twitter: string | null,
     instagram: string | null,
+    website: string | null,
+    youtube: string | null,
     github: string | null,
     lookingForAJob: boolean,
     lookingForAJobDescription: string | null,

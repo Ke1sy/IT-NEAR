@@ -1,10 +1,14 @@
 import React, {useEffect, FC} from 'react';
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import styles from "./settings-form.module.scss";
+// import styles from "./settings-form.module.scss";
 import Preloader from "../../Preloader/Preloader";
 import {required} from "../../../utils/validate";
-import { RenderField } from '../../Forms/components/FormControl';
+import {RenderField} from '../../Forms/components/FormControl';
 import {ProfileType, UpdatedProfileType} from "../../../redux/reducers/types";
+import {Alert} from "@material-ui/lab";
+import {Button, Divider, makeStyles, Paper, Typography} from '@material-ui/core';
+import CheckCircleOutlineOutlinedIcon from "@material-ui/icons/CheckCircleOutlineOutlined";
+import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 
 type OwnPropsType = {
     profile: ProfileType,
@@ -14,114 +18,158 @@ type FormDataType = UpdatedProfileType;
 
 type PropsType = InjectedFormProps<FormDataType> & OwnPropsType;
 
+const useStyles = makeStyles(theme => ({
+    paper: {
+        padding: '20px 25px 5px',
+        backgroundColor: theme.palette.common.white,
+        marginBottom: theme.spacing(2),
+    },
+    title: {
+        marginBottom: 20,
+        fontWeight: 500
+    },
+    buttons: {
+        display: 'flex',
+        justifyContent: 'center'
+    },
+    error: {
+        marginBottom: 15
+    },
+    button: {
+        minWidth: 150,
+        marginLeft: 15,
+        [theme.breakpoints.up('sm')]: {
+            minWidth: 200
+        },
+        '&:first-of-type': {
+            marginLeft: 0
+        },
+
+    }
+}));
+
+const socialsFields = ['website', 'facebook', 'vk', 'twitter', 'instagram', 'youtube', 'github'];
+
 const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting, reset, initialize, profile}) => {
-
+    const classes = useStyles();
     useEffect(() => {
-        const initForm = () => {
-            if (profile) {
-                const {aboutMe, contacts: {facebook, github, instagram, twitter, vk}, lookingForAJob, lookingForAJobDescription, fullName} = profile;
-
-                initialize({
-                    fullName,
-                    aboutMe,
-                    facebook,
-                    github,
-                    instagram,
-                    twitter,
-                    vk,
-                    lookingForAJob,
-                    lookingForAJobDescription
-                });
-            }
-        };
-
         if (profile) {
             initForm()
         }
-    }, [profile, initialize]);
+    }, [profile]);
 
+    const initForm = () => {
+        if (profile) {
+            const {aboutMe, contacts: {facebook, website, github, instagram, youtube, twitter, vk}, lookingForAJob, lookingForAJobDescription, fullName} = profile;
+
+            initialize({
+                fullName,
+                aboutMe,
+                facebook,
+                website,
+                github,
+                instagram,
+                youtube,
+                twitter,
+                vk,
+                lookingForAJob,
+                lookingForAJobDescription
+            });
+        }
+    };
 
     if (!profile) {
         return <Preloader showPreloader={true}/>
     }
-
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            <Field
-                component={RenderField}
-                type="text"
-                name="fullName"
-                label="Full Name: "
-                groupClasses={styles.form__group_inline}
-            />
-            <Field
-                component={RenderField}
-                type="textarea"
-                name="aboutMe"
-                label="About Me: "
-                groupClasses={styles.form__group_inline}
-                validate={required}
-            />
-            <Field
-                component={RenderField}
-                type="text"
-                name="facebook"
-                label="Facebook: "
-                groupClasses={styles.form__group_inline}
-            />
-            <Field
-                component={RenderField}
-                type="text"
-                name="github"
-                label="Github: "
-                groupClasses={styles.form__group_inline}
-            />
-            <Field
-                component={RenderField}
-                type="text"
-                name="instagram"
-                label="Instagram: "
-                groupClasses={styles.form__group_inline}
-            />
-            <Field
-                component={RenderField}
-                type="text"
-                name="twitter"
-                label="Twitter: "
-                groupClasses={styles.form__group_inline}
-            />
-            <Field
-                component={RenderField}
-                type="text"
-                name="vk"
-                label="Vkontakte: "
-                groupClasses={styles.form__group_inline}
-            />
-            <Field
-                component={RenderField}
-                type="checkbox"
-                name="lookingForAJob"
-                label="I'm looking for a job: "
-                id="lookingForAJob"
-                groupClasses={`${styles.form__group_inline} ${styles.form__group_checkbox}`}
-            />
-            <Field
-                component={RenderField}
-                type="text"
-                name="lookingForAJobDescription"
-                label="Job description: "
-                groupClasses={styles.form__group_inline}
-            />
+        <div>
+            <form onSubmit={handleSubmit}>
+                <Paper className={classes.paper}>
+                    <Typography variant="body1" className={classes.title}>
+                        Profile:
+                    </Typography>
+                    <Field
+                        component={RenderField}
+                        type="text"
+                        name="fullName"
+                        variant="outlined"
+                        validate={required}
+                        label="Full Name *"
+                    />
+                    <Field
+                        component={RenderField}
+                        type="textarea"
+                        name="aboutMe"
+                        variant="outlined"
+                        label="About Me *"
+                        validate={required}
+                    />
+                </Paper>
+                <Paper className={classes.paper}>
+                    <Typography variant="body1" className={classes.title}>
+                        Contacts:
+                    </Typography>
+                    {socialsFields.map(item => <Field
+                        component={RenderField}
+                        key={item}
+                        type="text"
+                        name={item}
+                        label={item.slice(0, 1).toUpperCase() + item.slice(1)}
+                        variant="outlined"
+                    />)}
+                </Paper>
+                <Paper className={classes.paper}>
+                    <Typography variant="body1" className={classes.title}>
+                        Open for job proposals
+                    </Typography>
+                    <Field
+                        component={RenderField}
+                        type="switch"
+                        name="lookingForAJob"
+                        label="I'm looking for a job"
+                        id="lookingForAJob"
+                    />
+                    <Field
+                        component={RenderField}
+                        type="textarea"
+                        variant="outlined"
+                        name="lookingForAJobDescription"
+                        label="Job description"
+                    />
+                </Paper>
 
-            {error && <div className={styles.form__error}>{error}</div>}
 
-            <div className={styles.form__btns}>
-                <button type="submit" disabled={pristine || submitting}>Save</button>
-                <button type="button" disabled={pristine || submitting} onClick={reset}>
-                    Cancel
-                </button>
-            </div>
-        </form>
+                {error &&
+                <Alert severity="error" className={classes.error}>{error}</Alert>
+                }
+
+                <div className={classes.buttons}>
+                    <Button
+                        size="large"
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        startIcon={<CheckCircleOutlineOutlinedIcon/>}
+                        disabled={pristine || submitting}
+                        className={classes.button}
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        size="large"
+                        type="reset"
+                        variant="contained"
+                        color="secondary"
+                        disabled={pristine || submitting}
+                        startIcon={<CancelOutlinedIcon/>}
+                        onClick={reset}
+                        className={classes.button}
+                    >
+                        Cancel
+                    </Button>
+                </div>
+            </form>
+        </div>
     )
 };
 

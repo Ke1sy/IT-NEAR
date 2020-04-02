@@ -8,7 +8,7 @@ import {
     setUserProfile,
     setUserStatus,
 } from "../../redux/reducers/profile-reducer";
-import {withRouter} from "react-router-dom";
+import {useParams, withRouter, useHistory} from "react-router-dom";
 import {compose} from "redux";
 import {getProfile, getProfileError, getStatus, getProfileIsLoading} from "../../redux/reducers/profile-selectors";
 import {getCurrentUserInfo, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
@@ -36,20 +36,13 @@ type MapDispatchPropsType = {
     setProfileInfo: (info: ProfileType, userId: number) => void
 }
 
-type RouteProps = {
-    match: any,
-    history: any
-}
-
-type PropsType = MapStatePropsType & MapDispatchPropsType & RouteProps
+type PropsType = MapStatePropsType & MapDispatchPropsType
 
 const ProfileContainer: FC<PropsType> = ({
                                              isAuth,
                                              userId,
                                              getUserProfile,
                                              getUserStatus,
-                                             match,
-                                             history,
                                              profile,
                                              status,
                                              setUserStatus,
@@ -59,20 +52,23 @@ const ProfileContainer: FC<PropsType> = ({
                                              profileIsLoading,
                                              currentUserInfo
                                          }) => {
-    const isOwner = match.params.id === undefined || Number(match.params.id) === userId;
-    useEffect(() => {
-        let id = match.params.id;
+    let { id } = useParams();
+    let history = useHistory();
+    const isOwner = !id || Number(id) === userId;
 
+    useEffect(() => {
+        let newId = id;
         const checkProfile = () => {
-            if (!id || id === 'undefined') {
-                isAuth ? id = userId : history.push('/login');
+            if (!id) {
+                isAuth ? newId = String(userId) : history.push('/login');
             }
-            getUserProfile(id);
-            getUserStatus(id);
+
+            getUserProfile(Number(newId));
+            getUserStatus(Number(newId));
         };
 
         checkProfile();
-    }, [match.params.id, isAuth, getUserProfile, userId, getUserStatus, history]);
+    }, [id, isAuth, getUserProfile, userId, getUserStatus, history]);
 
     const updateProfileInfo = (info: UpdatedProfileType) => {
         const {aboutMe, lookingForAJob, lookingForAJobDescription, fullName, ...contacts} = info;
@@ -129,7 +125,7 @@ const mapStateToProps = (state: AppStateType) => {
 };
 
 export default compose(
-    connect<MapStatePropsType, MapDispatchPropsType, RouteProps, AppStateType>(mapStateToProps, {
+    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {
         getUserProfile,
         getUserStatus,
         setUserStatus,

@@ -23,6 +23,7 @@ import {compose} from "redux";
 import {AppStateType} from "../../redux/redux-store";
 import {DialogsType, MessagesType, ProfileType} from "../../redux/reducers/types";
 import Messages from "./Messages";
+import {useParams} from "react-router-dom";
 
 type MapStatePropsType = {
     dialogs: Array<DialogsType>
@@ -44,20 +45,16 @@ type MapDispatchPropsType = {
     restoreMessage: (messageId: string) => void
 }
 
-type RouteProps = {
-    match: any
-};
+type PropsType = MapStatePropsType & MapDispatchPropsType;
 
-type PropsType = MapStatePropsType & MapDispatchPropsType & RouteProps;
-
-const MessagesContainer:FC<PropsType> = ({getDialogs, match, ...props}) => {
-    let friendId = match.params.id;
+const MessagesContainer:FC<PropsType> = ({getDialogs, ...props}) => {
+    let { id } = useParams();
 
     useEffect(() => {
         getDialogs()
     }, []);
 
-    return <Messages {...props} friendId={friendId}/>
+    return <Messages {...props} friendId={Number(id)}/>
 };
 
 
@@ -75,7 +72,7 @@ const mapStateToProps = (state: AppStateType) => {
 };
 
 export default compose(
-    connect<MapStatePropsType, MapDispatchPropsType, RouteProps, AppStateType>(mapStateToProps, {
+    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {
         sendMessage,
         getDialogs,
         getMessages,

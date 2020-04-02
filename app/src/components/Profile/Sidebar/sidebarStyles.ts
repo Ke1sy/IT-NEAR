@@ -42,6 +42,10 @@ const styles = createStyles((theme: Theme) => ({
 
         '&.github': {
             color: '#000'
+        },
+
+        '&.website': {
+            color: '#0077b5'
         }
     },
 }));

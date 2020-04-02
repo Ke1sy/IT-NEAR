@@ -49,9 +49,8 @@ const Users: FC<PropsType> = ({
                 <SearchContainer onChangeSearchText={onChangeSearchText} onResetSearch={onResetSearch}/>
                 <Grid container spacing={3}>
                     {users.map((user: UserType) =>
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={user.id}>
                             <User
-                                key={user.id}
                                 user={user}
                                 follow={follow}
                                 unfollow={unfollow}

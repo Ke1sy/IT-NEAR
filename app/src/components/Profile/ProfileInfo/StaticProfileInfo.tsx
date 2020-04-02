@@ -20,10 +20,6 @@ type PropsType = {
     isOwner: boolean
     setUserStatus: (status: string) => void
 }
-type ContactsArrType = {
-    name: string
-    url: string
-}
 
 const useStyles = makeStyles(theme => ({
     content: {
@@ -65,18 +61,6 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(2)
     },
     contacts: {},
-    actions: {
-        textAlign: 'right',
-        marginBottom: 15,
-        display: 'flex',
-        flexDirection: 'column'
-
-    },
-
-    actionsBtn: {
-        marginBottom: 20,
-        borderRadius: 0
-    },
 
     block: {
         marginBottom: theme.spacing(2)
@@ -95,98 +79,45 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const StaticProfileInfo: FC<PropsType> = ({profile, isOwner}) => {
-    // const [contactsArr, setContactsArr] = useState<Array<ContactsArrType>>([]);
     const classes = useStyles();
     const {fullName, lookingForAJobDescription, aboutMe, lookingForAJob} = profile;
-    //
-    // useEffect(() => {
-    //     let newArr: ContactsArrType[] = [];
-    //     Object.entries(profile.contacts).forEach(([key, value]) => {
-    //             if (value !== null && value.length) {
-    //                 newArr = [...newArr, {name: key, url: value}];
-    //             }
-    //         }
-    //     );
-    //     setContactsArr(newArr);
-    // }, [profile.contacts]);
 
     return (
         <div className={classes.content}>
-            <Grid container spacing={2}>
-                <Grid item sm={8} md={9}>
-                    <Typography variant="h6" className={classes.title}>Personal Info</Typography>
+            <Typography variant="h6" className={classes.title}>Personal Info</Typography>
 
-                    <Paper className={classNames(`${classes.paper}`, {[`${classes.withBg}`]: lookingForAJob})}>
-
-                        {/*<div className={classes.contacts}>*/}
-                        {/*    {*/}
-                        {/*        contactsArr.map((item: any) =>*/}
-                        {/*            <a href={item.url} key={item.name} target="_blank"*/}
-                        {/*               rel="noopener noreferrer">*/}
-                        {/*                {item.name}*/}
-                        {/*            </a>*/}
-                        {/*        )*/}
-                        {/*    }*/}
-                        {/*</div>*/}
-                        <div className={classes.block}>
-                            <Typography variant="subtitle1" component="span">Full Name: </Typography>
-                            <Typography variant="body1" component="span">{fullName}</Typography>
-                        </div>
-                        <div className={classes.block}>
-                            <Typography variant="subtitle1" component="span">About me: </Typography>
-                            <Typography variant="body1" component="span">{aboutMe}</Typography>
-                        </div>
-                        <div className={classes.block}>
-                            <Typography variant="subtitle1" component="span">Looking for a job: </Typography>
-                            <Typography variant="body1" component="span">
-                                {lookingForAJob ?
-                                    <DoneOutlineIcon fontSize="small" className={classNames(
-                                        classes.jobIcon,
-                                        'success')}/> :
-                                    <NotInterestedIcon fontSize="small" className={classNames(
-                                        classes.jobIcon,
-                                        'error'
-                                    )}/>
-                                }
-                            </Typography>
-                        </div>
-                        {lookingForAJob &&
-                        <div className={classes.block}>
-                            <Typography variant="subtitle1" component="span">Job Description: </Typography>
-                            <Typography variant="body1" component="span">
-                                {lookingForAJobDescription}
-                            </Typography>
-                        </div>
+            <Paper className={classNames(`${classes.paper}`, {[`${classes.withBg}`]: lookingForAJob})}>
+                <div className={classes.block}>
+                    <Typography variant="subtitle1" component="span">Full Name: </Typography>
+                    <Typography variant="body1" component="span">{fullName}</Typography>
+                </div>
+                <div className={classes.block}>
+                    <Typography variant="subtitle1" component="span">About me: </Typography>
+                    <Typography variant="body1" component="span">{aboutMe}</Typography>
+                </div>
+                <div className={classes.block}>
+                    <Typography variant="subtitle1" component="span">Looking for a job: </Typography>
+                    <Typography variant="body1" component="span">
+                        {lookingForAJob ?
+                            <DoneOutlineIcon fontSize="small" className={classNames(
+                                classes.jobIcon,
+                                'success')}/> :
+                            <NotInterestedIcon fontSize="small" className={classNames(
+                                classes.jobIcon,
+                                'error'
+                            )}/>
                         }
-                    </Paper>
-                </Grid>
-                <Grid item sm={4} md={3}>
-
-                    <div className={classes.actions}>
-                        {!isOwner &&
-                        <>
-                            <Button variant="contained" color="primary" className={classes.actionsBtn}
-                                    startIcon={<PersonAddDisabledRoundedIcon/>}>
-                                Follow
-                            </Button>
-                            <Button variant="contained" color="secondary" className={classes.actionsBtn}
-                                    startIcon={<EmailRoundedIcon/>}>
-                                Message
-                            </Button>
-                        </>
-                        }
-                        {/*todo remove*/}
-                        {isOwner &&
-                        <div>
-                            <Button variant="contained" color="primary" component={NavLink} className={classes.actionsBtn} to="/settings" startIcon={<SettingsIcon/>}>
-                                Settings
-                            </Button>
-                        </div>
-                        }
-                    </div>
-                </Grid>
-            </Grid>
-
+                    </Typography>
+                </div>
+                {lookingForAJob &&
+                <div className={classes.block}>
+                    <Typography variant="subtitle1" component="span">Job Description: </Typography>
+                    <Typography variant="body1" component="span">
+                        {lookingForAJobDescription}
+                    </Typography>
+                </div>
+                }
+            </Paper>
         </div>
     )
 };

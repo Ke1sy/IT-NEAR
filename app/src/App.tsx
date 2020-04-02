@@ -9,6 +9,8 @@ import withSuspense from "./components/HOC/Suspense";
 import {getAppInited} from "./redux/reducers/app-selectors";
 import {AppStateType} from "./redux/redux-store";
 import {createStyles, StyleRules, Theme, WithStyles, withStyles, CssBaseline, Container} from "@material-ui/core";
+import Notifier from "./components/Notifier/Notifier";
+import {withSnackbar, WithSnackbarProps} from 'notistack';
 
 const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
@@ -39,16 +41,17 @@ const styles = (theme: Theme): StyleRules => createStyles({
 });
 
 
-type PropsType = MapStatePropsType & MapDispatchPropsType & WithStyles<typeof styles>;
+type PropsType = MapStatePropsType & MapDispatchPropsType & WithStyles<typeof styles> & WithSnackbarProps;
 
 class App extends React.Component<PropsType> {
     componentDidMount() {
         this.props.appInitialize();
+
         window.addEventListener("unhandledrejection", this.globalError);
     }
 
     globalError = (e: any) => {
-        console.error(`Error has occured. Reason:  + ${e.reason}`);
+        this.props.enqueueSnackbar(`${e.reason}`, {variant: 'error'});
     };
 
     componentWillUnmount() {
@@ -56,25 +59,26 @@ class App extends React.Component<PropsType> {
     }
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
         if (!this.props.inited) {
             return <Preloader showPreloader={!this.props.inited}/>
         }
         return (
             <>
+                <Notifier/>
                 <CssBaseline/>
                 <HeaderContainer/>
                 <Container maxWidth="lg" component="main" className={classes.content}>
-                        <div className={classes.toolbar}/>
-                        <Switch>
-                            <Route exact path='/' render={() => <Redirect to={"/profile"}/>}/>
-                            <Route path="/profile/:id?" component={withSuspense(ProfileContainer)}/>
-                            <Route path="/settings" component={withSuspense(ProfileContainer)}/>
-                            <Route path="/dialogs/:id?" component={withSuspense(MessagesContainer)}/>
-                            <Route path="/login" component={withSuspense(LoginContainer)}/>
-                            <Route path="/users" component={withSuspense(UsersContainer)}/>
-                            <Route path="*" component={withSuspense(NotFound)}/>
-                        </Switch>
+                    <div className={classes.toolbar}/>
+                    <Switch>
+                        <Route exact path='/' render={() => <Redirect to={"/profile"}/>}/>
+                        <Route path="/profile/:id?" component={withSuspense(ProfileContainer)}/>
+                        <Route path="/settings" component={withSuspense(ProfileContainer)}/>
+                        <Route path="/dialogs/:id?" component={withSuspense(MessagesContainer)}/>
+                        <Route path="/login" component={withSuspense(LoginContainer)}/>
+                        <Route path="/users" component={withSuspense(UsersContainer)}/>
+                        <Route path="*" component={withSuspense(NotFound)}/>
+                    </Switch>
                 </Container>
             </>
         );
@@ -90,7 +94,8 @@ const mapStateToProps = (state: AppStateType) => {
 
 export default compose(
     withStyles(styles),
-    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {appInitialize}),
+    withSnackbar,
+    connect<MapStatePropsType, MapDispatchPropsType, WithSnackbarProps, AppStateType>(mapStateToProps, {appInitialize}),
     withRouter
 )(App) as React.ComponentType<any>;
 

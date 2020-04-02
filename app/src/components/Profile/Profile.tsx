@@ -1,13 +1,10 @@
 import React, {FC} from 'react';
-import PostsContainer from './Posts/PostsContainer';
 import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
 import {Route, Switch, withRouter, RouteComponentProps, NavLink} from "react-router-dom";
-import {Link, makeStyles} from "@material-ui/core";
-import Sidebar from "./Sidebar/Sidebar";
-import ProfileCover from './Cover/ProfileCover';
 import StaticProfileInfo from "./ProfileInfo/StaticProfileInfo";
 import ProfileLayout from "./ProfileLayout";
-import ProfileSettings from "./ProfileSettings/ProfileSettings";
+// import ProfileSettings from "./ProfileSettings/ProfileSettings";
+import SettingsReduxForm from "./ProfileSettings/SettingsForm";
 
 type PropsType = {
     profile: ProfileType | null
@@ -34,11 +31,11 @@ const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile,
                     {isOwner &&
                     <Route exact path={`/settings`}>
                         {currentUserInfo &&
-                        <ProfileSettings setProfileInfo={setProfileInfo} profile={currentUserInfo} loadPhoto={loadPhoto}/>
+                        <SettingsReduxForm profile={currentUserInfo} onSubmit={setProfileInfo}/>
                         }
                     </Route>
                     }
-                    <Route exact path="/profile/:id?">
+                    <Route path="/profile/:id?">
                         {profile &&
                         <StaticProfileInfo
                             profile={profile}

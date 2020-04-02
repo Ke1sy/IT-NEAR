@@ -9,7 +9,8 @@ import {
     List,
     ListItem,
     Divider,
-    Link
+    Link,
+    Button
 } from '@material-ui/core';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import ProfileStatus from "../Status/ProfileStatus";
@@ -57,6 +58,7 @@ const SocialIcon = (props: any) => {
 const Sidebar: FC<PropsType & WithStyles> = ({profile: {photos, fullName, contacts}, status, classes, setUserStatus, isOwner}) => {
     const userAvatar = photos.large !== null ? photos.large : userPlaceholder;
     const [contactsArr, setContactsArr] = useState<Array<ContactsArrType>>([]);
+
     useEffect(() => {
         let newArr: ContactsArrType[] = [];
         Object.entries(contacts).forEach(([key, value]) => {
@@ -76,18 +78,17 @@ const Sidebar: FC<PropsType & WithStyles> = ({profile: {photos, fullName, contac
                 <ProfileStatus status={status} setUserStatus={setUserStatus} isOwner={isOwner}/>
             </div>
             <List aria-label="socials" disablePadding={true} className={classes.socials} component="div">
-                    {
-                        contactsArr.map(({name, url}: {name: any, url: string}) =>
-                            <Fragment key={name}>
-                                <Divider/>
-                                <ListItem button component={Link} href={url} target="_blank" rel="noopener noreferrer">
-                                    <SocialIcon name={name} className={classNames(`${classes.socialsIcon}`, `${name}`)}/>
-                                    <Typography variant="body2" noWrap>{url}</Typography>
-                                </ListItem>
-                            </Fragment>
-                        )
-                    }
-
+                {
+                    contactsArr.map(({name, url}: { name: any, url: string }) =>
+                        <Fragment key={name}>
+                            <Divider/>
+                            <ListItem button component={Link} href={url} target="_blank" rel="noopener noreferrer">
+                                <SocialIcon name={name} className={classNames(`${classes.socialsIcon}`, `${name}`)}/>
+                                <Typography variant="body2" noWrap>{url}</Typography>
+                            </ListItem>
+                        </Fragment>
+                    )
+                }
             </List>
         </Paper>
     )

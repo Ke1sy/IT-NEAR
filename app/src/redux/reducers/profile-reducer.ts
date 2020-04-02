@@ -3,6 +3,8 @@ import {reset, stopSubmit} from 'redux-form';
 import {PhotosType, ProfileType} from "./types";
 import {ThunkAction} from "redux-thunk";
 import {AppStateType} from "../redux-store";
+import { enqueueSnackbar } from "./app-reducer";
+
 
 export const SET_STATUS = 'profile/SET_STATUS';
 export const SET_USER_PROFILE = 'profile/SET_USER_PROFILE';
@@ -80,22 +82,29 @@ export const getUserStatus = (id: number): ThunkType => async (dispatch) => {
 };
 
 export const setUserStatus = (status: string): ThunkType => async (dispatch) => {
-    try {
         const response = await profileAPI.setStatus(status);
         if (response.resultCode === ResultCodes.Success) {
             dispatch(setStatus(status));
+            dispatch(enqueueSnackbar({
+                message: 'Status updated!',
+                options: {variant: 'success'}
+            }))
         }
-    } catch (error) {
-        console.error(error)
-    }
-
 };
 
 export const setProfileInfo = (info: ProfileType, userId: number) => async (dispatch: any) => {
     const {resultCode, messages} = await profileAPI.setProfileInfo(info);
     if (resultCode === ResultCodes.Success) {
         dispatch(getUserProfile(userId));
+        dispatch(enqueueSnackbar({
+            message: 'Profile successfully updated!',
+            options: {variant: 'success'}
+        }))
     } else {
+        dispatch(enqueueSnackbar({
+            message: messages,
+            options: {variant: 'error'}
+        }));
         dispatch(stopSubmit("settings", {_error: messages}));
     }
 };
