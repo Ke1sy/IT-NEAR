@@ -8,25 +8,27 @@ import {PostsData, PostsDataVariables, PostsData_posts} from '../../../server/ty
 import {AddPostMutation, AddPostMutationVariables} from '../../../server/types/AddPostMutation';
 import {DeletePostMutation, DeletePostMutationVariables} from '../../../server/types/DeletePostMutation';
 import {UpdatePostMutation, UpdatePostMutationVariables} from '../../../server/types/UpdatePostMutation';
-import {ProfileType} from "../../../redux/reducers/types";
+import {ProfileType, OpenPostDialogType} from "../../../redux/reducers/types";
 import {reset} from "redux-form";
 import { useDispatch } from 'react-redux';
-import {Alert} from "@material-ui/lab";
 
 type PropsType = {
     authorId: number,
     isOwner: boolean,
     author: ProfileType,
+    currentUserInfo: ProfileType | null
 }
 
-const PostsContainer: FC<PropsType> = ({authorId, isOwner, author}) => {
+
+const PostsContainer: FC<PropsType> = ({authorId, isOwner, author, currentUserInfo}) => {
     const {data, loading: dataLoading} = useQuery<PostsData, PostsDataVariables>(GET_POSTS, {
         variables: {authorId},
     });
-    const [addPost, {loading: addPostLoading, error: addPostError}] = useMutation<AddPostMutation, AddPostMutationVariables>(ADD_POST);
+    const [addPost, {loading: addPostLoading}] = useMutation<AddPostMutation, AddPostMutationVariables>(ADD_POST);
     const [deletePost] = useMutation<DeletePostMutation, DeletePostMutationVariables>(DELETE_POST);
     const [updatePost] = useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UPDATE_POST);
     const [editDialogIsOpen, setEditDialogIsOpen] = useState(false);
+    const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [selectedPost, setSelectedPost] = useState<PostsData_posts | null>(null);
     const dispatch = useDispatch();
 
@@ -37,7 +39,7 @@ const PostsContainer: FC<PropsType> = ({authorId, isOwner, author}) => {
                     text: postText,
                     date: new Date().toString(),
                     authorId,
-                    likesCount: 0
+                    likedBy: []
                 },
                 refetchQueries: [{
                     query: GET_POSTS,
@@ -59,9 +61,10 @@ const PostsContainer: FC<PropsType> = ({authorId, isOwner, author}) => {
         });
     };
 
-    const onUpdatePost = (id: string, text: string) => {
+    const onEditPost = (newText: string, post: PostsData_posts) => {
+        let {id, likedBy} = post;
         updatePost({
-            variables: {id, text},
+            variables: {id, text: newText, likedBy},
             refetchQueries: [{
                 query: GET_POSTS,
                 variables: {authorId}
@@ -69,9 +72,30 @@ const PostsContainer: FC<PropsType> = ({authorId, isOwner, author}) => {
         });
     };
 
-    const openEditDialog = (isOpen: boolean, post: PostsData_posts | null) => {
-        setSelectedPost(post);
-        setEditDialogIsOpen(isOpen);
+    const onLikePost = (userId: string, post: PostsData_posts) => {
+        let {id, text, likedBy} = post;
+        likedBy = likedBy.includes(userId) ? likedBy.filter(item => item !== userId) : [...likedBy, userId];
+        updatePost({
+            variables: {id, text, likedBy},
+            refetchQueries: [{
+                query: GET_POSTS,
+                variables: {authorId}
+            }]
+        });
+    };
+
+    const openDialog = (isOpen: boolean, selectedItem: PostsData_posts | null, type: OpenPostDialogType) => {
+        setSelectedPost(selectedItem);
+        switch (type) {
+            case "delete":
+                setDeleteDialogIsOpen(isOpen);
+                break;
+            case "edit":
+                setEditDialogIsOpen(isOpen);
+                break;
+            default:
+                break;
+        }
     };
 
     if (dataLoading  || !data) return <Preloader showPreloader={true}/>;
@@ -79,16 +103,18 @@ const PostsContainer: FC<PropsType> = ({authorId, isOwner, author}) => {
     return (
         <Posts
             posts={posts}
-            authorId={authorId}
             isOwner={isOwner}
+            ownerId={currentUserInfo ? currentUserInfo.userId : null}
             onAddPost={onAddPost}
             onDeletePost={onDeletePost}
-            onUpdatePost={onUpdatePost}
+            onEditPost={onEditPost}
             author={author}
             editDialogIsOpen={editDialogIsOpen}
-            openEditDialog={openEditDialog}
+            deleteDialogIsOpen={deleteDialogIsOpen}
             selectedPost={selectedPost}
             addPostLoading={addPostLoading}
+            onLikePost={onLikePost}
+            openDialog={openDialog}
         />
     )
 };

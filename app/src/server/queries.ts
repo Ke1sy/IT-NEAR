@@ -5,7 +5,7 @@ export const GET_POSTS = gql`
         posts(authorId: $authorId){
             id,
             text,
-            likesCount,
+            likedBy,
             date,
             authorId
         }

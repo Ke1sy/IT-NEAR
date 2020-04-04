@@ -17,6 +17,7 @@ import {compose} from "redux";
 import queryString from 'query-string';
 import {UserType} from "../../redux/reducers/types";
 import {AppStateType} from "../../redux/redux-store";
+import { withAuthRedirect } from '../Redirects/AuthRedirect';
 
 type MapStatePropsType = {
     pageSize: number
@@ -113,6 +114,7 @@ export default compose(
         follow,
         startChat
     }),
-    withRouter
+    withRouter,
+    withAuthRedirect,
 )(UsersContainer) as React.ComponentType<any>;
 

@@ -76,3 +76,6 @@ export type LoginFormDataPropsType = {
     rememberMe: boolean,
     captcha: string | null
 }
+
+export type OpenPostDialogType = 'edit' | 'delete';
+

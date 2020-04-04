@@ -131,7 +131,7 @@ const User: FC<PropsType> = ({unfollow, follow, user, followInProgress, startCha
                 </Button>
             </CardActions>
             <CardActionArea className={classes.bottom}>
-                <Link component={NavLink} to={`/profile/${id}`} className={classes.bottomLink} underline="none">
+                <Link component={NavLink} to={`/profile/${id}`}  className={classes.bottomLink} underline="none">
                     <Typography variant="body1" component="span">
                         View Profile
                     </Typography>

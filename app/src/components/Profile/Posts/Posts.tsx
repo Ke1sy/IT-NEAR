@@ -6,21 +6,26 @@ import Typography from "@material-ui/core/Typography";
 import Paper from '@material-ui/core/Paper';
 import {makeStyles} from "@material-ui/core";
 import StyledDivider from "./StyledDivider";
-import {ProfileType} from "../../../redux/reducers/types";
+import {OpenPostDialogType, ProfileType} from "../../../redux/reducers/types";
 import EditDialog from "../Dialogs/EditDialog";
+import DeleteDialog from "../Dialogs/DeleteDialog";
 
 type PropsType = {
     posts: PostsData_posts[] | null,
     onAddPost: ({postText}: { postText: string }) => void,
     onDeletePost: (id: string) => void,
-    onUpdatePost: (id: string, text: string) => void,
-    authorId: number,
+    onEditPost: (newText: string, post: PostsData_posts) => void,
     isOwner: boolean,
+    ownerId: number | null,
     author: ProfileType,
+
     editDialogIsOpen: boolean,
-    openEditDialog: (isOpen: boolean, post: PostsData_posts | null) => void,
+    deleteDialogIsOpen: boolean,
+    openDialog: (isOpen: boolean, selectedItem: PostsData_posts | null, type: OpenPostDialogType) => void,
+
     selectedPost: null | PostsData_posts,
-    addPostLoading: boolean
+    addPostLoading: boolean,
+    onLikePost: (userId: string, post: PostsData_posts) => void
 }
 
 const useStyles = makeStyles(theme => ({
@@ -33,7 +38,21 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const Posts: FC<PropsType> = (({posts = [], authorId, isOwner, onAddPost, onDeletePost, onUpdatePost, author, selectedPost, editDialogIsOpen, openEditDialog, addPostLoading}) => {
+const Posts: FC<PropsType> = (({
+                                   posts = [],
+                                   onLikePost,
+                                   isOwner,
+                                   ownerId,
+                                   onAddPost,
+                                   onDeletePost,
+                                   onEditPost,
+                                   author,
+                                   selectedPost,
+                                   addPostLoading,
+                                   editDialogIsOpen,
+                                   deleteDialogIsOpen,
+                                   openDialog
+}) => {
     const classes = useStyles();
 
     return (
@@ -52,17 +71,34 @@ const Posts: FC<PropsType> = (({posts = [], authorId, isOwner, onAddPost, onDele
                     </Paper>
                 </>
             }
-            {posts && posts.length > 0 && posts.map((post) => (
-                <Post post={post} key={post.id} onDeletePost={onDeletePost} openEditDialog={openEditDialog} author={author}/>
+
+            {posts && posts.length > 0 && posts.map(post => (
+                <Post
+                    post={post}
+                    key={post.id}
+                    openDialog={openDialog}
+                    author={author}
+                    ownerId={ownerId}
+                    onLikePost={onLikePost}
+                />
             ))}
 
             {selectedPost &&
-            <EditDialog
-                open={editDialogIsOpen}
-                selectedPost={selectedPost}
-                onUpdatePost={onUpdatePost}
-                openEditDialog={openEditDialog}
-            />
+                <>
+                    <EditDialog
+                        isOpen={editDialogIsOpen}
+                        itemToEdit={selectedPost}
+                        onEditPost={onEditPost}
+                        openDialog={openDialog}
+                    />
+
+                    <DeleteDialog
+                        isOpen={deleteDialogIsOpen}
+                        openDialog={openDialog}
+                        deleteAction={onDeletePost}
+                        itemToDelete={selectedPost}
+                    />
+                </>
             }
         </>
     )

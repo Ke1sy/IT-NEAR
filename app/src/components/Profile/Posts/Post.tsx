@@ -4,14 +4,17 @@ import {PostsData_posts} from "../../../server/types/PostsData";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import {grey} from '@material-ui/core/colors';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
-import {ProfileType} from "../../../redux/reducers/types";
+import {OpenPostDialogType, ProfileType} from "../../../redux/reducers/types";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PostSubmenu from "./PostSubmenu";
+import classNames from "classnames";
+
 type PropsType = {
-    onDeletePost: (id: string) => void
     post: PostsData_posts,
     author: ProfileType,
-    openEditDialog: (isOpen: boolean, post: PostsData_posts | null) => void,
+    onLikePost: (userId: string, post: PostsData_posts) => void,
+    ownerId: number | null,
+    openDialog: (isOpen: boolean, selectedItem: PostsData_posts | null, type: OpenPostDialogType) => void,
 }
 
 const useStyles = makeStyles(theme => ({
@@ -37,6 +40,11 @@ const useStyles = makeStyles(theme => ({
             '& $likeIcon': {
                 color: theme.palette.secondary.main
             }
+        }
+    },
+    isLiked: {
+        '& $likeIcon': {
+            color: theme.palette.secondary.main
         }
     },
     likeIcon: {
@@ -71,14 +79,21 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Posts: FC<PropsType> = ({post, onDeletePost, author: {fullName, photos}, openEditDialog}) => {
-    const {text, likesCount, date} = post;
+const Post: FC<PropsType> = ({post, author: {fullName, photos}, openDialog, onLikePost, ownerId}) => {
+    const {text, date, likedBy} = post;
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const userAvatar = photos.large !== null ? photos.large : userPlaceholder;
+    const likedByCurrentUser = likedBy.includes(String(ownerId));
 
     const handleClick = ({currentTarget}: any) => {
         setAnchorEl(currentTarget);
+    };
+
+    const onLikePostAction = () => {
+        if (ownerId) {
+            onLikePost(String(ownerId), post)
+        }
     };
 
     const handleClose = () => {
@@ -87,7 +102,7 @@ const Posts: FC<PropsType> = ({post, onDeletePost, author: {fullName, photos}, o
 
     const getDate = (date: string) => {
         const formattedDate = new Date(+date);
-        return formattedDate.toLocaleDateString()  + ' at ' +  formattedDate.toLocaleTimeString().split(":").slice(0, -1).join(':');
+        return formattedDate.toLocaleDateString() + ' at ' + formattedDate.toLocaleTimeString().split(":").slice(0, -1).join(':');
     };
     const postDate = getDate(date);
     return (
@@ -102,37 +117,43 @@ const Posts: FC<PropsType> = ({post, onDeletePost, author: {fullName, photos}, o
                         {postDate}
                     </Typography>
                 </div>
-                <IconButton
-                    aria-label="more"
-                    aria-controls="post-submenu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                    className={classes.more}
-                >
-                    <MoreVertIcon/>
-                </IconButton>
-                <PostSubmenu
-                    post={post}
-                    anchorEl={anchorEl}
-                    handleClose={handleClose}
-                    onDeletePost={onDeletePost}
-                    openEditDialog={openEditDialog}
-                />
+                {ownerId &&
+                <>
+                    <IconButton
+                        aria-label="more"
+                        aria-controls="post-submenu"
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                        className={classes.more}
+                    >
+                        <MoreVertIcon/>
+                    </IconButton>
+                    <PostSubmenu
+                        post={post}
+                        anchorEl={anchorEl}
+                        handleClose={handleClose}
+                        openDialog={openDialog}
+                    />
+                </>
+                }
+
             </div>
             <Typography variant="body1" className={classes.content}>
                 {text}
             </Typography>
             <Divider/>
             <Typography variant="body2" className={classes.footer}>
-                <IconButton className={classes.likeBtn} size="small">
+                <IconButton className={
+                    classNames(classes.likeBtn, {[classes.isLiked]: likedByCurrentUser})
+                } size="small" onClick={onLikePostAction} disabled={!ownerId}>
                     <FavoriteIcon fontSize="small" className={classes.likeIcon}/>
                 </IconButton>
                 <Typography variant="body2" component="span">
-                    {likesCount}
+                    {likedBy.length}
                 </Typography>
             </Typography>
         </Paper>
     )
 };
 
-export default Posts;
+export default Post;

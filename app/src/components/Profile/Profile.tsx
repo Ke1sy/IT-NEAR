@@ -39,6 +39,7 @@ const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile,
                         <ProfileInfoTabs
                             profile={profile}
                             isOwner={isOwner}
+                            currentUserInfo={currentUserInfo}
                         />
                         }
                     </Route>

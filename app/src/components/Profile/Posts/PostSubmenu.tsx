@@ -4,25 +4,31 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {makeStyles} from "@material-ui/core/styles";
 import {PostsData_posts} from "../../../server/types/PostsData";
+import {grey} from '@material-ui/core/colors';
+import {OpenPostDialogType} from "../../../redux/reducers/types";
 
 type PropsType = {
-    onDeletePost: (id: string) => void
     post: PostsData_posts,
-    openEditDialog: (isOpen: boolean, post: PostsData_posts | null) => void,
     anchorEl: any,
-    handleClose: () => void
+    handleClose: () => void,
+    openDialog: (isOpen: boolean, selectedItem: PostsData_posts | null, type: OpenPostDialogType) => void,
 }
 
 const useStyles = makeStyles(theme => ({
     menuItemText: {
-        paddingLeft: 10
+        paddingLeft: 10,
+        color: grey[600],
+
+    },
+    menuItemIcon: {
+        color: grey[600],
     },
     paper: {
         backgroundColor: theme.palette.common.white,
     }
 }));
 
-const PostSubmenu:FC<PropsType> = ({openEditDialog, onDeletePost, post, anchorEl, handleClose}) => {
+const PostSubmenu:FC<PropsType> = ({post, anchorEl, handleClose, openDialog}) => {
     const classes = useStyles();
     return (
         <div>
@@ -36,14 +42,14 @@ const PostSubmenu:FC<PropsType> = ({openEditDialog, onDeletePost, post, anchorEl
                     className: classes.paper
                 }}
             >
-                <MenuItem onClick={() => openEditDialog(true, post)}>
-                    <EditIcon fontSize="small"  color="primary"/>
+                <MenuItem onClick={() => openDialog(true, post, 'edit')}>
+                <EditIcon fontSize="small" className={classes.menuItemIcon}/>
                     <Typography variant="body2" className={classes.menuItemText}>
                         Edit
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={() => onDeletePost(post.id)}>
-                    <DeleteIcon fontSize="small" color="secondary"/>
+                <MenuItem onClick={() => openDialog(true, post, 'delete')}>
+                    <DeleteIcon fontSize="small" className={classes.menuItemIcon}/>
                     <Typography variant="body2" className={classes.menuItemText}>
                         Delete
                     </Typography>

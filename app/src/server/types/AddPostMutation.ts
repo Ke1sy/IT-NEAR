@@ -11,8 +11,8 @@ export interface AddPostMutation_addPost {
   __typename: "Post";
   text: string;
   date: string;
-  likesCount: number;
   authorId: number;
+  likedBy: string[];
 }
 
 export interface AddPostMutation {
@@ -21,7 +21,7 @@ export interface AddPostMutation {
 
 export interface AddPostMutationVariables {
   text: string;
-  likesCount: number;
   date: string;
   authorId: number;
+  likedBy: string[];
 }

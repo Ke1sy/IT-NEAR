@@ -74,17 +74,19 @@ const StaticProfileInfo: FC<PropsType> = ({profile, isOwner}) => {
     const classes = useStyles();
     const {fullName, lookingForAJobDescription, aboutMe, lookingForAJob} = profile;
     return (<>
-        <StyledDivider customClasses={classes.divider}/>
+            <StyledDivider customClasses={classes.divider}/>
 
-        <Paper className={classNames(`${classes.paper}`, {[`${classes.withBg}`]: lookingForAJob})}>
+            <Paper className={classNames(`${classes.paper}`, {[`${classes.withBg}`]: lookingForAJob})}>
                 <div className={classes.block}>
                     <Typography variant="subtitle1" component="span">Full Name: </Typography>
                     <Typography variant="body1" component="span">{fullName}</Typography>
                 </div>
+                {aboutMe &&
                 <div className={classes.block}>
                     <Typography variant="subtitle1" component="span">About me: </Typography>
                     <Typography variant="body1" component="span">{aboutMe}</Typography>
                 </div>
+                }
                 <div className={classes.block}>
                     <Typography variant="subtitle1" component="span">Looking for a job: </Typography>
                     <Typography variant="body1" component="span">

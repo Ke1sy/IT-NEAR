@@ -11,7 +11,7 @@ export interface PostsData_posts {
   __typename: "Post";
   id: string;
   text: string;
-  likesCount: number;
+  likedBy: string[];
   date: string;
   authorId: number;
 }

@@ -16,6 +16,7 @@ import {AppStateType} from "../../redux/redux-store";
 import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
 import ProfileError from './ProfileError/ProfileError';
 import Preloader from "../Preloader/Preloader";
+import {withAuthRedirect} from "../Redirects/AuthRedirect";
 
 type MapStatePropsType = {
     profile: ProfileType | null
@@ -52,7 +53,7 @@ const ProfileContainer: FC<PropsType> = ({
                                              profileIsLoading,
                                              currentUserInfo
                                          }) => {
-    let { id } = useParams();
+    let {id} = useParams();
     let history = useHistory();
     const isOwner = !id || Number(id) === userId;
 
@@ -134,6 +135,7 @@ export default compose(
         setProfileInfo
     }),
     withRouter,
+    withAuthRedirect,
 )(ProfileContainer) as React.ComponentType<any>;
 
 

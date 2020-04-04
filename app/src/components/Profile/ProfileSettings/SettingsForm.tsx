@@ -141,7 +141,8 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
                         multiline
                         variant="outlined"
                         name="lookingForAJobDescription"
-                        label="Job description"
+                        label="Job description *"
+                        validate={required}
                     />
                 </Paper>
                 {error &&

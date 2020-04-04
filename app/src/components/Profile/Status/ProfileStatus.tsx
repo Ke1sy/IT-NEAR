@@ -1,7 +1,7 @@
 import React, {useState, FC} from 'react';
-import { makeStyles, Tooltip, Typography} from "@material-ui/core";
+import {makeStyles, Tooltip, Typography} from "@material-ui/core";
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
-import StatusDialog from "./StatusDialog";
+import StatusDialog from "../Dialogs/StatusDialog";
 
 type PropsType = {
     status: string
@@ -10,14 +10,8 @@ type PropsType = {
 }
 
 const useStyles = makeStyles(theme => ({
-    status: {},
     statusTxt: {
         textAlign: 'center'
-    },
-    btn: {
-        padding: 5,
-        marginLeft: 10,
-        display: 'inline-block'
     },
     icon: {
         cursor: 'pointer',
@@ -49,7 +43,7 @@ const ProfileStatus: FC<PropsType> = ({status, setUserStatus, isOwner}) => {
     };
 
     return (
-        <div className={classes.status}>
+        <>
             <div className={classes.statusTxt}>
                 <Typography variant="body1" component="span">{status}</Typography>
                 {isOwner &&
@@ -60,7 +54,7 @@ const ProfileStatus: FC<PropsType> = ({status, setUserStatus, isOwner}) => {
                 }
             </div>
             <StatusDialog open={open} handleClose={handleClose} status={status} setUserStatus={setUserStatus}/>
-        </div>
+        </>
     )
 };
 

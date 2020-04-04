@@ -11,6 +11,7 @@ export interface UpdatePostMutation_updatePost {
   __typename: "Post";
   id: string;
   text: string;
+  likedBy: string[];
 }
 
 export interface UpdatePostMutation {
@@ -20,4 +21,5 @@ export interface UpdatePostMutation {
 export interface UpdatePostMutationVariables {
   id?: string | null;
   text: string;
+  likedBy: string[];
 }

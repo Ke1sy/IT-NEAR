@@ -10,7 +10,8 @@ import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 
 type PropsType = {
     profile: ProfileType
-    isOwner: boolean
+    isOwner: boolean,
+    currentUserInfo: ProfileType | null
 }
 
 const useStyles = makeStyles(theme => ({
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner}) => {
+const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner, currentUserInfo}) => {
     const classes = useStyles();
     const [selectedTab, setSelectedTab] = React.useState(0);
 
@@ -53,17 +54,17 @@ const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner}) => {
                         onChangeIndex={handleChangeIndex}
                     >
                         <TabPanel selectedTab={selectedTab} index={0}>
+                            <StaticProfileInfo
+                                profile={profile}
+                                isOwner={isOwner}
+                            />
+                        </TabPanel>
+                        <TabPanel selectedTab={selectedTab} index={1}>
                             <PostsContainer
                                 author={profile}
                                 authorId={profile.userId}
                                 isOwner={isOwner}
-                            />
-
-                        </TabPanel>
-                        <TabPanel selectedTab={selectedTab} index={1}>
-                            <StaticProfileInfo
-                                profile={profile}
-                                isOwner={isOwner}
+                                currentUserInfo={currentUserInfo}
                             />
                         </TabPanel>
                     </SwipeableViews>

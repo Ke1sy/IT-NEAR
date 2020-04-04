@@ -1,12 +1,12 @@
 import {gql} from 'apollo-boost';
 
 export const ADD_POST = gql`
-   mutation AddPostMutation($text: String!, $likesCount: Int!, $date: String!, $authorId: Int!) {
-    addPost(text: $text, likesCount: $likesCount, date: $date, authorId: $authorId) {
+   mutation AddPostMutation($text: String!, $date: String!, $authorId: Int!, $likedBy: [String!]!) {
+    addPost(text: $text, date: $date, authorId: $authorId, likedBy: $likedBy) {
         text
         date
-        likesCount
-        authorId
+        authorId,
+        likedBy
     }
 }
 `;
@@ -20,10 +20,11 @@ export const DELETE_POST = gql`
 `;
 
 export const UPDATE_POST = gql`
-   mutation UpdatePostMutation($id: ID, $text: String!) {
-   updatePost(id: $id, text: $text) {
+   mutation UpdatePostMutation($id: ID, $text: String!, $likedBy: [String!]!) {
+   updatePost(id: $id, text: $text, likedBy: $likedBy) {
         id
         text
+        likedBy
     }
 }
 `;
