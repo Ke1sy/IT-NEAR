@@ -24,6 +24,7 @@ const MessageForm: FC<InjectedFormProps<FormDataType>> = ({handleSubmit, submitt
                     className: styles.textarea
                 }}
                 variant="outlined"
+                multiline
                 rowsMax="2"
             />
 

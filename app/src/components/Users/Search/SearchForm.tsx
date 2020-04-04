@@ -4,7 +4,6 @@ import {RenderField} from "../../Forms/components/FormControl";
 import {minLength, required} from "../../../utils/validate";
 import {IconButton, Paper, makeStyles} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import ClearIcon from '@material-ui/icons/Clear';
 const minLength3 = minLength(3);
 
 const useStyles = makeStyles(theme => ({

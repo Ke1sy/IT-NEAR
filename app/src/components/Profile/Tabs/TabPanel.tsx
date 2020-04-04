@@ -1,5 +1,4 @@
 import React, {FC, ReactNode} from 'react';
-import { Typography } from '@material-ui/core';
 
 type PropsType = {
     children?: ReactNode;

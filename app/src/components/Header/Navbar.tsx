@@ -1,11 +1,8 @@
-import React, {ComponentType, FC} from 'react';
+import React, {FC} from 'react';
 import {NavLink} from "react-router-dom";
 import {
-    Drawer,
     List,
     ListItem,
-    ListItemIcon,
-    ListItemText,
     makeStyles,
     Link,
     IconButton,

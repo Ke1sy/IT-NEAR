@@ -3,12 +3,12 @@ import {Menu, MenuItem, Typography} from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {makeStyles} from "@material-ui/core/styles";
+import {PostsData_posts} from "../../../server/types/PostsData";
 
 type PropsType = {
     onDeletePost: (id: string) => void
-    postText: string,
-    postId: string,
-    onUpdatePost: (id: string, text: string) => void,
+    post: PostsData_posts,
+    openEditDialog: (isOpen: boolean, post: PostsData_posts | null) => void,
     anchorEl: any,
     handleClose: () => void
 }
@@ -22,9 +22,8 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const PostSubmenu:FC<PropsType> = ({onUpdatePost, onDeletePost, postText, postId , anchorEl, handleClose}) => {
+const PostSubmenu:FC<PropsType> = ({openEditDialog, onDeletePost, post, anchorEl, handleClose}) => {
     const classes = useStyles();
-
     return (
         <div>
             <Menu
@@ -37,15 +36,14 @@ const PostSubmenu:FC<PropsType> = ({onUpdatePost, onDeletePost, postText, postId
                     className: classes.paper
                 }}
             >
-                {/*todo update dialog*/}
-                <MenuItem onClick={() => onUpdatePost('1','2')}>
-                    <EditIcon fontSize="small"/>
+                <MenuItem onClick={() => openEditDialog(true, post)}>
+                    <EditIcon fontSize="small"  color="primary"/>
                     <Typography variant="body2" className={classes.menuItemText}>
                         Edit
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={() => onDeletePost(postId)}>
-                    <DeleteIcon fontSize="small"/>
+                <MenuItem onClick={() => onDeletePost(post.id)}>
+                    <DeleteIcon fontSize="small" color="secondary"/>
                     <Typography variant="body2" className={classes.menuItemText}>
                         Delete
                     </Typography>

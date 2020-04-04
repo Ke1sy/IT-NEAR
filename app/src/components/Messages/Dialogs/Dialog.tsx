@@ -3,7 +3,7 @@ import styles from './dialog.module.scss';
 import {NavLink} from "react-router-dom";
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import {DialogsType} from "../../../redux/reducers/types";
-import {Avatar, Button, List, ListItem, ListItemAvatar, ListItemText} from "@material-ui/core";
+import {Avatar, ListItem, ListItemAvatar, ListItemText} from "@material-ui/core";
 
 type PropsType = {
     user: DialogsType

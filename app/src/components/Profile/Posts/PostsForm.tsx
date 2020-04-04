@@ -1,16 +1,19 @@
-import React, {FC} from 'react';
-import {Field, reduxForm, InjectedFormProps} from "redux-form";
+import React, {FC, useEffect} from 'react';
+import {Field, reduxForm, InjectedFormProps, reset} from "redux-form";
 import {required} from "../../../utils/validate";
 import {RenderField} from "../../Forms/components/FormControl";
-import {Divider, IconButton, makeStyles, Paper} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import {IconButton, makeStyles, Paper} from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import StyledDivider from "./StyledDivider";
+import Preloader from "../../Preloader/Preloader";
 
-type FormDataType = {
-    postText: string
+type OwnPropsType = {
+    addPostLoading: boolean
 }
 
+type FormDataType = {
+    postText: string,
+}
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -19,6 +22,7 @@ const useStyles = makeStyles(theme => ({
         marginBottom: 20
     },
     form: {
+        position: 'relative',
         display: 'flex',
         alignItems: 'flex-start'
     },
@@ -34,39 +38,38 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-type PropsType = InjectedFormProps<FormDataType>
+type PropsType = InjectedFormProps<FormDataType> & OwnPropsType
 
-const PostsForm: FC<PropsType> = ({handleSubmit, submitting, pristine}) => {
+const PostsForm: FC<PropsType> = ({handleSubmit, submitting, addPostLoading}) => {
     const classes = useStyles();
     return (
         <>
             <StyledDivider/>
             <Paper square className={classes.paper}>
                 <form className={classes.form} onSubmit={handleSubmit}>
+                    <Preloader showPreloader={addPostLoading}/>
                     <Field
                         placeholder="What's on your mind?"
                         name="postText"
                         type="textarea"
                         component={RenderField}
-                        required={true}
                         validate={[required]}
                         classes={{
                             root: classes.root,
                         }}
                         variant="outlined"
                     />
-                    <IconButton type="submit" disabled={submitting} aria-label="send" className={classes.button}>
+                    <IconButton type="submit" disabled={submitting || addPostLoading} aria-label="send" className={classes.button}>
                         <SendIcon color="primary" className={classes.buttonIcon}/>
                     </IconButton>
                 </form>
             </Paper>
         </>
-
     );
 };
 
-const PostsReduxForm = reduxForm<FormDataType>({
-    form: 'posts'
+const PostsReduxForm = reduxForm<FormDataType, OwnPropsType>({
+    form: 'posts',
 })(PostsForm);
 
 export default PostsReduxForm;

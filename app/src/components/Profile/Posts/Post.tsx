@@ -11,7 +11,7 @@ type PropsType = {
     onDeletePost: (id: string) => void
     post: PostsData_posts,
     author: ProfileType,
-    onUpdatePost: (id: string, text: string) => void,
+    openEditDialog: (isOpen: boolean, post: PostsData_posts | null) => void,
 }
 
 const useStyles = makeStyles(theme => ({
@@ -71,7 +71,8 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Posts: FC<PropsType> = ({post: {id, text, likesCount, date}, onDeletePost, onUpdatePost, author: {fullName, userId, photos}}) => {
+const Posts: FC<PropsType> = ({post, onDeletePost, author: {fullName, photos}, openEditDialog}) => {
+    const {text, likesCount, date} = post;
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const userAvatar = photos.large !== null ? photos.large : userPlaceholder;
@@ -111,12 +112,11 @@ const Posts: FC<PropsType> = ({post: {id, text, likesCount, date}, onDeletePost,
                     <MoreVertIcon/>
                 </IconButton>
                 <PostSubmenu
-                    postText={text}
-                    postId={id}
+                    post={post}
                     anchorEl={anchorEl}
                     handleClose={handleClose}
                     onDeletePost={onDeletePost}
-                    onUpdatePost={onUpdatePost}
+                    openEditDialog={openEditDialog}
                 />
             </div>
             <Typography variant="body1" className={classes.content}>
@@ -131,8 +131,6 @@ const Posts: FC<PropsType> = ({post: {id, text, likesCount, date}, onDeletePost,
                     {likesCount}
                 </Typography>
             </Typography>
-
-            {/*<button onClick={() => onDeletePost(id)}>Delete</button>*/}
         </Paper>
     )
 };

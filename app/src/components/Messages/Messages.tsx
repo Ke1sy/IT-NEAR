@@ -1,5 +1,4 @@
-import React, {useEffect, FC} from 'react';
-import styles from './messages.module.scss';
+import React, {FC} from 'react';
 import Dialog from "./Dialogs/Dialog";
 import MessagesChat from "./MessagesChat";
 import {DialogsType, MessagesType, ProfileType} from "../../redux/reducers/types";

@@ -3,7 +3,7 @@ import styles from './messages.module.scss';
 import Message from "./Message/Message";
 import MessageForm from "./Message/MessageForm";
 import {MessagesType, ProfileType} from "../../redux/reducers/types";
-import {Avatar, Link, MenuItem, Typography} from "@material-ui/core";
+import {Avatar, Link, Typography} from "@material-ui/core";
 import userPlaceholder from "../../assets/images/user-placeholder.png";
 import Preloader from "../Preloader/Preloader";
 import {NavLink} from "react-router-dom";

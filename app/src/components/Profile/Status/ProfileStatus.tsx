@@ -1,8 +1,7 @@
-import React, {useEffect, useState, FC} from 'react';
-import {IconButton, ListItemIcon, makeStyles, Tooltip, Typography} from "@material-ui/core";
+import React, {useState, FC} from 'react';
+import { makeStyles, Tooltip, Typography} from "@material-ui/core";
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import StatusDialog from "./StatusDialog";
-import {indigo} from '@material-ui/core/colors';
 
 type PropsType = {
     status: string

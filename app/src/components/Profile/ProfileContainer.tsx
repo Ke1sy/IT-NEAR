@@ -13,7 +13,7 @@ import {compose} from "redux";
 import {getProfile, getProfileError, getStatus, getProfileIsLoading} from "../../redux/reducers/profile-selectors";
 import {getCurrentUserInfo, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 import {AppStateType} from "../../redux/redux-store";
-import {PhotosType, ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
+import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
 import ProfileError from './ProfileError/ProfileError';
 import Preloader from "../Preloader/Preloader";
 

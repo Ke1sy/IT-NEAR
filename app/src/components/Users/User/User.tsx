@@ -17,7 +17,6 @@ import {
     CardActions,
     makeStyles
 } from '@material-ui/core';
-import theme from "../../../theme";
 
 type PropsType = {
     user: UserType,

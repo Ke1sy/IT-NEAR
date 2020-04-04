@@ -1,5 +1,5 @@
 import {takeEvery, put, call} from 'redux-saga/effects';
-import {profileAPI, ResultCodes} from "../../api/api";
+import {profileAPI} from "../../api/api";
 import {
     setUserProfile,
     setUserProfileError,

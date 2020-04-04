@@ -1,17 +1,12 @@
 import React, {FC} from 'react';
 import {ProfileType} from "../../../redux/reducers/types";
-import Paper from '@material-ui/core/Paper';
 import {Grid, makeStyles, Tab, Tabs} from "@material-ui/core";
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import TabPanel from "./TabPanel";
 import StaticProfileInfo from "../ProfileInfo/StaticProfileInfo";
 import PostsContainer from "../Posts/PostsContainer";
 import SwipeableViews from 'react-swipeable-views';
 import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
-import ViewListOutlinedIcon from '@material-ui/icons/ViewListOutlined';
-import PermContactCalendarOutlinedIcon from '@material-ui/icons/PermContactCalendarOutlined';
 
 type PropsType = {
     profile: ProfileType
@@ -23,7 +18,14 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 400,
         textTransform: 'none',
         minWidth: 90,
-        color: theme.palette.primary.light
+        color: theme.palette.primary.light,
+        '&:not($selected):hover': {
+            color: theme.palette.primary.main
+        }
+    },
+    selected: {
+        color: theme.palette.secondary.main,
+        cursor: 'auto'
     },
     indicator: {
         backgroundColor: 'transparent'
@@ -79,15 +81,16 @@ const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner}) => {
                         }}
                     >
                         <Tab icon={<AssignmentOutlinedIcon/>} label="Info" disableRipple classes={{
-                            root: classes.tab
+                            root: classes.tab,
+                            selected: classes.selected
                         }}/>
                         <Tab icon={<ListAltOutlinedIcon/>} label="Posts" disableRipple classes={{
-                            root: classes.tab
+                            root: classes.tab,
+                            selected: classes.selected
                         }}/>
                     </Tabs>
                 </Grid>
             </Grid>
-
         </>
     )
 };

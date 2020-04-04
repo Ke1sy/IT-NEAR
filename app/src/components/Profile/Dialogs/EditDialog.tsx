@@ -5,18 +5,18 @@ import {
     DialogContent,
     TextField,
     DialogActions,
-    Button, makeStyles,
+    Button,
+    makeStyles
 } from "@material-ui/core";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
-import withWidth from "@material-ui/core/withWidth";
-import {Breakpoint} from "@material-ui/core/styles/createBreakpoints";
+import {PostsData_posts} from "../../../server/types/PostsData";
+
 type PropsType = {
-    status: string,
-    setUserStatus: (status: string) => void,
     open: boolean,
-    handleClose: () => void,
-    width: Breakpoint
+    selectedPost: PostsData_posts,
+    onUpdatePost: (id: string, text: string) => void,
+    openEditDialog: (isOpen: boolean, post: PostsData_posts | null) => void,
 }
 
 
@@ -35,48 +35,56 @@ const useStyles = makeStyles(theme => ({
         padding: '8px 24px 16px'
     },
     btn: {
-       width: '48%'
+        width: '48%'
     }
 }));
 
-const StatusDialog: FC<PropsType> = ({status, open, handleClose, setUserStatus}) => {
-    const [newStatus, setNewStatus] = useState(status);
+const EditDialog: FC<PropsType> = ({open, selectedPost: {text, id}, onUpdatePost, openEditDialog}) => {
+    const [newText, setNewText] = useState(text);
     const classes = useStyles();
-    const saveNewStatus = () => {
-        setUserStatus(newStatus);
-        handleClose();
+
+    const saveUpdatedPost = () => {
+        if(newText) {
+            onUpdatePost(id, newText);
+            handleClose();
+        }
+    };
+
+    const handleClose = () => {
+        openEditDialog(false, null)
     };
 
     useEffect(() => {
-        setNewStatus(status)
-    }, [status]);
+        setNewText(text)
+    }, [text]);
 
 
     const handleChange = ({target: {value}}: { target: { value: string } }) => {
-        setNewStatus(value)
+        setNewText(value)
     };
 
     return (
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title"
+        <Dialog open={open} onClose={handleClose} aria-labelledby="post-edit-form" fullWidth maxWidth="xs"
                 classes={{
                     paper: classes.paper
                 }}>
-            <DialogTitle className={classes.title}>Change Status</DialogTitle>
+            <DialogTitle className={classes.title}>Edit post</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
                     margin="dense"
-                    label="Status"
+                    label="Edit post"
                     type="textarea"
                     multiline
                     rowsMax={8}
-                    value={newStatus}
+                    value={newText}
                     onChange={handleChange}
                     fullWidth
+                    error={!newText}
                 />
             </DialogContent>
             <DialogActions className={classes.buttons} disableSpacing>
-                <Button onClick={saveNewStatus} className={classes.btn} color="primary" variant="contained" startIcon={<CheckCircleOutlineOutlinedIcon/>}>
+                <Button onClick={saveUpdatedPost} className={classes.btn} color="primary" variant="contained" startIcon={<CheckCircleOutlineOutlinedIcon/>}>
                     Save
                 </Button>
                 <Button onClick={handleClose} className={classes.btn} color="secondary" variant="contained" startIcon={<CancelOutlinedIcon/>}>
@@ -87,5 +95,4 @@ const StatusDialog: FC<PropsType> = ({status, open, handleClose, setUserStatus})
     )
 };
 
-export default withWidth()(StatusDialog);
-
+export default EditDialog;

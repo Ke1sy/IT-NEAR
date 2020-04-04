@@ -10,7 +10,6 @@ import {
     ListItem,
     Divider,
     Link,
-    Button
 } from '@material-ui/core';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import ProfileStatus from "../Status/ProfileStatus";

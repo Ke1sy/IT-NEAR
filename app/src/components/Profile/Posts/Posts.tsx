@@ -4,9 +4,10 @@ import PostsForm from "./PostsForm";
 import {PostsData_posts} from '../../../server/types/PostsData';
 import Typography from "@material-ui/core/Typography";
 import Paper from '@material-ui/core/Paper';
-import {Divider, makeStyles} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import StyledDivider from "./StyledDivider";
 import {ProfileType} from "../../../redux/reducers/types";
+import EditDialog from "../Dialogs/EditDialog";
 
 type PropsType = {
     posts: PostsData_posts[] | null,
@@ -15,7 +16,11 @@ type PropsType = {
     onUpdatePost: (id: string, text: string) => void,
     authorId: number,
     isOwner: boolean,
-    author: ProfileType
+    author: ProfileType,
+    editDialogIsOpen: boolean,
+    openEditDialog: (isOpen: boolean, post: PostsData_posts | null) => void,
+    selectedPost: null | PostsData_posts,
+    addPostLoading: boolean
 }
 
 const useStyles = makeStyles(theme => ({
@@ -28,13 +33,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const Posts: FC<PropsType> = (({posts = [], authorId, isOwner, onAddPost, onDeletePost, onUpdatePost, author}) => {
+const Posts: FC<PropsType> = (({posts = [], authorId, isOwner, onAddPost, onDeletePost, onUpdatePost, author, selectedPost, editDialogIsOpen, openEditDialog, addPostLoading}) => {
     const classes = useStyles();
 
     return (
         <>
             {isOwner &&
-            <PostsForm onSubmit={onAddPost}/>
+            <PostsForm onSubmit={onAddPost} addPostLoading={addPostLoading}/>
             }
             {
                 posts && !posts.length &&
@@ -47,9 +52,18 @@ const Posts: FC<PropsType> = (({posts = [], authorId, isOwner, onAddPost, onDele
                     </Paper>
                 </>
             }
-            {posts && posts.length > 0 && posts.map((post, index) => (
-                <Post post={post} key={post.id} onDeletePost={onDeletePost} onUpdatePost={onUpdatePost} author={author}/>
+            {posts && posts.length > 0 && posts.map((post) => (
+                <Post post={post} key={post.id} onDeletePost={onDeletePost} openEditDialog={openEditDialog} author={author}/>
             ))}
+
+            {selectedPost &&
+            <EditDialog
+                open={editDialogIsOpen}
+                selectedPost={selectedPost}
+                onUpdatePost={onUpdatePost}
+                openEditDialog={openEditDialog}
+            />
+            }
         </>
     )
 });

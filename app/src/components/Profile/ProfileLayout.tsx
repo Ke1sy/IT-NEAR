@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
-import PostsContainer from './Posts/PostsContainer';
-import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
+import {ProfileType} from "../../redux/reducers/types";
 import {Grid, makeStyles} from "@material-ui/core";
 import Sidebar from "./Sidebar/Sidebar";
 import ProfileCover from './Cover/ProfileCover';

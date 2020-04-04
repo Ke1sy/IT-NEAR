@@ -1,7 +1,6 @@
 import React, {FC} from "react";
 import {WrappedFieldProps} from "redux-form/lib/Field";
-import {TextField, TextFieldProps, FormHelperText, makeStyles, Checkbox, FormControlLabel, Switch} from "@material-ui/core";
-import classNames from 'classnames';
+import {TextField, TextFieldProps, makeStyles, Checkbox, FormControlLabel, Switch} from "@material-ui/core";
 
 const inputTypes = [
     'text',
@@ -37,7 +36,7 @@ export const RenderField: FC<PropsType> = ({input, label, type, meta: {touched, 
         <>
             {inputTypes.includes(type) &&
             <TextField
-                error={touched && error}
+                error={touched && Boolean(error)}
                 helperText={touched && error ? error : ''}
                 label={label}
                 {...input}
@@ -45,7 +44,6 @@ export const RenderField: FC<PropsType> = ({input, label, type, meta: {touched, 
                 type={type}
                 fullWidth={true}
                 className={classes.textInput}
-                multiline={type === 'textarea'}
             />
             }
             {type === 'checkbox' &&

@@ -105,6 +105,7 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
                         component={RenderField}
                         type="textarea"
                         name="aboutMe"
+                        multiline
                         variant="outlined"
                         label="About Me *"
                         validate={required}
@@ -137,6 +138,7 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
                     <Field
                         component={RenderField}
                         type="textarea"
+                        multiline
                         variant="outlined"
                         name="lookingForAJobDescription"
                         label="Job description"

@@ -1,9 +1,7 @@
 import React, {FC} from 'react';
 import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
-import {Route, Switch, withRouter, RouteComponentProps, NavLink} from "react-router-dom";
-import StaticProfileInfo from "./ProfileInfo/StaticProfileInfo";
+import {Route, Switch, withRouter, RouteComponentProps} from "react-router-dom";
 import ProfileLayout from "./ProfileLayout";
-// import ProfileSettings from "./ProfileSettings/ProfileSettings";
 import SettingsReduxForm from "./ProfileSettings/SettingsForm";
 import ProfileInfoTabs from "./Tabs/ProfileInfoTabs";
 
