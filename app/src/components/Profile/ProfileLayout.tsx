@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, children}) => {
+const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, children, loadPhoto}) => {
     const classes = useStyles();
     return (
         <div>
@@ -41,6 +41,7 @@ const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, 
                         status={status}
                         setUserStatus={setUserStatus}
                         isOwner={isOwner}
+                        loadPhoto={loadPhoto}
                     />
                     }
                 </div>

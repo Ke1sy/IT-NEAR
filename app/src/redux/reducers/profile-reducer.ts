@@ -72,8 +72,15 @@ export const getUserProfile = (id: number, isAuthenticate: boolean = false) => (
 });
 
 export const loadPhoto = (photo: any): ThunkType => async (dispatch) => {
-    const {data} = await profileAPI.loadPhoto(photo);
-    dispatch(loadPhotoSuccess(data.photos));
+    const {data, resultCode, messages} = await profileAPI.loadPhoto(photo);
+    if (resultCode === ResultCodes.Success) {
+        dispatch(loadPhotoSuccess(data.photos));
+    } else {
+        dispatch(enqueueSnackbar({
+            message: messages,
+            options: {variant: 'error'}
+        }))
+    }
 };
 
 export const getUserStatus = (id: number): ThunkType => async (dispatch) => {

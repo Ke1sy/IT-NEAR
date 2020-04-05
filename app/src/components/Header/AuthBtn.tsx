@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {
     Avatar,
     Button,
@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 const AuthBtn: FC<PropsType> = ({isAuth, login, logout, avatar, userId, history}) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const userAvatar = avatar !== null && avatar.small !== null ? avatar.small : userPlaceholder;
+    let userAvatar = avatar !== null && avatar.small !== null ? avatar.small : userPlaceholder;
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -72,6 +72,7 @@ const AuthBtn: FC<PropsType> = ({isAuth, login, logout, avatar, userId, history}
                         aria-controls="customized-menu"
                         aria-haspopup="true"
                     >
+                        {/*todo update after new photo loaded*/}
                         <Avatar src={userAvatar} alt={login ? login : 'avatar'} sizes="40"/>
                         <Typography variant="body2" className={classes.avatarText}>
                             {login}

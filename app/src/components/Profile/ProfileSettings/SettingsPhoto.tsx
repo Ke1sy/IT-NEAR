@@ -46,7 +46,7 @@ const SettingsPhoto: FC<PropsType> = ({profile, loadPhoto}) => {
             <div className={styles.photo__load}>
                 <form onSubmit={updateAvatar}>
                     <input type="file" name="photo" ref={inputFile} onChange={photoPreview}/>
-                    <button type="submit">Save</button>
+                    {/*<button type="submit">Save</button>*/}
                 </form>
             </div>
         </div>

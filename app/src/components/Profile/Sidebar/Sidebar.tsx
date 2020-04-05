@@ -9,7 +9,7 @@ import {
     List,
     ListItem,
     Divider,
-    Link,
+    Link, IconButton,
 } from '@material-ui/core';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import ProfileStatus from "../Status/ProfileStatus";
@@ -21,12 +21,16 @@ import YouTubeIcon from '@material-ui/icons/YouTube';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import VkIcon from '../../Svg/VkIcon';
 import classNames from "classnames";
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import LoadPhotoDialog from "../Dialogs/LoadPhotoDialog";
+import {loadPhoto} from "../../../redux/reducers/profile-reducer";
 
 type PropsType = {
     status: string,
     profile: ProfileType,
-    setUserStatus: (status: string) => void
-    isOwner: boolean
+    setUserStatus: (status: string) => void,
+    isOwner: boolean,
+    loadPhoto: (photo: any) => void
 }
 
 type IconsType = {
@@ -54,9 +58,11 @@ const SocialIcon = (props: any) => {
     return <TagName {...other}/>
 };
 
-const Sidebar: FC<PropsType & WithStyles> = ({profile: {photos, fullName, contacts}, status, classes, setUserStatus, isOwner}) => {
+const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserStatus, isOwner, loadPhoto}) => {
+    const {photos, fullName, contacts} = profile;
     const userAvatar = photos.large !== null ? photos.large : userPlaceholder;
     const [contactsArr, setContactsArr] = useState<Array<ContactsArrType>>([]);
+    const [photoDialogOpen, setPhotoDialogOpen] = useState(false);
 
     useEffect(() => {
         let newArr: ContactsArrType[] = [];
@@ -69,27 +75,44 @@ const Sidebar: FC<PropsType & WithStyles> = ({profile: {photos, fullName, contac
         setContactsArr(newArr);
     }, [contacts]);
 
+    const openDialog = (open: boolean) => {
+        setPhotoDialogOpen(open)
+    };
+
     return (
-        <Paper className={classes.paper}>
-            <div className={classes.body}>
-                <Avatar src={userAvatar} alt={fullName ? fullName : 'avatar'} className={classes.avatarImg}/>
-                <Typography variant="h6">{fullName}</Typography>
-                <ProfileStatus status={status} setUserStatus={setUserStatus} isOwner={isOwner}/>
-            </div>
-            <List aria-label="socials" disablePadding={true} className={classes.socials} component="div">
-                {
-                    contactsArr.map(({name, url}: { name: any, url: string }) =>
-                        <Fragment key={name}>
-                            <Divider/>
-                            <ListItem button component={Link} href={url} target="_blank" rel="noopener noreferrer">
-                                <SocialIcon name={name} className={classNames(`${classes.socialsIcon}`, `${name}`)}/>
-                                <Typography variant="body2" noWrap>{url}</Typography>
-                            </ListItem>
-                        </Fragment>
-                    )
-                }
-            </List>
-        </Paper>
+        <>
+            {isOwner &&
+            <LoadPhotoDialog profile={profile} open={photoDialogOpen} handleClose={() => openDialog(false)} loadPhoto={loadPhoto}/>
+            }
+            <Paper className={classes.paper}>
+                <div className={classes.body}>
+                    <div className={classes.avatar}>
+                        {isOwner &&
+                        <IconButton className={classes.avatarBtn} aria-label="load-photo" onClick={() => openDialog(true)}>
+                            <AddAPhotoIcon fontSize="small" className={classes.avatarIcon}/>
+                        </IconButton>
+                        }
+                        <Avatar src={userAvatar} alt={fullName ? fullName : 'avatar'} className={classes.avatarImg}/>
+                    </div>
+                    <Typography variant="h6">{fullName}</Typography>
+                    <ProfileStatus status={status} setUserStatus={setUserStatus} isOwner={isOwner}/>
+                </div>
+                <List aria-label="socials" disablePadding={true} className={classes.socials} component="div">
+                    {
+                        contactsArr.map(({name, url}: { name: any, url: string }) =>
+                            <Fragment key={name}>
+                                <Divider/>
+                                <ListItem button component={Link} href={url} target="_blank" rel="noopener noreferrer">
+                                    <SocialIcon name={name}
+                                                className={classNames(`${classes.socialsIcon}`, `${name}`)}/>
+                                    <Typography variant="body2" noWrap>{url}</Typography>
+                                </ListItem>
+                            </Fragment>
+                        )
+                    }
+                </List>
+            </Paper>
+        </>
     )
 };
 

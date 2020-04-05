@@ -15,7 +15,9 @@ type PropsType = {
     open: boolean,
     title: string,
     resetAction: () => void,
-    submitAction: () => void,
+    submitAction: any,
+    submitName?: string,
+    submitDisabled?: boolean,
     rest?: any
 }
 
@@ -35,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const SimpleDialogTemplate: FC<DialogProps & PropsType> = ({open, title, children, submitAction, resetAction, ...rest}) => {
+const SimpleDialogTemplate: FC<DialogProps & PropsType> = ({open, title, children, submitAction, resetAction, submitName, submitDisabled, ...rest}) => {
     const classes = useStyles();
     return (
         <Dialog
@@ -52,12 +54,23 @@ const SimpleDialogTemplate: FC<DialogProps & PropsType> = ({open, title, childre
                 {children}
             </DialogContent>
             <DialogActions className={classes.buttons} disableSpacing>
-                <Button onClick={submitAction} className={classes.btn} color="primary" variant="contained"
-                        startIcon={<CheckCircleOutlineOutlinedIcon/>}>
-                    Confirm
+                <Button
+                    onClick={submitAction}
+                    className={classes.btn}
+                    color="primary"
+                    variant="contained"
+                    startIcon={<CheckCircleOutlineOutlinedIcon/>}
+                    {...(submitDisabled ? {disabled:submitDisabled} : {})}
+                >
+                   {submitName ? submitName : 'Confirm'}
                 </Button>
-                <Button onClick={resetAction} className={classes.btn} color="secondary" variant="contained"
-                        startIcon={<CancelOutlinedIcon/>}>
+                <Button
+                    onClick={resetAction}
+                    className={classes.btn}
+                    color="secondary"
+                    variant="contained"
+                    startIcon={<CancelOutlinedIcon/>}
+                >
                     Cancel
                 </Button>
             </DialogActions>
