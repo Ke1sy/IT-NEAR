@@ -14,6 +14,7 @@ type PropsType = {
     author: ProfileType,
     onLikePost: (userId: string, post: PostsData_posts) => void,
     ownerId: number | null,
+    isOwner: Boolean,
     openDialog: (isOpen: boolean, selectedItem: PostsData_posts | null, type: OpenPostDialogType) => void,
 }
 
@@ -79,7 +80,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Post: FC<PropsType> = ({post, author: {fullName, photos}, openDialog, onLikePost, ownerId}) => {
+const Post: FC<PropsType> = ({post, author: {fullName, photos}, openDialog, onLikePost, ownerId, isOwner}) => {
     const {text, date, likedBy} = post;
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -117,7 +118,7 @@ const Post: FC<PropsType> = ({post, author: {fullName, photos}, openDialog, onLi
                         {postDate}
                     </Typography>
                 </div>
-                {ownerId &&
+                {isOwner &&
                 <>
                     <IconButton
                         aria-label="more"

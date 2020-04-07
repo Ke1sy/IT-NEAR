@@ -1,9 +1,12 @@
-import React, {useEffect, useState, FC, ChangeEvent, FormEvent, useRef} from 'react';
-import {Avatar, IconButton, makeStyles, Chip, Tooltip} from "@material-ui/core";
-import SimpleDialogTemplate from "../Dialogs/SimpleDialogTemplate";
+import React, {useEffect, useState, FC, ChangeEvent, useRef} from 'react';
+import { makeStyles, Tooltip, Typography, Button} from "@material-ui/core";
 import {ProfileType} from "../../../redux/reducers/types";
-import userPlaceholder from "../../../assets/images/user-placeholder.png";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/lib/ReactCrop.scss';
+import {Alert} from "@material-ui/lab";
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import SimpleDialogTemplate from "../Dialogs/SimpleDialogTemplate";
+import {getCroppedImg} from '../../../utils/crop';
 
 type PropsType = {
     profile: ProfileType
@@ -14,125 +17,160 @@ type PropsType = {
 
 const useStyles = makeStyles(theme => ({
     photo: {
-        width: 250,
-        height: 250,
-        borderRadius: '50%',
-        margin: '0 auto 16px',
         position: 'relative',
-    },
-    photoImg: {
-        height: '100%',
-        width: '100%',
-        border: `3px solid ${theme.palette.primary.main}`,
+        textAlign: 'center',
+
+        '& .ReactCrop__image': {
+            maxHeight: 250
+        }
     },
     load: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        zIndex: 2,
+        display: 'block',
+        width: '100%',
+        backgroundColor: '#eee',
+        border: `1px dashed ${theme.palette.primary.main}`,
+        marginBottom: 20,
+        borderRadius: 4
     },
-    loadBtn: {
-        border: `2px solid ${theme.palette.primary.main}`,
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.common.white,
-        transition: '150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-        '&:hover': {
-            backgroundColor: theme.palette.common.white,
-            color: theme.palette.primary.main,
-        }
+    loadContent: {
+        display: 'flex',
+        width: '100%',
+        height: 60,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     loadInput: {
         display: 'none'
     },
-    chipWrapper: {
-        display: 'flex',
-        justifyContent: 'center',
-        margin: '15px 0'
+    loadIcon: {
+        marginRight: 10
     },
-    chipItem: {
-        maxWidth: '100%'
+    message: {
+        marginTop: 15
     }
 }));
 
+type Crop = {
+    aspect?: number;
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    unit?: 'px' | '%';
+}
+
 const LoadPhotoDialog: FC<PropsType> = ({profile, open, handleClose, loadPhoto}) => {
-    const [photo, setPhoto] = useState<string | null>(null);
-    const [photoName, setPhotoName] = useState<string | null>(null);
-    const [fileRequiredError, setFileRequiredError] = useState(true);
     const classes = useStyles();
+    const [imgSrc, setImgSrc] = useState<any>(null);
+    const [imgRef, setImgRef] = useState<any>(null);
+    const [croppedImageUrl, setCroppedImageUrl] = useState<any>(null);
+    const [cropIsValid, setCropIsValid] = useState(false);
+    const [crop, setCrop] = useState<any>({
+        aspect: 1,
+    });
     let inputFile: any = useRef(null);
+
 
     useEffect(() => {
         toDefaultState();
-    }, [open]);
-
-    const photoPreview = (e: ChangeEvent<HTMLInputElement>) => {
-        const {target: {files}} = e;
-        if (files) {
-            setFileRequiredError(false);
-            const selectedFile = files[0];
-            setPhoto(URL.createObjectURL(selectedFile));
-            setPhotoName(selectedFile.name);
-        } else {
-            setFileRequiredError(true);
-        }
-    };
-
-    const toDefaultState = () => {
-        setPhoto(profile.photos.large);
-        setFileRequiredError(true);
-        setPhotoName(null);
         if (inputFile.current) {
             inputFile.current.value = null
         }
-    };
+    }, [open]);
 
-    const closeAndClear = () => {
-        handleClose();
+    const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
         toDefaultState();
+        const {target: {files}} = e;
+        if (files) {
+            const selectedFile = files[0];
+            const reader = new FileReader();
+            reader.addEventListener('load', () => setImgSrc(reader.result));
+            reader.readAsDataURL(selectedFile);
+        }
     };
 
-    const updateAvatar = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (inputFile.current) {
-            const files = inputFile.current.files;
-            if (files.length) {
-                loadPhoto(files[0]);
-                closeAndClear();
-            }
+    const onCropComplete = (crop: Crop) => {
+        makeClientCrop(crop);
+    };
+
+    const onImageLoaded = (image: HTMLImageElement) => {
+        setImgRef(image);
+    };
+
+    const onCropChange = (crop: Crop) => {
+        setCrop(crop);
+    };
+
+    const toDefaultState = () => {
+        URL.revokeObjectURL(croppedImageUrl);
+        setImgSrc(null);
+        setImgRef(null);
+        setCropIsValid(false);
+        setCroppedImageUrl(null);
+        setCrop({
+            aspect: 1,
+        });
+    };
+
+    const makeClientCrop = async (crop: Crop) => {
+        if (imgRef && crop.width && crop.height) {
+            const croppedImageUrl = await getCroppedImg(
+                imgRef,
+                crop,
+                'newFile.jpeg'
+            );
+            setCroppedImageUrl(croppedImageUrl);
+            setCropIsValid(true)
         }
+    };
+
+    const updateAvatar = async () => {
+        fetch(croppedImageUrl, {mode: "cors"})
+            .then(res => res.blob())
+            .then(blob => {
+                const file = new File([blob], 'new-avatar.png', {type: 'image/png'});
+                loadPhoto(file);
+                handleClose();
+            });
     };
 
     return (
         <SimpleDialogTemplate
             open={open}
-            resetAction={closeAndClear}
+            resetAction={handleClose}
             submitAction={updateAvatar}
             submitName="Save"
-            submitDisabled={fileRequiredError}
+            submitDisabled={!cropIsValid}
             aria-labelledby="load-photo-dialog"
             title="Load Photo"
         >
+            <label className={classes.load}>
+                <input type="file" name="photo" ref={inputFile} onChange={onSelectFile} accept=".jpg, .jpeg, .png"
+                       className={classes.loadInput}/>
+                <Tooltip title=".jpg, .jpeg, .png" aria-label="Extensions">
+                    <Button component="span" className={classes.loadContent}>
+                        <AddAPhotoIcon color="primary" className={classes.loadIcon}/>
+                        <Typography variant="subtitle2" color="primary">Upload</Typography>
+                    </Button>
+                </Tooltip>
+            </label>
             <div className={classes.photo}>
-                <Avatar src={photo || userPlaceholder} alt={profile.fullName ? profile.fullName : 'avatar'}
-                        className={classes.photoImg}/>
-                <label className={classes.load}>
-                    <input type="file" name="photo" ref={inputFile} onChange={photoPreview} accept=".jpg, .jpeg, .png"
-                           className={classes.loadInput}/>
-                    <Tooltip title=".jpg, .jpeg, .png" aria-label="Extensions">
-                        <IconButton component="span" className={classes.loadBtn} aria-label="load-photo">
-                            <GetAppIcon fontSize="small"/>
-                        </IconButton>
-                    </Tooltip>
-                </label>
+                {imgSrc &&
+                <ReactCrop
+                    src={imgSrc}
+                    crop={crop}
+                    ruleOfThirds
+                    onImageLoaded={onImageLoaded}
+                    onComplete={onCropComplete}
+                    onChange={onCropChange}
+                />
+                }
             </div>
-            {photoName &&
-            <div className={classes.chipWrapper}>
-                <Chip label={photoName} onDelete={toDefaultState} color="primary" variant="outlined" className={classes.chipItem}/>
-            </div>
+            {imgSrc && !croppedImageUrl &&
+            <Alert severity="warning" className={classes.message}>Crop the image</Alert>
             }
         </SimpleDialogTemplate>
     )
 };
 
 export default LoadPhotoDialog;
-

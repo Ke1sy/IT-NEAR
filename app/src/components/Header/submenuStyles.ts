@@ -9,15 +9,22 @@ const styles = createStyles((theme: Theme) => ({
         padding: 0,
         backgroundColor: theme.palette.common.white
     },
-    link: {
-        display: 'flex',
-        width: '100%',
-        alignItems: 'center'
-    },
     menuItemTxt: {
         lineHeight: 1
     },
     menuItem: {
+        '&:hover': {
+            backgroundColor: theme.palette.primary.light,
+            color:  theme.palette.common.white,
+
+            '& .MuiLink-root, & .MuiListItemIcon-root': {
+                color:  theme.palette.common.white,
+                textDecoration: 'none'
+            }
+        }
+    },
+
+    link: {
         '&:hover': {
             backgroundColor: theme.palette.primary.light,
             color:  theme.palette.common.white,

@@ -6,7 +6,7 @@ import {
     ListItemText,
     Menu,
     MenuItem,
-    Paper,
+    Paper, Typography,
     WithStyles
 } from '@material-ui/core';
 import {NavLink} from "react-router-dom";
@@ -56,24 +56,18 @@ const Submenu: FC<PropsType & WithStyles> = ({
                     horizontal: 'center',
                 }}
             >
-                <MenuItem className={classes.menuItem}>
-                    <Link component={NavLink} to={`/profile/${userId}`} className={classes.link}>
-                        <ListItemIcon>
-                            <PersonRoundedIcon fontSize="small" />
-                        </ListItemIcon>
-                        <ListItemText  classes={{
-                            primary: classes.menuItemTxt
-                        }} primary="Profile"/>
-                    </Link>
+                <MenuItem component={NavLink} to={`/profile/${userId}`} className={classes.menuItem}>
+                    <span className="MuiListItemIcon-root">
+                        <PersonRoundedIcon fontSize="small" />
+                    </span>
+                    <Typography variant="body1" component="span" className={classes.menuItemTxt}>Profile</Typography>
                 </MenuItem>
                 <Divider orientation="horizontal" light={true}/>
-                <MenuItem className={classes.menuItem}>
-                    <ListItemIcon>
+                <MenuItem component={NavLink} to={`/settings`} className={classes.menuItem}>
+                     <span className="MuiListItemIcon-root">
                         <EditRoundedIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText  classes={{
-                        primary: classes.menuItemTxt
-                    }} primary="Edit Profile"/>
+                    </span>
+                    <Typography variant="body1" component="span" className={classes.menuItemTxt}>Edit Profile</Typography>
                 </MenuItem>
                 <Divider orientation="horizontal" light={true}/>
 

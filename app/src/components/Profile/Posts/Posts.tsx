@@ -75,6 +75,7 @@ const Posts: FC<PropsType> = (({
             {posts && posts.length > 0 && posts.map(post => (
                 <Post
                     post={post}
+                    isOwner={isOwner}
                     key={post.id}
                     openDialog={openDialog}
                     author={author}
