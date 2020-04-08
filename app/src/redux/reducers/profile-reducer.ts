@@ -3,14 +3,14 @@ import {reset, stopSubmit} from 'redux-form';
 import {PhotosType, ProfileType} from "./types";
 import {ThunkAction} from "redux-thunk";
 import {AppStateType} from "../redux-store";
-import { enqueueSnackbar } from "./app-reducer";
-
+import {enqueueSnackbar} from "./app-reducer";
 
 export const SET_STATUS = 'profile/SET_STATUS';
 export const SET_USER_PROFILE = 'profile/SET_USER_PROFILE';
 export const SET_USER_PROFILE_FAILED = 'profile/SET_USER_PROFILE_FAILED';
 export const GET_USER_PROFILE = 'profile/GET_USER_PROFILE';
-export const LOAD_PHOTO_SUCCESS = 'profile/LOAD_PHOTO_SUCCESS';
+export const LOAD_PHOTO = 'profile/LOAD_PHOTO';
+export const SET_PHOTO = 'profile/SET_PHOTO';
 export const TOGGLE_PROFILE_LOADING = 'profile/TOGGLE_PROFILE_LOADING';
 
 const initialState = {
@@ -22,7 +22,7 @@ const initialState = {
 
 export type InitialStateType = typeof initialState;
 
-type ActionType = InitialStateType &  ActionsTypes & {
+type ActionType = InitialStateType & ActionsTypes & {
     photos: PhotosType
 }
 
@@ -34,7 +34,7 @@ const profileReducer = (state: { profile: ProfileType | null; profileError: stri
             return {...state, profile: null, profileError};
         case SET_STATUS:
             return {...state, status};
-        case LOAD_PHOTO_SUCCESS:
+        case SET_PHOTO:
             return {...state, profile: {...state.profile, photos: photos} as ProfileType};
         default:
             return state;
@@ -50,20 +50,21 @@ type SetUserProfileActionType = { type: typeof SET_USER_PROFILE, profile: Profil
 export const setUserProfile = (profile: ProfileType): SetUserProfileActionType => ({type: SET_USER_PROFILE, profile});
 
 type SetUserProfileErrorActionType = { type: typeof SET_USER_PROFILE_FAILED, profileError: string };
-export const setUserProfileError = (profileError: string): SetUserProfileErrorActionType => ({type: SET_USER_PROFILE_FAILED, profileError});
+export const setUserProfileError = (profileError: string): SetUserProfileErrorActionType => ({
+    type: SET_USER_PROFILE_FAILED,
+    profileError
+});
 
 type SetStatusActionType = { type: typeof SET_STATUS, status: string };
 export const setStatus = (status: string): SetStatusActionType => ({type: SET_STATUS, status});
 
-type LoadPhotoSuccessActionType = { type: typeof LOAD_PHOTO_SUCCESS, photos: PhotosType };
-export const loadPhotoSuccess = (photos: PhotosType): LoadPhotoSuccessActionType => ({
-    type: LOAD_PHOTO_SUCCESS,
-    photos
-});
+export const loadPhoto = (photo: any) => ({type: LOAD_PHOTO, photo});
+
+export const setPhoto = (photos: PhotosType) => ({type: SET_PHOTO, photos});
 
 type FormResetType = ReturnType<typeof reset>
-type ActionsTypes = SetUserProfileActionType | SetStatusActionType | LoadPhotoSuccessActionType | FormResetType;
-type ThunkType = ThunkAction<Promise<void | PhotosType | undefined | Error >, AppStateType, unknown, ActionsTypes>
+type ActionsTypes = SetUserProfileActionType | SetStatusActionType | FormResetType;
+type ThunkType = ThunkAction<Promise<void | PhotosType | undefined | Error>, AppStateType, unknown, ActionsTypes>
 
 export const getUserProfile = (id: number, isAuthenticate: boolean = false) => ({
     type: GET_USER_PROFILE,
@@ -71,32 +72,20 @@ export const getUserProfile = (id: number, isAuthenticate: boolean = false) => (
     isAuthenticate
 });
 
-export const loadPhoto = (photo: any): ThunkType => async (dispatch) => {
-    const {data, resultCode, messages} = await profileAPI.loadPhoto(photo);
-    if (resultCode === ResultCodes.Success) {
-        dispatch(loadPhotoSuccess(data.photos));
-    } else {
-        dispatch(enqueueSnackbar({
-            message: messages,
-            options: {variant: 'error'}
-        }))
-    }
-};
-
 export const getUserStatus = (id: number): ThunkType => async (dispatch) => {
     const data = await profileAPI.getStatus(id);
     dispatch(setStatus(data));
 };
 
 export const setUserStatus = (status: string): ThunkType => async (dispatch) => {
-        const response = await profileAPI.setStatus(status);
-        if (response.resultCode === ResultCodes.Success) {
-            dispatch(setStatus(status));
-            dispatch(enqueueSnackbar({
-                message: 'Status updated!',
-                options: {variant: 'success'}
-            }))
-        }
+    const response = await profileAPI.setStatus(status);
+    if (response.resultCode === ResultCodes.Success) {
+        dispatch(setStatus(status));
+        dispatch(enqueueSnackbar({
+            message: 'Status updated!',
+            options: {variant: 'success'}
+        }))
+    }
 };
 
 export const setProfileInfo = (info: ProfileType, userId: number) => async (dispatch: any) => {

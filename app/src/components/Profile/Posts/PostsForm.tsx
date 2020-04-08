@@ -1,5 +1,5 @@
-import React, {FC, useEffect} from 'react';
-import {Field, reduxForm, InjectedFormProps, reset} from "redux-form";
+import React, {FC} from 'react';
+import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import {required} from "../../../utils/validate";
 import {RenderField} from "../../Forms/components/FormControl";
 import {IconButton, makeStyles, Paper} from "@material-ui/core";

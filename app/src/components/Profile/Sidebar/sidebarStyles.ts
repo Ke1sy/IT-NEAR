@@ -26,6 +26,7 @@ const styles = createStyles((theme: Theme) => ({
         right: 0,
         border: `2px solid ${theme.palette.primary.main}`,
         zIndex: 2,
+        padding: 8,
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,
         transition: 'border-color  150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
@@ -33,6 +34,11 @@ const styles = createStyles((theme: Theme) => ({
             borderColor: theme.palette.common.white,
             backgroundColor: theme.palette.primary.main,
         }
+    },
+    removeBtn: {
+        top: 50,
+        right: 0,
+        transform: 'translateX(50%)'
     },
     avatarIcon: {
     },

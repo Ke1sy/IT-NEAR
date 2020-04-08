@@ -11,7 +11,7 @@ type PropsType = {
     post: PostsData_posts,
     anchorEl: any,
     handleClose: () => void,
-    openDialog: (isOpen: boolean, selectedItem: PostsData_posts | null, type: OpenPostDialogType) => void,
+    openDialog: (isOpen: boolean, type: OpenPostDialogType, selectedItem: PostsData_posts | null) => void,
 }
 
 const useStyles = makeStyles(theme => ({
@@ -42,13 +42,13 @@ const PostSubmenu:FC<PropsType> = ({post, anchorEl, handleClose, openDialog}) =>
                     className: classes.paper
                 }}
             >
-                <MenuItem onClick={() => openDialog(true, post, 'edit')}>
+                <MenuItem onClick={() => openDialog(true,  'edit', post)}>
                 <EditIcon fontSize="small" className={classes.menuItemIcon}/>
                     <Typography variant="body2" className={classes.menuItemText}>
                         Edit
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={() => openDialog(true, post, 'delete')}>
+                <MenuItem onClick={() => openDialog(true, 'delete',  post,)}>
                     <DeleteIcon fontSize="small" className={classes.menuItemIcon}/>
                     <Typography variant="body2" className={classes.menuItemText}>
                         Delete

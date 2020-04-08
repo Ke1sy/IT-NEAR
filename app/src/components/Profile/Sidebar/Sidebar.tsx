@@ -23,7 +23,8 @@ import VkIcon from '../../Svg/VkIcon';
 import classNames from "classnames";
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import LoadPhotoDialog from "../Dialogs/LoadPhotoDialog";
-import {loadPhoto} from "../../../redux/reducers/profile-reducer";
+import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteDialog from "../Dialogs/DeleteDialog";
 
 type PropsType = {
     status: string,
@@ -63,6 +64,7 @@ const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserS
     const userAvatar = photos.large !== null ? photos.large : userPlaceholder;
     const [contactsArr, setContactsArr] = useState<Array<ContactsArrType>>([]);
     const [photoDialogOpen, setPhotoDialogOpen] = useState(false);
+    const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
     useEffect(() => {
         let newArr: ContactsArrType[] = [];
@@ -75,22 +77,54 @@ const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserS
         setContactsArr(newArr);
     }, [contacts]);
 
-    const openDialog = (open: boolean) => {
-        setPhotoDialogOpen(open)
+    const openDialog = (open: boolean, type: 'edit' | 'delete') => {
+        switch (type) {
+            case 'edit':
+                setPhotoDialogOpen(open);
+                break;
+            case 'delete':
+                setDeleteDialogIsOpen(open);
+                break;
+        }
+    };
+
+    const removePhoto = () => {
+        fetch(userPlaceholder)
+            .then(res => res.blob())
+            .then(blob => {
+                const file = new File([blob], 'new-avatar.png', {type: 'image/png'});
+                loadPhoto(file);
+            });
     };
 
     return (
         <>
             {isOwner &&
-            <LoadPhotoDialog profile={profile} open={photoDialogOpen} handleClose={() => openDialog(false)} loadPhoto={loadPhoto}/>
+            <>
+                <LoadPhotoDialog profile={profile} open={photoDialogOpen} handleClose={() => openDialog(false, 'edit')}
+                                 loadPhoto={loadPhoto}/>
+                <DeleteDialog
+                    isOpen={deleteDialogIsOpen}
+                    openDialog={openDialog}
+                    deleteAction={removePhoto}
+                />
+            </>
             }
             <Paper className={classes.paper}>
                 <div className={classes.body}>
                     <div className={classes.avatar}>
                         {isOwner &&
-                        <IconButton className={classes.avatarBtn} aria-label="load-photo" onClick={() => openDialog(true)}>
-                            <AddAPhotoIcon fontSize="small" className={classes.avatarIcon}/>
-                        </IconButton>
+                        <>
+                            <IconButton className={classes.avatarBtn} aria-label="load-photo"
+                                        onClick={() => openDialog(true, 'edit')}>
+                                <AddAPhotoIcon fontSize="small" className={classes.avatarIcon}/>
+                            </IconButton>
+                            <IconButton className={classNames(classes.avatarBtn, classes.removeBtn)}
+                                        aria-label="remove-photo"
+                                        onClick={() => openDialog(true, 'delete')}>
+                                <DeleteIcon fontSize="small" className={classes.avatarIcon}/>
+                            </IconButton>
+                        </>
                         }
                         <Avatar src={userAvatar} alt={fullName ? fullName : 'avatar'} className={classes.avatarImg}/>
                     </div>

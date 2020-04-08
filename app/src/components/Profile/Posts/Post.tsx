@@ -15,7 +15,7 @@ type PropsType = {
     onLikePost: (userId: string, post: PostsData_posts) => void,
     ownerId: number | null,
     isOwner: Boolean,
-    openDialog: (isOpen: boolean, selectedItem: PostsData_posts | null, type: OpenPostDialogType) => void,
+    openDialog: (isOpen: boolean, type: OpenPostDialogType, selectedItem: PostsData_posts | null) => void,
 }
 
 const useStyles = makeStyles(theme => ({

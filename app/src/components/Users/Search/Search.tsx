@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import styles from './search.module.scss';
 import SearchReduxForm from "./SearchForm";
 import {makeStyles, Typography, Chip} from "@material-ui/core";
 
@@ -14,7 +13,6 @@ const useStyles = makeStyles(theme => ({
         marginLeft: 10
     },
     search: {
-        marginBottom: 40,
         width: '100%'
     },
 }));
@@ -25,7 +23,7 @@ const Search: FC<PropsType> = ({onChangeSearchText, searchRequest, onResetSearch
     const classes = useStyles();
 
     return (
-        <div className={styles.search}>
+        <div className={classes.search}>
             {searchRequest &&
             <Typography variant="body2">
                 Found on query:

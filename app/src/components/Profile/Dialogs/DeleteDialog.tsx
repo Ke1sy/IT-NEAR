@@ -6,18 +6,18 @@ import SimpleDialogTemplate from './SimpleDialogTemplate';
 
 type PropsType = {
     isOpen: boolean,
-    openDialog: (isOpen: boolean, selectedItem: PostsData_posts | null, type: OpenPostDialogType) => void,
-    itemToDelete: PostsData_posts,
-    deleteAction: (id: string) => void,
+    openDialog: (isOpen: boolean,  type: OpenPostDialogType, selectedItem: PostsData_posts | null) => void,
+    itemToDelete?: PostsData_posts,
+    deleteAction: any,
 }
 
 const DeleteDialog: FC<PropsType> = ({isOpen, openDialog, deleteAction, itemToDelete}) => {
     const handleClose = () => {
-        openDialog(false, null, 'delete');
+        openDialog(false, 'delete', null);
     };
 
     const deleteActionSubmit = () => {
-        deleteAction(itemToDelete.id);
+        itemToDelete ? deleteAction(itemToDelete.id) : deleteAction();
         handleClose();
     };
     return (

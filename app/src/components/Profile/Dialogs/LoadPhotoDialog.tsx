@@ -64,7 +64,7 @@ const LoadPhotoDialog: FC<PropsType> = ({profile, open, handleClose, loadPhoto})
     const [imgSrc, setImgSrc] = useState<any>(null);
     const [imgRef, setImgRef] = useState<any>(null);
     const [croppedImageUrl, setCroppedImageUrl] = useState<any>(null);
-    const [cropIsValid, setCropIsValid] = useState(false);
+    const [fileLoaded, setFileLoaded] = useState(false);
     const [crop, setCrop] = useState<any>({
         aspect: 1,
     });
@@ -82,6 +82,7 @@ const LoadPhotoDialog: FC<PropsType> = ({profile, open, handleClose, loadPhoto})
         toDefaultState();
         const {target: {files}} = e;
         if (files) {
+            setFileLoaded(true);
             const selectedFile = files[0];
             const reader = new FileReader();
             reader.addEventListener('load', () => setImgSrc(reader.result));
@@ -105,7 +106,7 @@ const LoadPhotoDialog: FC<PropsType> = ({profile, open, handleClose, loadPhoto})
         URL.revokeObjectURL(croppedImageUrl);
         setImgSrc(null);
         setImgRef(null);
-        setCropIsValid(false);
+        setFileLoaded(false);
         setCroppedImageUrl(null);
         setCrop({
             aspect: 1,
@@ -120,18 +121,26 @@ const LoadPhotoDialog: FC<PropsType> = ({profile, open, handleClose, loadPhoto})
                 'newFile.jpeg'
             );
             setCroppedImageUrl(croppedImageUrl);
-            setCropIsValid(true)
         }
     };
 
     const updateAvatar = async () => {
-        fetch(croppedImageUrl, {mode: "cors"})
-            .then(res => res.blob())
-            .then(blob => {
-                const file = new File([blob], 'new-avatar.png', {type: 'image/png'});
-                loadPhoto(file);
-                handleClose();
-            });
+        if(croppedImageUrl) {
+            fetch(croppedImageUrl, {mode: "cors"})
+                .then(res => res.blob())
+                .then(blob => {
+                    const file = new File([blob], 'new-avatar.png', {type: 'image/png'});
+                    loadPhoto(file);
+                });
+        } else {
+            if (inputFile.current) {
+                const files = inputFile.current.files;
+                if (files.length) {
+                    loadPhoto(files[0]);
+                }
+            }
+        }
+        handleClose();
     };
 
     return (
@@ -140,7 +149,7 @@ const LoadPhotoDialog: FC<PropsType> = ({profile, open, handleClose, loadPhoto})
             resetAction={handleClose}
             submitAction={updateAvatar}
             submitName="Save"
-            submitDisabled={!cropIsValid}
+            submitDisabled={!fileLoaded}
             aria-labelledby="load-photo-dialog"
             title="Load Photo"
         >

@@ -99,7 +99,7 @@ const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessa
                         <div className={classes.rightColumn}>
                             <Navbar newMessagesCount={newMessagesCount}/>
                             <Divider orientation="vertical" flexItem light={true}/>
-                            <AuthBtn login={login} history={history} isAuth={isAuth} avatar={currentUserInfo ? currentUserInfo.photos: null} userId={userId} logout={logout}/>
+                            <AuthBtn login={login} history={history} isAuth={isAuth} currentUserInfo={currentUserInfo} userId={userId} logout={logout}/>
                             <Divider orientation="vertical" flexItem light={true} />
                         </div>
                     </Grid>

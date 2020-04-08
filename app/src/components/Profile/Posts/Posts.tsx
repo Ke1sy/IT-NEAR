@@ -21,7 +21,7 @@ type PropsType = {
 
     editDialogIsOpen: boolean,
     deleteDialogIsOpen: boolean,
-    openDialog: (isOpen: boolean, selectedItem: PostsData_posts | null, type: OpenPostDialogType) => void,
+    openDialog: (isOpen: boolean, type: OpenPostDialogType, selectedItem: PostsData_posts | null) => void,
 
     selectedPost: null | PostsData_posts,
     addPostLoading: boolean,

@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import {NavLink} from "react-router-dom";
 import userPlaceholder from "../../assets/images/user-placeholder.png";
-import {PhotosType} from "../../redux/reducers/types";
+import {ProfileType} from "../../redux/reducers/types";
 import Submenu from "./Submenu";
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
 
@@ -15,7 +15,7 @@ type PropsType = {
     login: string | null,
     isAuth: boolean,
     logout: (history: any) => void,
-    avatar: PhotosType | null,
+    currentUserInfo: ProfileType | null
     userId: number | null,
     history: any,
 }
@@ -47,10 +47,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const AuthBtn: FC<PropsType> = ({isAuth, login, logout, avatar, userId, history}) => {
+const AuthBtn: FC<PropsType> = ({isAuth, login, logout, currentUserInfo, userId, history}) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    let userAvatar = avatar !== null && avatar.small !== null ? avatar.small : userPlaceholder;
+    const avatar = currentUserInfo  && currentUserInfo.photos.small ? currentUserInfo.photos.small : userPlaceholder;
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -73,9 +73,9 @@ const AuthBtn: FC<PropsType> = ({isAuth, login, logout, avatar, userId, history}
                         aria-haspopup="true"
                     >
                         {/*todo update after new photo loaded*/}
-                        <Avatar src={userAvatar} alt={login ? login : 'avatar'} sizes="40"/>
+                        <Avatar src={avatar} alt={login ? login : 'avatar'} sizes="40"/>
                         <Typography variant="body2" className={classes.avatarText}>
-                            {login}
+                            {currentUserInfo && currentUserInfo.fullName ? currentUserInfo.fullName : login}
                         </Typography>
                         <ExpandMoreRoundedIcon fontSize="small" className={`${classes.avatarIcon} ${anchorEl ? 'active': ''}`}/>
                     </Button>

@@ -8,7 +8,7 @@ type PropsType = {
     isOpen: boolean,
     itemToEdit: PostsData_posts,
     onEditPost: (newText: string, post: PostsData_posts) => void,
-    openDialog: (isOpen: boolean, selectedItem: PostsData_posts | null, type: OpenPostDialogType) => void,
+    openDialog: (isOpen: boolean, type: OpenPostDialogType, selectedItem: PostsData_posts | null) => void,
 }
 
 const EditDialog: FC<PropsType> = ({isOpen, itemToEdit, onEditPost, openDialog}) => {
@@ -22,7 +22,7 @@ const EditDialog: FC<PropsType> = ({isOpen, itemToEdit, onEditPost, openDialog})
     };
 
     const handleClose = () => {
-        openDialog(false, null, 'edit')
+        openDialog(false, 'edit', null)
     };
 
     const handleChange = ({target: {value}}: { target: { value: string } }) => {
