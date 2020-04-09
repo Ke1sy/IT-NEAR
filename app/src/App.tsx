@@ -11,13 +11,13 @@ import {AppStateType} from "./redux/redux-store";
 import {createStyles, StyleRules, Theme, WithStyles, withStyles, CssBaseline, Container} from "@material-ui/core";
 import Notifier from "./components/Notifier/Notifier";
 import {withSnackbar, WithSnackbarProps} from 'notistack';
+import RM from "./RouterManager";
 
 const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
 const LoginContainer = React.lazy(() => import(/* webpackChunkName: "LoginContainer" */"./components/Login/LoginContainer"));
 const UsersContainer = React.lazy(() => import(/* webpackChunkName: "UsersContainer" */"./components/Users/UsersContainer"));
 const NotFound = React.lazy(() => import(/* webpackChunkName: "Music" */"./components/NotFound/NotFound"));
-
 
 type MapStatePropsType = {
     inited: boolean
@@ -71,12 +71,12 @@ class App extends React.Component<PropsType> {
                 <Container maxWidth="lg" component="main" className={classes.content}>
                     <div className={classes.toolbar}/>
                     <Switch>
-                        <Route exact path='/' render={() => <Redirect to={"/profile"}/>}/>
-                        <Route path="/profile/:id?" component={withSuspense(ProfileContainer)}/>
-                        <Route path="/settings" component={withSuspense(ProfileContainer)}/>
-                        <Route path="/dialogs/:id?" component={withSuspense(MessagesContainer)}/>
-                        <Route path="/login" component={withSuspense(LoginContainer)}/>
-                        <Route path="/users" component={withSuspense(UsersContainer)}/>
+                        <Route exact path={RM.home.path} render={() => <Redirect to={RM.profile.getPath(null)}/>}/>
+                        <Route path={RM.profile.path} component={withSuspense(ProfileContainer)}/>
+                        <Route path={RM.settings.path} component={withSuspense(ProfileContainer)}/>
+                        <Route path={RM.dialogs.path} component={withSuspense(MessagesContainer)}/>
+                        <Route path={RM.login.path} component={withSuspense(LoginContainer)}/>
+                        <Route path={RM.users.path} component={withSuspense(UsersContainer)}/>
                         <Route path="*" component={withSuspense(NotFound)}/>
                     </Switch>
                 </Container>

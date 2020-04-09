@@ -17,6 +17,7 @@ import {
     CardActions,
     makeStyles
 } from '@material-ui/core';
+import RM from "../../../RouterManager";
 
 type PropsType = {
     user: UserType,
@@ -90,7 +91,7 @@ const User: FC<PropsType> = ({unfollow, follow, user, followInProgress, startCha
     const userAvatar = photos.small !== null ? photos.small : userPlaceholder;
     return (
         <Card className={classes.root}>
-            <Link component={NavLink} to={`/profile/${id}`}  underline="none">
+            <Link component={NavLink} to={RM.profile.getPath(id)}  underline="none">
                 <Avatar src={userAvatar} alt={name ? name : 'avatar'} className={classes.avatarImg} component="span"/>
             </Link>
             <CardContent className={classes.content}>
@@ -131,7 +132,7 @@ const User: FC<PropsType> = ({unfollow, follow, user, followInProgress, startCha
                 </Button>
             </CardActions>
             <CardActionArea className={classes.bottom}>
-                <Link component={NavLink} to={`/profile/${id}`}  className={classes.bottomLink} underline="none">
+                <Link component={NavLink} to={RM.profile.getPath(id)}  className={classes.bottomLink} underline="none">
                     <Typography variant="body1" component="span">
                         View Profile
                     </Typography>

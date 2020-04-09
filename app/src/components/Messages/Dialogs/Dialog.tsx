@@ -4,6 +4,7 @@ import {NavLink} from "react-router-dom";
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import {DialogsType} from "../../../redux/reducers/types";
 import {Avatar, ListItem, ListItemAvatar, ListItemText} from "@material-ui/core";
+import RM from "../../../RouterManager";
 
 type PropsType = {
     user: DialogsType
@@ -15,7 +16,7 @@ const Dialog: FC<PropsType> = ({user: {id, userName, photos, hasNewMessages, new
     const userAvatar = photos.small !== null ? photos.small : userPlaceholder;
 
     return (
-        <ListItem button={true} component={NavLink}  to={`/dialogs/${id}`} activeClassName={styles.active} className={styles.dialog}>
+        <ListItem button={true} component={NavLink}  to={RM.dialogs.getPath(id)} activeClassName={styles.active} className={styles.dialog}>
             <ListItemAvatar>
                 <Avatar src={userAvatar} alt={userName} sizes="40"/>
             </ListItemAvatar>

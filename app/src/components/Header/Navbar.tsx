@@ -12,22 +12,23 @@ import {
 import MailIcon from '@material-ui/icons/Mail';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import HomeIcon from '@material-ui/icons/Home';
+import RM from "../../RouterManager";
 
 const LINKS = [
     {
         id: 1,
         text: 'Profile',
-        url: '/profile',
+        url: RM.profile.getPath(null),
         icon: <HomeIcon/>
     }, {
         id: 2,
         text: 'Dialogs',
-        url: '/dialogs',
+        url: RM.dialogs.getPath(null),
         icon: <MailIcon/>
     }, {
         id: 3,
         text: 'Users',
-        url: '/users',
+        url: RM.users.path,
         icon: <PeopleAltIcon/>
     }
 ];
@@ -81,10 +82,10 @@ const Navbar: FC<PropsType> = ({newMessagesCount}) => {
                           underline="none" color="textSecondary">
                         <Tooltip title={text} aria-label={text} classes={{tooltip: classes.tooltip}}>
                             <IconButton aria-label={text} className={classes.icon}>
-                                {url === '/dialogs' && areNewMessages ?
-                                <Badge badgeContent={newMessagesCount} max={99} color="secondary">
-                                    {icon}
-                                </Badge> : icon
+                                {url === RM.dialogs.getPath(null) && areNewMessages ?
+                                    <Badge badgeContent={newMessagesCount} max={99} color="secondary">
+                                        {icon}
+                                    </Badge> : icon
                                 }
                             </IconButton>
                         </Tooltip>

@@ -14,6 +14,7 @@ import {
 import Navbar from "./Navbar";
 import {ProfileType} from "../../redux/reducers/types";
 import AuthBtn from "./AuthBtn";
+import RM from "../../RouterManager";
 
 
 type PropsType = {
@@ -84,27 +85,28 @@ const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessa
         <AppBar position="fixed" component="header" className={classes.appBar}>
             <Container maxWidth="lg">
                 <Toolbar variant="dense" disableGutters>
-                <Grid container className={classes.grid} spacing={0}>
-                    <Grid item sm={6}>
-                        <div>
-                            <NavLink to="/" className={classes.logo}>
-                                <IconButton aria-label="logo" className={classes.logoBtn}>
-                                    <img src={logoImg} alt="" className={classes.logoImg}/>
-                                </IconButton>
-                                <Typography variant="h5" className={classes.logoTxt}>IT-NEAR</Typography>
-                            </NavLink>
-                        </div>
+                    <Grid container className={classes.grid} spacing={0}>
+                        <Grid item sm={6}>
+                            <div>
+                                <NavLink to={RM.home.path} className={classes.logo}>
+                                    <IconButton aria-label="logo" className={classes.logoBtn}>
+                                        <img src={logoImg} alt="" className={classes.logoImg}/>
+                                    </IconButton>
+                                    <Typography variant="h5" className={classes.logoTxt}>IT-NEAR</Typography>
+                                </NavLink>
+                            </div>
+                        </Grid>
+                        <Grid item sm={6}>
+                            <div className={classes.rightColumn}>
+                                <Navbar newMessagesCount={newMessagesCount}/>
+                                <Divider orientation="vertical" flexItem light={true}/>
+                                <AuthBtn login={login} history={history} isAuth={isAuth}
+                                         currentUserInfo={currentUserInfo} userId={userId} logout={logout}/>
+                                <Divider orientation="vertical" flexItem light={true}/>
+                            </div>
+                        </Grid>
                     </Grid>
-                    <Grid item sm={6}>
-                        <div className={classes.rightColumn}>
-                            <Navbar newMessagesCount={newMessagesCount}/>
-                            <Divider orientation="vertical" flexItem light={true}/>
-                            <AuthBtn login={login} history={history} isAuth={isAuth} currentUserInfo={currentUserInfo} userId={userId} logout={logout}/>
-                            <Divider orientation="vertical" flexItem light={true} />
-                        </div>
-                    </Grid>
-                </Grid>
-            </Toolbar>
+                </Toolbar>
             </Container>
         </AppBar>
     )

@@ -1,7 +1,6 @@
 import React, {FC} from 'react';
 import {
     Divider,
-    Link,
     ListItemIcon,
     ListItemText,
     Menu,
@@ -14,6 +13,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import withSubmenuStyles from './submenuStyles'
 import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
+import RM from "../../RouterManager";
 
 type PropsType = {
     logout: (history: any) => void,
@@ -56,14 +56,14 @@ const Submenu: FC<PropsType & WithStyles> = ({
                     horizontal: 'center',
                 }}
             >
-                <MenuItem component={NavLink} to={`/profile/${userId}`} className={classes.menuItem}>
+                <MenuItem component={NavLink} to={RM.profile.getPath(userId)} className={classes.menuItem}>
                     <span className="MuiListItemIcon-root">
                         <PersonRoundedIcon fontSize="small" />
                     </span>
                     <Typography variant="body1" component="span" className={classes.menuItemTxt}>Profile</Typography>
                 </MenuItem>
                 <Divider orientation="horizontal" light={true}/>
-                <MenuItem component={NavLink} to={`/settings`} className={classes.menuItem}>
+                <MenuItem component={NavLink} to={RM.settings.path} className={classes.menuItem}>
                      <span className="MuiListItemIcon-root">
                         <EditRoundedIcon fontSize="small" />
                     </span>

@@ -5,6 +5,7 @@ import EmailRoundedIcon from "@material-ui/icons/EmailRounded";
 import {NavLink, useLocation} from "react-router-dom";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SettingsIcon from "@material-ui/icons/Settings";
+import RM from "../../../RouterManager";
 
 type PropsType = {
     isOwner: boolean
@@ -49,7 +50,7 @@ const ProfileActions: FC<PropsType> = ({isOwner}) => {
                         color="primary"
                         component={NavLink}
                         className={classes.actionsBtn}
-                        to="/profile"
+                        to={RM.profile.getPath(null)}
                         startIcon={<AccountCircleIcon/>}
                     >
                         Profile
@@ -61,7 +62,7 @@ const ProfileActions: FC<PropsType> = ({isOwner}) => {
                         color="primary"
                         component={NavLink}
                         className={classes.actionsBtn}
-                        to="/settings"
+                        to={RM.settings.path}
                         startIcon={<SettingsIcon/>}
                     >
                         Settings

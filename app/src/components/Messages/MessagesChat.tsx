@@ -7,6 +7,7 @@ import {Avatar, Link, Typography} from "@material-ui/core";
 import userPlaceholder from "../../assets/images/user-placeholder.png";
 import Preloader from "../Preloader/Preloader";
 import {NavLink} from "react-router-dom";
+import RM from "../../RouterManager";
 
 type PropsType = {
     messages: Array<MessagesType>
@@ -113,12 +114,12 @@ const MessagesChat: FC<PropsType> = ({
             <div className={styles.messages}>
                 {selectedFriend &&
                 <div className={styles.messages__head}>
-                    <Link component={NavLink} to={`/profile/${selectedFriend.userId}`}>
+                    <Link component={NavLink} to={RM.profile.getPath(selectedFriend.userId)}>
                         <Avatar src={selectedFriend.photos.small || userPlaceholder} component="span" alt='avatar'
                                 sizes="40"/>
                     </Link>
                     <div className={styles.messages__headInfo}>
-                        <Link component={NavLink} to={`/profile/${selectedFriend.userId}`} underline="none"
+                        <Link component={NavLink} to={RM.profile.getPath(selectedFriend.userId)} underline="none"
                               className={styles.messages__headLink}>
                             <Typography variant="subtitle1" component="h6">
                                 {selectedFriend.fullName}

@@ -10,6 +10,7 @@ import userPlaceholder from "../../assets/images/user-placeholder.png";
 import {ProfileType} from "../../redux/reducers/types";
 import Submenu from "./Submenu";
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
+import RM from "../../RouterManager";
 
 type PropsType = {
     login: string | null,
@@ -85,7 +86,7 @@ const AuthBtn: FC<PropsType> = ({isAuth, login, logout, currentUserInfo, userId,
 
             {
                 !isAuth &&
-                <Link component={NavLink} to="/login" className={classes.loginLink}>
+                <Link component={NavLink} to={RM.login.path} className={classes.loginLink}>
                     Login
                 </Link>
             }
