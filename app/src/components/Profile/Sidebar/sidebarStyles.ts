@@ -1,5 +1,4 @@
 import {withStyles, createStyles, Theme} from '@material-ui/core/styles';
-import {} from '@material-ui/core/colors';
 
 const styles = createStyles((theme: Theme) => ({
     paper: {
@@ -8,7 +7,10 @@ const styles = createStyles((theme: Theme) => ({
     },
     body: {
         textAlign: 'center',
-        paddingBottom: 20,
+        paddingBottom: 10,
+        [theme.breakpoints.up('md')]: {
+            paddingBottom: 20,
+        },
     },
     avatar: {
         position: 'relative',
@@ -46,10 +48,27 @@ const styles = createStyles((theme: Theme) => ({
         height: '100%',
         width: '100%',
     },
+    socials: {
+        [theme.breakpoints.down('md')]: {
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center'
+        },
+    },
+    socialsItem: {
+        [theme.breakpoints.down('md')]: {
+            width: 'auto',
+            padding: 9,
+            marginBottom: 5
+        },
+    },
     socialsIcon: {
         height: 25,
         width: 25,
-        marginRight: 20,
+        marginRight: 0,
+        [theme.breakpoints.up('lg')]: {
+            marginRight: 20,
+        },
 
         '&.facebook': {
             color: '#3b5999'
@@ -75,6 +94,12 @@ const styles = createStyles((theme: Theme) => ({
             color: '#0077b5'
         }
     },
+    socialsText: {
+        display: 'none',
+        [theme.breakpoints.up('lg')]: {
+            display: 'block'
+        }
+    }
 }));
 
 export default withStyles(styles, {withTheme: true})

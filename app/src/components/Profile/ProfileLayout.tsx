@@ -1,9 +1,10 @@
 import React, {FC} from 'react';
 import {ProfileType} from "../../redux/reducers/types";
-import {Grid, makeStyles} from "@material-ui/core";
+import {Grid, isWidthDown, isWidthUp, makeStyles, WithWidth} from "@material-ui/core";
 import Sidebar from "./Sidebar/Sidebar";
 import ProfileCover from './Cover/ProfileCover';
 import ProfileActions from "./Sidebar/ProfileActions";
+import withWidth from "@material-ui/core/withWidth";
 
 type PropsType = {
     profile: ProfileType | null
@@ -13,22 +14,48 @@ type PropsType = {
     loadPhoto: (photo: any) => void
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     profile: {
         display: 'flex',
+        [theme.breakpoints.down(769)]: {
+           flexDirection: 'column'
+        }
     },
     profileLeft: {
-        width: 300,
-        minWidth: 300
+        width: '100%',
+        minWidth: 250,
+        [theme.breakpoints.up(769)]: {
+            width: 250,
+            minWidth: 250,
+        },
+        [theme.breakpoints.up('lg')]: {
+            width: 300,
+            minWidth: 300,
+        },
     },
     profileRight: {
         flexGrow: 1,
-        marginLeft: theme.spacing(3),
-        paddingTop: 30
+        paddingTop: theme.spacing(2),
+        [theme.breakpoints.up(769)]: {
+            paddingTop: 0,
+            marginLeft: theme.spacing(1),
+        },
+        [theme.breakpoints.up('md')]: {
+            paddingTop: theme.spacing(3),
+            marginLeft: theme.spacing(2),
+        },
+        [theme.breakpoints.up('lg')]: {
+            marginLeft: theme.spacing(3),
+        }
     },
+    grid: {
+        [theme.breakpoints.down('md')]: {
+            flexDirection: 'column-reverse'
+        }
+    }
 }));
 
-const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, children, loadPhoto}) => {
+const ProfileLayout: FC<PropsType & WithWidth> = ({profile, status, setUserStatus, isOwner, children, loadPhoto, width}) => {
     const classes = useStyles();
     return (
         <div>
@@ -46,15 +73,16 @@ const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, 
                     }
                 </div>
                 <div className={classes.profileRight}>
-                    <Grid container spacing={3}>
-                        <Grid item sm={8} md={9}>
+                    <Grid container spacing={2} className={classes.grid}>
+                        <Grid item sm={12} lg={9}>
                             {children}
                         </Grid>
-                        <Grid item sm={4} md={3}>
-                            <ProfileActions
-                                isOwner={isOwner}
-                            />
-                        </Grid>
+                        {
+                            isWidthUp('lg', width) &&
+                            <Grid item sm={10} lg={3}>
+                                <ProfileActions isOwner={isOwner}/>
+                            </Grid>
+                        }
                     </Grid>
                 </div>
             </div>
@@ -62,4 +90,4 @@ const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, 
     )
 };
 
-export default ProfileLayout;
+export default withWidth()(ProfileLayout);

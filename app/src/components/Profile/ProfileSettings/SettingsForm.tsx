@@ -30,14 +30,17 @@ const useStyles = makeStyles(theme => ({
     },
     buttons: {
         display: 'flex',
-        justifyContent: 'center',
-        margin: '25px 0 15px'
+        justifyContent: 'space-between',
+        margin: '25px 0 15px',
+        [theme.breakpoints.up('sm')]: {
+            justifyContent: 'center',
+        },
     },
     error: {
         marginBottom: 15
     },
     button: {
-        minWidth: 150,
+        minWidth: '48%',
         marginLeft: 15,
         [theme.breakpoints.up('sm')]: {
             minWidth: 200

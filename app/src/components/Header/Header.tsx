@@ -42,15 +42,12 @@ const useStyles = makeStyles((theme) => ({
         },
         logo: {
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            height: '100%',
+            lineHeight: 1
         },
         logoImg: {
-            height: 30
-        },
-        logoBtn: {
-            padding: theme.spacing(1),
-            position: 'relative',
-            left: -theme.spacing(1),
+            height: 35
         },
         logoutBtn: {
             padding: theme.spacing(1),
@@ -87,12 +84,9 @@ const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessa
                 <Toolbar variant="dense" disableGutters>
                     <Grid container className={classes.grid} spacing={0}>
                         <Grid item sm={6}>
-                            <div>
-                                <NavLink to={RM.home.path} className={classes.logo}>
-                                    <IconButton aria-label="logo" className={classes.logoBtn}>
+                            <div className={classes.logo}>
+                                <NavLink to={RM.home.path} >
                                         <img src={logoImg} alt="" className={classes.logoImg}/>
-                                    </IconButton>
-                                    <Typography variant="h5" className={classes.logoTxt}>IT-NEAR</Typography>
                                 </NavLink>
                             </div>
                         </Grid>

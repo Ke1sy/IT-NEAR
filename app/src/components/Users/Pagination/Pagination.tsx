@@ -23,12 +23,12 @@ const useStyles = makeStyles(theme => ({
         }
     },
 }));
+
 const Pagination: FC<PropsType> = ({totalPages, currentPage, onSetCurrentPage, width}) => {
     const classes = useStyles();
     return (
         <PaginationComponent size={width === 'xs' ? 'small': 'medium'} count={totalPages} page={currentPage} onChange={onSetCurrentPage} color="primary" className={classes.root}/>
     )
 };
-
 
 export default  withWidth()(Pagination);

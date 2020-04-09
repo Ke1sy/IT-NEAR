@@ -1,12 +1,13 @@
 import React, {FC} from 'react';
 import {ProfileType} from "../../../redux/reducers/types";
-import {Grid, makeStyles, Tab, Tabs} from "@material-ui/core";
+import {Grid, isWidthDown, isWidthUp, makeStyles, Tab, Tabs, WithWidth} from "@material-ui/core";
 import TabPanel from "./TabPanel";
 import StaticProfileInfo from "../ProfileInfo/StaticProfileInfo";
 import PostsContainer from "../Posts/PostsContainer";
 import SwipeableViews from 'react-swipeable-views';
 import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
+import withWidth from "@material-ui/core/withWidth";
 
 type PropsType = {
     profile: ProfileType
@@ -18,10 +19,13 @@ const useStyles = makeStyles(theme => ({
     tab: {
         fontWeight: 400,
         textTransform: 'none',
-        minWidth: 90,
+        minWidth: 'auto',
         color: theme.palette.primary.light,
         '&:not($selected):hover': {
             color: theme.palette.primary.main
+        },
+        [theme.breakpoints.up('lg')]: {
+            minWidth: 90,
         }
     },
     selected: {
@@ -33,10 +37,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner, currentUserInfo}) => {
+const ProfileInfoTabs: FC<PropsType & WithWidth> = ({profile, isOwner, currentUserInfo, width}) => {
     const classes = useStyles();
     const [selectedTab, setSelectedTab] = React.useState(0);
-
+    const widthUpMd = isWidthUp('md', width);
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setSelectedTab(newValue);
     };
@@ -46,8 +50,8 @@ const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner, currentUserInfo}) => 
 
     return (
         <>
-            <Grid container>
-                <Grid item xs={10}>
+            <Grid container  direction={widthUpMd ? 'row' : 'column-reverse'}>
+                <Grid item xs={12} md={10}>
                     <SwipeableViews
                         axis='x'
                         index={selectedTab}
@@ -56,7 +60,6 @@ const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner, currentUserInfo}) => 
                         <TabPanel selectedTab={selectedTab} index={0}>
                             <StaticProfileInfo
                                 profile={profile}
-                                isOwner={isOwner}
                             />
                         </TabPanel>
                         <TabPanel selectedTab={selectedTab} index={1}>
@@ -69,14 +72,15 @@ const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner, currentUserInfo}) => 
                         </TabPanel>
                     </SwipeableViews>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={12} md={2}>
                     <Tabs
                         value={selectedTab}
                         onChange={handleChange}
                         indicatorColor="secondary"
                         textColor="secondary"
                         aria-label="profile tabs"
-                        orientation="vertical"
+                        centered={!widthUpMd}
+                        orientation={widthUpMd ? "vertical" : "horizontal"}
                         TabIndicatorProps={{
                             className: classes.indicator,
                         }}
@@ -96,4 +100,4 @@ const ProfileInfoTabs: FC<PropsType> = ({profile, isOwner, currentUserInfo}) => 
     )
 };
 
-export default ProfileInfoTabs;
+export default withWidth()(ProfileInfoTabs);

@@ -10,7 +10,6 @@ import StyledDivider from "../Posts/StyledDivider";
 
 type PropsType = {
     profile: ProfileType
-    isOwner: boolean
 }
 
 const useStyles = makeStyles(theme => ({
@@ -28,12 +27,11 @@ const useStyles = makeStyles(theme => ({
             content: '\'\'',
             background: `url(${jobImage}) no-repeat`,
             opacity: 0.5,
-            top: 4,
-            right: 1,
+            top: 0,
+            right: 0,
             width: 100,
             height: 100,
             position: 'absolute',
-            zIndex: 2,
             backgroundSize: 100,
         }
     },
@@ -70,12 +68,12 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const StaticProfileInfo: FC<PropsType> = ({profile, isOwner}) => {
+const StaticProfileInfo: FC<PropsType> = ({profile}) => {
     const classes = useStyles();
     const {fullName, lookingForAJobDescription, aboutMe, lookingForAJob} = profile;
-    return (<>
+    return (
+        <>
             <StyledDivider customClasses={classes.divider}/>
-
             <Paper className={classNames(`${classes.paper}`, {[`${classes.withBg}`]: lookingForAJob})}>
                 <div className={classes.block}>
                     <Typography variant="subtitle1" component="span">Full Name: </Typography>
