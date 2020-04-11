@@ -1,12 +1,11 @@
 import React, {FC} from 'react';
-import {Button, Divider, isWidthUp, makeStyles, WithWidth} from "@material-ui/core";
+import {Button, Hidden, makeStyles} from "@material-ui/core";
 import PersonAddDisabledRoundedIcon from "@material-ui/icons/PersonAddDisabledRounded";
 import EmailRoundedIcon from "@material-ui/icons/EmailRounded";
 import {NavLink, useLocation} from "react-router-dom";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SettingsIcon from "@material-ui/icons/Settings";
 import RM from "../../../RouterManager";
-import withWidth from '@material-ui/core/withWidth';
 
 type PropsType = {
     isOwner: boolean
@@ -53,10 +52,9 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const ProfileActions: FC<PropsType & WithWidth> = ({isOwner, width}) => {
+const ProfileActions: FC<PropsType> = ({isOwner}) => {
     const classes = useStyles();
     let { pathname } = useLocation();
-    const fullWidth = ['xl'].includes(width);
 
     return (
         <div className={classes.actions}>
@@ -72,12 +70,12 @@ const ProfileActions: FC<PropsType & WithWidth> = ({isOwner, width}) => {
                 </Button>
             </>
             }
-            {isOwner &&  isWidthUp('lg', width) &&
-            <>
+            {isOwner &&
+            <Hidden mdDown>
                 {pathname === '/settings' ?
                     <Button
                         size="large"
-                        fullWidth={fullWidth}
+                        fullWidth={true}
                         variant="contained"
                         color="primary"
                         component={NavLink}
@@ -89,7 +87,7 @@ const ProfileActions: FC<PropsType & WithWidth> = ({isOwner, width}) => {
                     </Button>
                     : <Button
                         size="large"
-                        fullWidth={fullWidth}
+                        fullWidth={true}
                         variant="contained"
                         color="primary"
                         component={NavLink}
@@ -100,10 +98,10 @@ const ProfileActions: FC<PropsType & WithWidth> = ({isOwner, width}) => {
                         <span  className={classes.actionsTxt}>Settings</span>
                     </Button>
                 }
-            </>
+            </Hidden>
             }
         </div>
     )
 };
 
-export default withWidth()(ProfileActions);
+export default ProfileActions;

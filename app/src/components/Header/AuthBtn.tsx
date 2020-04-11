@@ -1,7 +1,7 @@
 import React, {FC, useEffect} from 'react';
 import {
     Avatar,
-    Button,
+    Button, Hidden,
     Link, makeStyles,
     Typography,
 } from "@material-ui/core";
@@ -27,7 +27,10 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         paddingLeft: 20,
         paddingRight: 20,
-        textTransform: 'none'
+        textTransform: 'none',
+    },
+    avatarRoot: {
+        marginRight: 10
     },
     loginLink: {
         paddingLeft: 20,
@@ -73,11 +76,12 @@ const AuthBtn: FC<PropsType> = ({isAuth, login, logout, currentUserInfo, userId,
                         aria-controls="customized-menu"
                         aria-haspopup="true"
                     >
-                        {/*todo update after new photo loaded*/}
-                        <Avatar src={avatar} alt={login ? login : 'avatar'} sizes="40"/>
-                        <Typography variant="body2" className={classes.avatarText}>
-                            {currentUserInfo && currentUserInfo.fullName ? currentUserInfo.fullName : login}
-                        </Typography>
+                        <Avatar src={avatar} alt={login ? login : 'avatar'} sizes="40" classes={{root: classes.avatarRoot}}/>
+                        <Hidden smDown>
+                            <Typography variant="body2" className={classes.avatarText}>
+                                {currentUserInfo && currentUserInfo.fullName ? currentUserInfo.fullName : login}
+                            </Typography>
+                        </Hidden>
                         <ExpandMoreRoundedIcon fontSize="small" className={`${classes.avatarIcon} ${anchorEl ? 'active': ''}`}/>
                     </Button>
                     <Submenu logout={logout} userId={userId} history={history} handleClose={handleClose} anchorEl={anchorEl}/>

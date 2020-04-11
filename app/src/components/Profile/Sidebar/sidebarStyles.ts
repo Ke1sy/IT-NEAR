@@ -20,7 +20,11 @@ const styles = createStyles((theme: Theme) => ({
         width: 206,
         border: '3px solid #fff',
         margin: '0 auto',
-        borderRadius: ' 50%'
+        borderRadius: ' 50%',
+        [theme.breakpoints.down('xs')]: {
+            height: 156,
+            width: 156,
+        },
     },
     avatarBtn: {
         position: 'absolute',
@@ -41,8 +45,6 @@ const styles = createStyles((theme: Theme) => ({
         top: 50,
         right: 0,
         transform: 'translateX(50%)'
-    },
-    avatarIcon: {
     },
     avatarImg: {
         height: '100%',

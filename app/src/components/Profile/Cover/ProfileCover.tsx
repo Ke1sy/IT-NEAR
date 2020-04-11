@@ -5,9 +5,7 @@ import profileCover from '../../../assets/images/profile_cover.jpg'
 
 const ProfileCover: FC<WithStyles> = ({classes}) => {
     return (
-        <div className={classes.cover}>
-            <img src={profileCover} alt=""/>
-        </div>
+        <div className={classes.cover} style={{backgroundImage: `url(${profileCover})`}}/>
     )
 };
 

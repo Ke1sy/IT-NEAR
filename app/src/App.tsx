@@ -12,6 +12,7 @@ import {createStyles, StyleRules, Theme, WithStyles, withStyles, CssBaseline, Co
 import Notifier from "./components/Notifier/Notifier";
 import {withSnackbar, WithSnackbarProps} from 'notistack';
 import RM from "./RouterManager";
+import classNames from "classnames";
 
 const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
@@ -40,13 +41,11 @@ const styles = (theme: Theme): StyleRules => createStyles({
     toolbar: theme.mixins.toolbar,
 });
 
-
 type PropsType = MapStatePropsType & MapDispatchPropsType & WithStyles<typeof styles> & WithSnackbarProps;
 
 class App extends React.Component<PropsType> {
     componentDidMount() {
         this.props.appInitialize();
-
         window.addEventListener("unhandledrejection", this.globalError);
     }
 

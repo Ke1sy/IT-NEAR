@@ -4,17 +4,16 @@ import logoImg from '../../assets/images/logo.png';
 import {
     AppBar,
     Toolbar,
-    Typography,
     makeStyles,
-    IconButton,
     Grid,
     Container,
-    Divider
+    Divider, Hidden
 } from '@material-ui/core';
 import Navbar from "./Navbar";
 import {ProfileType} from "../../redux/reducers/types";
 import AuthBtn from "./AuthBtn";
 import RM from "../../RouterManager";
+import MobileMenu from "./MobileMenu";
 
 
 type PropsType = {
@@ -47,7 +46,10 @@ const useStyles = makeStyles((theme) => ({
             lineHeight: 1
         },
         logoImg: {
-            height: 35
+            height: 30,
+            [theme.breakpoints.up('sm')]: {
+                height: 35,
+            },
         },
         logoutBtn: {
             padding: theme.spacing(1),
@@ -83,20 +85,37 @@ const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessa
             <Container maxWidth="lg">
                 <Toolbar variant="dense" disableGutters>
                     <Grid container className={classes.grid} spacing={0}>
-                        <Grid item sm={6}>
+                        <Grid item xs={6} sm={4}>
                             <div className={classes.logo}>
                                 <NavLink to={RM.home.path} >
                                         <img src={logoImg} alt="" className={classes.logoImg}/>
                                 </NavLink>
                             </div>
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item xs={6} sm={8}>
                             <div className={classes.rightColumn}>
-                                <Navbar newMessagesCount={newMessagesCount}/>
-                                <Divider orientation="vertical" flexItem light={true}/>
-                                <AuthBtn login={login} history={history} isAuth={isAuth}
-                                         currentUserInfo={currentUserInfo} userId={userId} logout={logout}/>
-                                <Divider orientation="vertical" flexItem light={true}/>
+                                <Hidden xsDown>
+                                    <Navbar
+                                        newMessagesCount={newMessagesCount}
+                                        userId={currentUserInfo ? currentUserInfo.userId : null}
+                                        logout={logout}/>
+                                    <Divider
+                                        orientation="vertical"
+                                        flexItem
+                                        light={true}/>
+                                    <AuthBtn login={login} history={history} isAuth={isAuth}
+                                             currentUserInfo={currentUserInfo} userId={userId} logout={logout}/>
+                                    <Divider orientation="vertical" flexItem light={true}/>
+                                </Hidden>
+
+                                <Hidden smUp>
+                                    <MobileMenu>
+                                        <Navbar
+                                            logout={logout}
+                                            newMessagesCount={newMessagesCount} userId={currentUserInfo ? currentUserInfo.userId : null}
+                                        />
+                                    </MobileMenu>
+                                </Hidden>
                             </div>
                         </Grid>
                     </Grid>

@@ -14,6 +14,7 @@ import withSubmenuStyles from './submenuStyles'
 import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import RM from "../../RouterManager";
+import classNames from "classnames";
 
 type PropsType = {
     logout: (history: any) => void,
@@ -57,14 +58,14 @@ const Submenu: FC<PropsType & WithStyles> = ({
                 }}
             >
                 <MenuItem component={NavLink} to={RM.profile.getPath(userId)} className={classes.menuItem}>
-                    <span className="MuiListItemIcon-root">
+                    <span className={classNames('MuiListItemIcon-root', classes.menuIcon)}>
                         <PersonRoundedIcon fontSize="small" />
                     </span>
                     <Typography variant="body1" component="span" className={classes.menuItemTxt}>Profile</Typography>
                 </MenuItem>
                 <Divider orientation="horizontal" light={true}/>
                 <MenuItem component={NavLink} to={RM.settings.path} className={classes.menuItem}>
-                     <span className="MuiListItemIcon-root">
+                     <span className={classNames('MuiListItemIcon-root', classes.menuIcon)}>
                         <EditRoundedIcon fontSize="small" />
                     </span>
                     <Typography variant="body1" component="span" className={classes.menuItemTxt}>Edit Profile</Typography>
@@ -72,7 +73,7 @@ const Submenu: FC<PropsType & WithStyles> = ({
                 <Divider orientation="horizontal" light={true}/>
 
                 <MenuItem className={classes.menuItem} onClick={() => logout(history)}>
-                    <ListItemIcon>
+                    <ListItemIcon className={classes.menuIcon}>
                         <ExitToAppIcon fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText  classes={{

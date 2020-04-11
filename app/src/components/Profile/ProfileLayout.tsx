@@ -1,10 +1,9 @@
 import React, {FC} from 'react';
 import {ProfileType} from "../../redux/reducers/types";
-import {Grid, isWidthDown, isWidthUp, makeStyles, WithWidth} from "@material-ui/core";
+import {Grid, Hidden, makeStyles} from "@material-ui/core";
 import Sidebar from "./Sidebar/Sidebar";
 import ProfileCover from './Cover/ProfileCover';
 import ProfileActions from "./Sidebar/ProfileActions";
-import withWidth from "@material-ui/core/withWidth";
 
 type PropsType = {
     profile: ProfileType | null
@@ -55,7 +54,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const ProfileLayout: FC<PropsType & WithWidth> = ({profile, status, setUserStatus, isOwner, children, loadPhoto, width}) => {
+const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, children, loadPhoto}) => {
     const classes = useStyles();
     return (
         <div>
@@ -77,12 +76,11 @@ const ProfileLayout: FC<PropsType & WithWidth> = ({profile, status, setUserStatu
                         <Grid item sm={12} lg={9}>
                             {children}
                         </Grid>
-                        {
-                            isWidthUp('lg', width) &&
+                        <Hidden mdDown>
                             <Grid item sm={10} lg={3}>
                                 <ProfileActions isOwner={isOwner}/>
                             </Grid>
-                        }
+                        </Hidden>
                     </Grid>
                 </div>
             </div>
@@ -90,4 +88,4 @@ const ProfileLayout: FC<PropsType & WithWidth> = ({profile, status, setUserStatu
     )
 };
 
-export default withWidth()(ProfileLayout);
+export default ProfileLayout;

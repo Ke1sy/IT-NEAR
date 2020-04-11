@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {ProfileType} from "../../../redux/reducers/types";
-import {Grid, isWidthDown, isWidthUp, makeStyles, Tab, Tabs, WithWidth} from "@material-ui/core";
+import {Grid, isWidthUp, makeStyles, Tab, Tabs, WithWidth} from "@material-ui/core";
 import TabPanel from "./TabPanel";
 import StaticProfileInfo from "../ProfileInfo/StaticProfileInfo";
 import PostsContainer from "../Posts/PostsContainer";
@@ -50,7 +50,7 @@ const ProfileInfoTabs: FC<PropsType & WithWidth> = ({profile, isOwner, currentUs
 
     return (
         <>
-            <Grid container  direction={widthUpMd ? 'row' : 'column-reverse'}>
+            <Grid container direction={widthUpMd ? 'row' : 'column-reverse'}>
                 <Grid item xs={12} md={10}>
                     <SwipeableViews
                         axis='x'

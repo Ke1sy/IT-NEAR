@@ -23,7 +23,9 @@ const styles = createStyles((theme: Theme) => ({
             }
         }
     },
-
+    menuIcon: {
+      minWidth: 35
+    },
     link: {
         '&:hover': {
             backgroundColor: theme.palette.primary.light,

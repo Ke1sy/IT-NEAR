@@ -9,7 +9,8 @@ import {
     List,
     ListItem,
     Divider,
-    Link, IconButton, WithWidth, isWidthDown, isWidthUp,
+    Link, IconButton,
+    Hidden,
 } from '@material-ui/core';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import ProfileStatus from "../Status/ProfileStatus";
@@ -25,7 +26,6 @@ import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import LoadPhotoDialog from "../Dialogs/LoadPhotoDialog";
 import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteDialog from "../Dialogs/DeleteDialog";
-import withWidth from '@material-ui/core/withWidth';
 import {compose} from "redux";
 import ProfileActions from "./ProfileActions";
 
@@ -62,7 +62,7 @@ const SocialIcon = (props: any) => {
     return <TagName {...other}/>
 };
 
-const Sidebar: FC<PropsType & WithStyles & WithWidth> = ({profile, status, classes, setUserStatus, isOwner, loadPhoto, width}) => {
+const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserStatus, isOwner, loadPhoto}) => {
     const {photos, fullName, contacts} = profile;
     const userAvatar = photos.large !== null ? photos.large : userPlaceholder;
     const [contactsArr, setContactsArr] = useState<Array<ContactsArrType>>([]);
@@ -134,18 +134,18 @@ const Sidebar: FC<PropsType & WithStyles & WithWidth> = ({profile, status, class
                     <Typography variant="h6">{fullName}</Typography>
                     <ProfileStatus status={status} setUserStatus={setUserStatus} isOwner={isOwner}/>
                 </div>
-                {
-                    isWidthDown('md', width) &&
+
+                <Hidden lgUp>
                     <ProfileActions isOwner={isOwner}/>
-                }
+                </Hidden>
+
                 <List aria-label="socials" disablePadding={true} className={classes.socials} component="div">
                     {
                         contactsArr.map(({name, url}: { name: any, url: string }) =>
                             <Fragment key={name}>
-                                {
-                                    isWidthUp('lg', width) &&
+                                <Hidden mdDown>
                                     <Divider orientation='horizontal' light={true}/>
-                                }
+                                </Hidden>
                                 <ListItem button component={Link} href={url} target="_blank" rel="noopener noreferrer" className={classes.socialsItem}>
                                     <SocialIcon name={name}
                                                 className={classNames(`${classes.socialsIcon}`, `${name}`)}/>
@@ -162,6 +162,5 @@ const Sidebar: FC<PropsType & WithStyles & WithWidth> = ({profile, status, class
 
 export default compose(
     withSidebarStyles,
-    withWidth()
 )(Sidebar) as FC<PropsType>;
 
