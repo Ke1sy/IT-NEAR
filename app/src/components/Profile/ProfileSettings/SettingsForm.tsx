@@ -89,8 +89,7 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
         return <Preloader showPreloader={true}/>
     }
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
                 <StyledDivider customClasses={classes.divider}/>
                 <Paper className={classes.paper}>
                     <Typography variant="body1" className={classes.title}>
@@ -177,7 +176,6 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
                     </Button>
                 </div>
             </form>
-        </div>
     )
 };
 

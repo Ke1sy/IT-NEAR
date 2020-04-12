@@ -81,4 +81,4 @@ export default compose(
         restoreMessage
     }),
     withAuthRedirect
-)(MessagesContainer) as React.ComponentType<any>;
+)(MessagesContainer) as FC;

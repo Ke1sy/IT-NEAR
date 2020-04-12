@@ -14,10 +14,13 @@ const useStyles = makeStyles(theme => ({
     textInput: {
         marginBottom: 25,
         '& .MuiFormHelperText-root': {
-            fontSize: 12,
+            fontSize: 10,
             position: 'absolute',
             bottom: 0,
             transform: 'translateY(100%)',
+            [theme.breakpoints.up('sm')]: {
+                fontSize: 12,
+            }
         }
     }
 }));

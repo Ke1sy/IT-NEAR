@@ -136,6 +136,6 @@ export default compose(
     }),
     withRouter,
     withAuthRedirect,
-)(ProfileContainer) as React.ComponentType<any>;
+)(ProfileContainer) as FC;
 
 

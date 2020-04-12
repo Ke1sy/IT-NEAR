@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import Users from "./Users";
 import {
@@ -12,12 +12,12 @@ import {
 } from "../../redux/reducers/users-selectors";
 import {follow, unfollow, requestUsers} from "../../redux/reducers/users-reducer";
 import {startChat} from "../../redux/reducers/dialogs-reducer";
-import {withRouter} from "react-router-dom";
+import {withRouter, useLocation, useHistory} from "react-router-dom";
 import {compose} from "redux";
 import queryString from 'query-string';
 import {UserType} from "../../redux/reducers/types";
 import {AppStateType} from "../../redux/redux-store";
-import { withAuthRedirect } from '../Redirects/AuthRedirect';
+import {withAuthRedirect} from '../Redirects/AuthRedirect';
 
 type MapStatePropsType = {
     pageSize: number
@@ -29,11 +29,6 @@ type MapStatePropsType = {
     currentPage: number
 }
 
-type OwnPropsType = {
-    location: any
-    history: any
-}
-
 type MapDispatchPropsType = {
     requestUsers: (currentPage: number, pageSize: number, searchText: string) => void
     startChat: (userId: number, history: any) => void
@@ -41,59 +36,77 @@ type MapDispatchPropsType = {
     unfollow: (id: number) => void
 }
 
-type PropsType = MapStatePropsType & OwnPropsType & MapDispatchPropsType
+type PropsType = MapStatePropsType & MapDispatchPropsType
 
-class UsersContainer extends Component<PropsType> {
-    componentDidMount() {
-        const {pageSize, requestUsers} = this.props;
-        const {search = '', page = 1} = this.getQueryParams();
-        requestUsers(Number(page), pageSize, String(search))
-    }
+const UsersContainer: FC<PropsType> = ({
+                                           pageSize,
+                                           searchQuery,
+                                           isLoading,
+                                           followInProgress,
+                                           users,
+                                           totalUsersCount,
+                                           currentPage,
+                                           requestUsers,
+                                           startChat, follow,
+                                           unfollow
+                                       }) => {
 
-    getQueryParams = () => {
-        return queryString.parse(this.props.location.search);
+    const [searchRequest, setSearchRequest] = useState<any>(null);
+    const totalPages = Math.ceil(totalUsersCount / pageSize);
+    let location = useLocation();
+    let history = useHistory();
+
+    useEffect(() => {
+        const {search = '', page = 1} = getQueryParams();
+        requestUsers(Number(page), pageSize, String(search));
+    }, []);
+
+    useEffect(() => {
+        const request = queryString.parse(location.search);
+        setSearchRequest(request.search ? request.search : null)
+    }, [location]);
+
+    const getQueryParams = () => {
+        return queryString.parse(location.search);
     };
 
-    stringifyParams: (page?: number, search?: string | null) => string = (page, search) => {
+    const stringifyParams: (page?: number, search?: string | null) => string = (page, search) => {
         return '?' + queryString.stringify({
             search: search || undefined,
             page: page || undefined
         });
     };
 
-    onChangeSearchText = ({searchText}: { searchText: string | null}) => {
-        this.props.history.replace(this.stringifyParams(undefined, searchText));
+    const onChangeSearchText = ({searchText}: { searchText: string | null }) => {
+        history.replace(stringifyParams(undefined, searchText));
     };
 
-    onResetSearch = () => {
-        this.props.history.replace(this.stringifyParams(undefined, ''));
+    const onResetSearch = () => {
+        history.replace(stringifyParams(undefined, ''));
     };
 
-    onSetCurrentPage = (e: React.ChangeEvent<unknown>, value: number) => {
-        this.props.history.replace(this.stringifyParams(value, this.props.searchQuery));
+    const onSetCurrentPage = (e: React.ChangeEvent<unknown>, value: number) => {
+        history.replace(stringifyParams(value, searchQuery));
     };
 
-    render() {
-        const {users, pageSize, totalUsersCount, currentPage, isLoading, followInProgress, follow, unfollow, startChat, history} = this.props;
-        return (
-                <Users
-                    follow={follow}
-                    unfollow={unfollow}
-                    onSetCurrentPage={this.onSetCurrentPage}
-                    users={users}
-                    pageSize={pageSize}
-                    totalUsersCount={totalUsersCount}
-                    currentPage={currentPage}
-                    followInProgress={followInProgress}
-                    startChat={startChat}
-                    history={history}
-                    onChangeSearchText={this.onChangeSearchText}
-                    onResetSearch={this.onResetSearch}
-                    isLoading={isLoading}
-                />
-        )
-    }
-}
+    return (
+        <Users
+            follow={follow}
+            unfollow={unfollow}
+            onSetCurrentPage={onSetCurrentPage}
+            users={users}
+            currentPage={currentPage}
+            followInProgress={followInProgress}
+            startChat={startChat}
+            history={history}
+            onChangeSearchText={onChangeSearchText}
+            onResetSearch={onResetSearch}
+            isLoading={isLoading}
+            searchRequest={searchRequest}
+            totalPages={totalPages}
+        />
+    )
+};
 
 let mapStateToProps = (state: AppStateType) => {
     return {
@@ -108,7 +121,7 @@ let mapStateToProps = (state: AppStateType) => {
 };
 
 export default compose(
-    connect<MapStatePropsType, MapDispatchPropsType, OwnPropsType, AppStateType>(mapStateToProps, {
+    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {
         unfollow,
         requestUsers,
         follow,
@@ -116,5 +129,5 @@ export default compose(
     }),
     withRouter,
     withAuthRedirect,
-)(UsersContainer) as React.ComponentType<any>;
+)(UsersContainer) as FC;
 
