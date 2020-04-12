@@ -8,7 +8,7 @@ import {makeStyles} from "@material-ui/core";
 import StyledDivider from "./StyledDivider";
 import {OpenPostDialogType, ProfileType} from "../../../redux/reducers/types";
 import EditDialog from "../Dialogs/EditDialog";
-import DeleteDialog from "../Dialogs/DeleteDialog";
+import ConfirmDialog from "../Dialogs/ConfirmDialog";
 
 type PropsType = {
     posts: PostsData_posts[] | null,
@@ -93,11 +93,11 @@ const Posts: FC<PropsType> = (({
                         openDialog={openDialog}
                     />
 
-                    <DeleteDialog
+                    <ConfirmDialog
                         isOpen={deleteDialogIsOpen}
                         openDialog={openDialog}
-                        deleteAction={onDeletePost}
-                        itemToDelete={selectedPost}
+                        confirmAction={onDeletePost}
+                        itemToConfirm={selectedPost}
                     />
                 </>
             }

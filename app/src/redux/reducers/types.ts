@@ -77,5 +77,5 @@ export type LoginFormDataPropsType = {
     captcha: string | null
 }
 
-export type OpenPostDialogType = 'edit' | 'delete';
+export type OpenPostDialogType = 'edit' | 'confirm';
 

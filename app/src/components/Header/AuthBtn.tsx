@@ -15,10 +15,9 @@ import RM from "../../RouterManager";
 type PropsType = {
     login: string | null,
     isAuth: boolean,
-    logout: (history: any) => void,
     currentUserInfo: ProfileType | null
     userId: number | null,
-    history: any,
+    openLogoutDialog: (open: boolean) => void
 }
 
 const useStyles = makeStyles(theme => ({
@@ -51,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const AuthBtn: FC<PropsType> = ({isAuth, login, logout, currentUserInfo, userId, history}) => {
+const AuthBtn: FC<PropsType> = ({isAuth, login, currentUserInfo, userId, openLogoutDialog}) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const avatar = currentUserInfo  && currentUserInfo.photos.small ? currentUserInfo.photos.small : userPlaceholder;
@@ -84,7 +83,7 @@ const AuthBtn: FC<PropsType> = ({isAuth, login, logout, currentUserInfo, userId,
                         </Hidden>
                         <ExpandMoreRoundedIcon fontSize="small" className={`${classes.avatarIcon} ${anchorEl ? 'active': ''}`}/>
                     </Button>
-                    <Submenu logout={logout} userId={userId} history={history} handleClose={handleClose} anchorEl={anchorEl}/>
+                    <Submenu openLogoutDialog={openLogoutDialog} userId={userId} handleClose={handleClose} anchorEl={anchorEl}/>
                 </>
             }
 

@@ -17,20 +17,18 @@ import RM from "../../RouterManager";
 import classNames from "classnames";
 
 type PropsType = {
-    logout: (history: any) => void,
     userId: number | null,
     handleClose: () => void
     anchorEl: null | HTMLElement,
-    history: any,
+    openLogoutDialog: (open: boolean) => void
 }
 
 const Submenu: FC<PropsType & WithStyles> = ({
-                                                 logout,
                                                  userId,
                                                  handleClose,
                                                  anchorEl,
-                                                 history,
-                                                 classes
+                                                 classes,
+                                                 openLogoutDialog
                                              }) => {
     return (
         <>
@@ -72,7 +70,7 @@ const Submenu: FC<PropsType & WithStyles> = ({
                 </MenuItem>
                 <Divider orientation="horizontal" light={true}/>
 
-                <MenuItem className={classes.menuItem} onClick={() => logout(history)}>
+                <MenuItem className={classes.menuItem} onClick={() => openLogoutDialog(true)}>
                     <ListItemIcon className={classes.menuIcon}>
                         <ExitToAppIcon fontSize="small"/>
                     </ListItemIcon>

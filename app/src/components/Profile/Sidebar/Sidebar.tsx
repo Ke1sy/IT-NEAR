@@ -25,7 +25,7 @@ import classNames from "classnames";
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import LoadPhotoDialog from "../Dialogs/LoadPhotoDialog";
 import DeleteIcon from '@material-ui/icons/Delete';
-import DeleteDialog from "../Dialogs/DeleteDialog";
+import ConfirmDialog from "../Dialogs/ConfirmDialog";
 import {compose} from "redux";
 import ProfileActions from "./ProfileActions";
 
@@ -80,12 +80,12 @@ const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserS
         setContactsArr(newArr);
     }, [contacts]);
 
-    const openDialog = (open: boolean, type: 'edit' | 'delete') => {
+    const openDialog = (open: boolean, type: 'edit' | 'confirm') => {
         switch (type) {
             case 'edit':
                 setPhotoDialogOpen(open);
                 break;
-            case 'delete':
+            case 'confirm':
                 setDeleteDialogIsOpen(open);
                 break;
         }
@@ -106,10 +106,10 @@ const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserS
             <>
                 <LoadPhotoDialog profile={profile} open={photoDialogOpen} handleClose={() => openDialog(false, 'edit')}
                                  loadPhoto={loadPhoto}/>
-                <DeleteDialog
+                <ConfirmDialog
                     isOpen={deleteDialogIsOpen}
                     openDialog={openDialog}
-                    deleteAction={removePhoto}
+                    confirmAction={removePhoto}
                 />
             </>
             }
@@ -124,7 +124,7 @@ const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserS
                             </IconButton>
                             <IconButton className={classNames(classes.avatarBtn, classes.removeBtn)}
                                         aria-label="remove-photo"
-                                        onClick={() => openDialog(true, 'delete')}>
+                                        onClick={() => openDialog(true, 'confirm')}>
                                 <DeleteIcon fontSize="small" className={classes.avatarIcon}/>
                             </IconButton>
                         </>

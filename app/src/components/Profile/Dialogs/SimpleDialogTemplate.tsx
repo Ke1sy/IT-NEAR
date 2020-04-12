@@ -26,7 +26,8 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.common.white,
     },
     title: {
-        textAlign: 'center'
+        textAlign: 'center',
+        padding: '16px 24px 8px'
     },
     buttons: {
         justifyContent: 'space-between',

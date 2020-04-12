@@ -16,12 +16,11 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import RM from "../../RouterManager";
 import classNames from "classnames";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import {useHistory} from "react-router-dom";
 
 type PropsType = {
     newMessagesCount: null | number,
     userId: number | null,
-    logout: (history: any) => void
+    openLogoutDialog: (open: boolean) => void
 };
 
 const useStyles = makeStyles(theme => ({
@@ -79,9 +78,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Navbar: FC<PropsType> = ({newMessagesCount, userId, logout}) => {
+const Navbar: FC<PropsType> = ({newMessagesCount, userId, openLogoutDialog}) => {
     const classes = useStyles();
-    let history = useHistory();
     const LINKS = [
         {
             id: 1,
@@ -117,14 +115,6 @@ const Navbar: FC<PropsType> = ({newMessagesCount, userId, logout}) => {
     ];
 
     let areNewMessages = newMessagesCount && newMessagesCount > 0;
-    const linkProps = (url: string) => ({
-            to: url,
-            activeClassName: classes.activeLink
-    });
-    const logoutProps = {
-        onClick: () => logout(history)
-    };
-
     return (
         <List className={classes.list}>
             <Hidden xsDown>
@@ -154,7 +144,7 @@ const Navbar: FC<PropsType> = ({newMessagesCount, userId, logout}) => {
                                 to: url,
                                 activeClassName: classes.activeLink
                             } : ''}
-                            {...id === 5 ? {onClick: () => logout(history)} : ''}
+                            {...id === 5 ? {onClick: () => openLogoutDialog(true)} : ''}
                             className={classes.link}
                             underline="none"
                             color="textSecondary"

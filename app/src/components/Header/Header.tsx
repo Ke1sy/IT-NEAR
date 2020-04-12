@@ -15,15 +15,13 @@ import AuthBtn from "./AuthBtn";
 import RM from "../../RouterManager";
 import MobileMenu from "./MobileMenu";
 
-
 type PropsType = {
     userId: number | null,
     login: string | null,
     isAuth: boolean,
-    logout: (history: any) => void
-    history: any,
     newMessagesCount: number | null
-    currentUserInfo: ProfileType | null
+    currentUserInfo: ProfileType | null,
+    openLogoutDialog: (open: boolean) => void
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -78,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
         }
     }));
 
-const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessagesCount, currentUserInfo}) => {
+const Header: FC<PropsType> = ({userId, login, isAuth, newMessagesCount, currentUserInfo, openLogoutDialog}) => {
     const classes = useStyles();
     return (
         <AppBar position="fixed" component="header" className={classes.appBar}>
@@ -98,21 +96,23 @@ const Header: FC<PropsType> = ({userId, login, logout, isAuth, history, newMessa
                                     <Navbar
                                         newMessagesCount={newMessagesCount}
                                         userId={currentUserInfo ? currentUserInfo.userId : null}
-                                        logout={logout}/>
+                                        openLogoutDialog={openLogoutDialog}
+                                      />
                                     <Divider
                                         orientation="vertical"
                                         flexItem
                                         light={true}/>
-                                    <AuthBtn login={login} history={history} isAuth={isAuth}
-                                             currentUserInfo={currentUserInfo} userId={userId} logout={logout}/>
+                                    <AuthBtn login={login} openLogoutDialog={openLogoutDialog} isAuth={isAuth}
+                                             currentUserInfo={currentUserInfo} userId={userId}/>
                                     <Divider orientation="vertical" flexItem light={true}/>
                                 </Hidden>
 
                                 <Hidden smUp>
                                     <MobileMenu>
                                         <Navbar
-                                            logout={logout}
-                                            newMessagesCount={newMessagesCount} userId={currentUserInfo ? currentUserInfo.userId : null}
+                                            openLogoutDialog={openLogoutDialog}
+                                            newMessagesCount={newMessagesCount}
+                                            userId={currentUserInfo ? currentUserInfo.userId : null}
                                         />
                                     </MobileMenu>
                                 </Hidden>

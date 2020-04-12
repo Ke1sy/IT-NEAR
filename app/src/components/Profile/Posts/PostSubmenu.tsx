@@ -48,7 +48,7 @@ const PostSubmenu:FC<PropsType> = ({post, anchorEl, handleClose, openDialog}) =>
                         Edit
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={() => openDialog(true, 'delete',  post,)}>
+                <MenuItem onClick={() => openDialog(true, 'confirm',  post,)}>
                     <DeleteIcon fontSize="small" className={classes.menuItemIcon}/>
                     <Typography variant="body2" className={classes.menuItemText}>
                         Delete

@@ -87,7 +87,7 @@ const PostsContainer: FC<PropsType> = ({authorId, isOwner, author, currentUserIn
     const openDialog = (isOpen: boolean, type: OpenPostDialogType, selectedItem: PostsData_posts | null) => {
         setSelectedPost(selectedItem);
         switch (type) {
-            case "delete":
+            case "confirm":
                 setDeleteDialogIsOpen(isOpen);
                 break;
             case "edit":
