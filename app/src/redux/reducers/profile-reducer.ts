@@ -66,10 +66,10 @@ type FormResetType = ReturnType<typeof reset>
 type ActionsTypes = SetUserProfileActionType | SetStatusActionType | FormResetType;
 type ThunkType = ThunkAction<Promise<void | PhotosType | undefined | Error>, AppStateType, unknown, ActionsTypes>
 
-export const getUserProfile = (id: number, isAuthenticate: boolean = false) => ({
+export const getUserProfile = (id: number, updateCurrentUserInfo: boolean = false) => ({
     type: GET_USER_PROFILE,
     id,
-    isAuthenticate
+    updateCurrentUserInfo
 });
 
 export const getUserStatus = (id: number): ThunkType => async (dispatch) => {
@@ -91,7 +91,7 @@ export const setUserStatus = (status: string): ThunkType => async (dispatch) => 
 export const setProfileInfo = (info: ProfileType, userId: number) => async (dispatch: any) => {
     const {resultCode, messages} = await profileAPI.setProfileInfo(info);
     if (resultCode === ResultCodes.Success) {
-        dispatch(getUserProfile(userId));
+        dispatch(getUserProfile(userId, true));
         dispatch(enqueueSnackbar({
             message: 'Profile successfully updated!',
             options: {variant: 'success'}

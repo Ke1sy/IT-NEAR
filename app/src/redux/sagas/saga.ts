@@ -13,12 +13,12 @@ import {enqueueSnackbar} from "../reducers/app-reducer";
 import {getCurrentUserId} from "../reducers/auth-selectors";
 import * as React from "react";
 
-type GetUserProfileType = { type: typeof GET_USER_PROFILE, id: number, isAuthenticate: boolean}
-function* getUserProfileAsync({id, isAuthenticate}: GetUserProfileType)  {
+type GetUserProfileType = { type: typeof GET_USER_PROFILE, id: number, updateCurrentUserInfo: boolean}
+function* getUserProfileAsync({id, updateCurrentUserInfo}: GetUserProfileType)  {
     try {
         yield put(toggleProfileLoading(true));
         const data = yield call(getProfileById, id);
-        if (isAuthenticate) {
+        if (updateCurrentUserInfo) {
             yield put(setCurrentUserInfo(data));
         } else {
             yield put(setUserProfile(data));
@@ -37,7 +37,7 @@ function* loadPhotoAsync ({photo}: loadPhotoType) {
         if (resultCode === ResultCodes.Success) {
             const state = yield select();
             yield put(setPhoto(data.photos));
-            yield put({type: GET_USER_PROFILE, id: getCurrentUserId(state), isAuthenticate: true});
+            yield put({type: GET_USER_PROFILE, id: getCurrentUserId(state), updateCurrentUserInfo: true});
         } else {
             yield put(enqueueSnackbar({message: messages, options: {variant: 'error'}}))
         }
