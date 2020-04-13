@@ -1,6 +1,6 @@
 import React from 'react';
-import chatPlaceholder from "../../assets/images/chat-bg.svg";
-import {makeStyles, Typography} from "@material-ui/core";
+import chatPlaceholder from "../../../assets/images/chat-bg.svg";
+import {Hidden, makeStyles, Typography} from "@material-ui/core";
 
 const useStyles = makeStyles(() =>
     ({
@@ -28,16 +28,17 @@ const EmptyChat = () => {
     return (
         <div className={classes.empty}>
             <div className={classes.emptyImg}/>
-            <div className={classes.emptyText}>
-                <Typography variant="h6">
-                    Select conversation to display
-                </Typography>
-                <Typography variant="body2">
-                    To start a new conversation just click the message button from a person profile
-                </Typography>
-            </div>
+            <Hidden mdDown>
+                <div className={classes.emptyText}>
+                    <Typography variant="h6">
+                        Select conversation to display
+                    </Typography>
+                    <Typography variant="body2">
+                        To start a new conversation just click the message button from a person profile
+                    </Typography>
+                </div>
+            </Hidden>
         </div>
     )
 };
-
 export default EmptyChat;

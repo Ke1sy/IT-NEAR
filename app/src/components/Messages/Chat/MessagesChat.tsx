@@ -1,13 +1,10 @@
 import React, {useEffect, FC, useState, Fragment} from 'react';
-import styles from './messages.module.scss';
-import Message from "./Message/Message";
-import MessageForm from "./Message/MessageForm";
-import {MessagesType, ProfileType} from "../../redux/reducers/types";
-import {Avatar, Link, Typography} from "@material-ui/core";
-import userPlaceholder from "../../assets/images/user-placeholder.png";
-import Preloader from "../Preloader/Preloader";
-import {NavLink} from "react-router-dom";
-import RM from "../../RouterManager";
+import Message from "./../Message/Message";
+import MessageForm from "./../Message/MessageForm";
+import {MessagesType, ProfileType} from "../../../redux/reducers/types";
+import Preloader from "../../Preloader/Preloader";
+import ChatHeader from "./ChatHeader";
+import {makeStyles} from "@material-ui/core";
 
 type PropsType = {
     messages: Array<MessagesType>
@@ -18,7 +15,6 @@ type PropsType = {
     selectedFriend: ProfileType | null
     currentUserInfo: ProfileType,
     messagesLoading: boolean,
-
     sendMessage: (userId: number, message: string) => void
     getMessages: (userId: number) => void
     deleteMessage: (messageId: string) => void
@@ -30,6 +26,34 @@ type FilteredMessagesType = {
     date: string,
     messages: Array<MessagesType>
 };
+
+const useStyles = makeStyles(theme => ({
+    chat: {
+        position: "relative",
+        paddingTop: "68px",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%"
+    },
+
+    chatWrapper: {
+        position: "relative",
+
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        flexGrow: 1,
+        overflowY: "auto",
+        padding: "0 10px 20px"
+    },
+    date: {
+        color: theme.palette.grey[400],
+        margin: "5px auto",
+        [theme.breakpoints.up('sm')]: {
+            margin: "15px auto",
+        },
+    }
+}));
 
 const MessagesChat: FC<PropsType> = ({
                                          friendId,
@@ -46,9 +70,8 @@ const MessagesChat: FC<PropsType> = ({
                                          currentUserInfo,
                                          messagesLoading
                                      }) => {
-
+    const classes = useStyles();
     const [filteredMessages, setFilteredMessages] = useState<[] | Array<FilteredMessagesType>>([]);
-
     const filterByDate = () => {
         let newArr: any = {};
         messages.map((message: MessagesType) => {
@@ -89,7 +112,7 @@ const MessagesChat: FC<PropsType> = ({
     }, [messages]);
 
     useEffect(() => {
-        if(!messagesLoading) {
+        if (!messagesLoading) {
             scrollChatToBottom();
         }
     }, [messagesLoading, filteredMessages]);
@@ -105,55 +128,36 @@ const MessagesChat: FC<PropsType> = ({
         sendMessage(friendId, message);
     };
 
-    if (messagesLoading) {
-        return <Preloader showPreloader={true}/>
-    }
-
     return (
         <>
-            <div className={styles.messages}>
+            <div className={classes.chat}>
                 {selectedFriend &&
-                <div className={styles.messages__head}>
-                    <Link component={NavLink} to={RM.profile.getPath(selectedFriend.userId)}>
-                        <Avatar src={selectedFriend.photos.small || userPlaceholder} component="span" alt='avatar'
-                                sizes="40"/>
-                    </Link>
-                    <div className={styles.messages__headInfo}>
-                        <Link component={NavLink} to={RM.profile.getPath(selectedFriend.userId)} underline="none"
-                              className={styles.messages__headLink}>
-                            <Typography variant="subtitle1" component="h6">
-                                {selectedFriend.fullName}
-                            </Typography>
-                        </Link>
-                        {lastUserActivityDate &&
-                        <div className={styles.messages__headDate}>
-                            Was here: {new Date(lastUserActivityDate).toLocaleString()}
-                        </div>
-                        }
-                    </div>
-                </div>
+                <ChatHeader lastUserActivityDate={lastUserActivityDate} selectedFriend={selectedFriend} messagesLoading={messagesLoading}/>
                 }
-                <div className={styles.messages__wrapper} id="wrapper">
-                    {(filteredMessages as FilteredMessagesType[]).map(({date, messages}) =>
-                        <Fragment key={date}>
-                            <div className={styles.messages__date}>
-                                {date}
-                            </div>
-                            {messages.map((message) =>
-                                <Message
-                                    key={message.id}
-                                    message={message}
-                                    deleteMessage={deleteMessage}
-                                    spamMessage={spamMessage}
-                                    restoreMessage={restoreMessage}
-                                    deletedMessages={deletedMessages}
-                                    spamedMessages={spamedMessages}
-                                    selectedFriend={selectedFriend}
-                                    currentUserInfo={currentUserInfo}
-                                />
-                            )}
-                        </Fragment>
-                    )}
+                <div className={classes.chatWrapper} id="wrapper">
+                    {messagesLoading ?
+                        <Preloader showPreloader={true}/> :
+                        (filteredMessages as FilteredMessagesType[]).map(({date, messages}) =>
+                            <Fragment key={date}>
+                                <div className={classes.date}>
+                                    {date}
+                                </div>
+                                {messages.map((message) =>
+                                    <Message
+                                        key={message.id}
+                                        message={message}
+                                        deleteMessage={deleteMessage}
+                                        spamMessage={spamMessage}
+                                        restoreMessage={restoreMessage}
+                                        deletedMessages={deletedMessages}
+                                        spamedMessages={spamedMessages}
+                                        selectedFriend={selectedFriend}
+                                        currentUserInfo={currentUserInfo}
+                                    />
+                                )}
+                            </Fragment>
+                        )
+                    }
                 </div>
                 <MessageForm onSubmit={onAddMessage}/>
             </div>
