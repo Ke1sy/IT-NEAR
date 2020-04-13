@@ -21,6 +21,7 @@ const styles = createStyles((theme: Theme) => ({
         border: '3px solid #fff',
         margin: '0 auto',
         borderRadius: ' 50%',
+        backgroundColor: theme.palette.common.white,
         [theme.breakpoints.down('xs')]: {
             height: 156,
             width: 156,
@@ -101,7 +102,10 @@ const styles = createStyles((theme: Theme) => ({
         [theme.breakpoints.up('lg')]: {
             display: 'block'
         }
-    }
+    },
+    autoMargin: {
+        margin: '0 auto'
+    },
 }));
 
 export default withStyles(styles, {withTheme: true})

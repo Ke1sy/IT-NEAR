@@ -10,14 +10,17 @@ type PropsType = {
     status: string
     isOwner: boolean
     setUserStatus: (status: string) => void
-    loadPhoto: (photo: any) => void
+    loadPhoto: (photo: any) => void,
+    profileIsLoading: boolean,
+    followed: boolean
+
 }
 
 const useStyles = makeStyles(theme => ({
     profile: {
         display: 'flex',
         [theme.breakpoints.down(769)]: {
-           flexDirection: 'column'
+            flexDirection: 'column'
         }
     },
     profileLeft: {
@@ -54,20 +57,22 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, children, loadPhoto}) => {
+const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, children, loadPhoto, profileIsLoading, followed}) => {
     const classes = useStyles();
     return (
         <div>
             <ProfileCover/>
             <div className={classes.profile}>
                 <div className={classes.profileLeft}>
-                    {profile !== null &&
+                    {profile &&
                     <Sidebar
                         profile={profile}
                         status={status}
                         setUserStatus={setUserStatus}
                         isOwner={isOwner}
                         loadPhoto={loadPhoto}
+                        profileIsLoading={profileIsLoading}
+                        followed={followed}
                     />
                     }
                 </div>
@@ -78,7 +83,14 @@ const ProfileLayout: FC<PropsType> = ({profile, status, setUserStatus, isOwner, 
                         </Grid>
                         <Hidden mdDown>
                             <Grid item sm={10} lg={3}>
-                                <ProfileActions isOwner={isOwner}/>
+                                {profile &&
+                                <ProfileActions
+                                    userId={profile.userId}
+                                    isOwner={isOwner}
+                                    profileIsLoading={profileIsLoading}
+                                    followed={followed}
+                                />
+                                }
                             </Grid>
                         </Hidden>
                     </Grid>

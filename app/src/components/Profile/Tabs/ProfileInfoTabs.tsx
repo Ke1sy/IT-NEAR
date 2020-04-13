@@ -12,7 +12,8 @@ import withWidth from "@material-ui/core/withWidth";
 type PropsType = {
     profile: ProfileType
     isOwner: boolean,
-    currentUserInfo: ProfileType | null
+    currentUserInfo: ProfileType | null,
+    profileIsLoading: boolean
 }
 
 const useStyles = makeStyles(theme => ({
@@ -37,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const ProfileInfoTabs: FC<PropsType & WithWidth> = ({profile, isOwner, currentUserInfo, width}) => {
+const ProfileInfoTabs: FC<PropsType & WithWidth> = ({profile, isOwner, currentUserInfo, width, profileIsLoading}) => {
     const classes = useStyles();
     const [selectedTab, setSelectedTab] = React.useState(0);
     const widthUpMd = isWidthUp('md', width);
@@ -60,6 +61,7 @@ const ProfileInfoTabs: FC<PropsType & WithWidth> = ({profile, isOwner, currentUs
                         <TabPanel selectedTab={selectedTab} index={0}>
                             <StaticProfileInfo
                                 profile={profile}
+                                profileIsLoading={profileIsLoading}
                             />
                         </TabPanel>
                         <TabPanel selectedTab={selectedTab} index={1}>

@@ -89,7 +89,6 @@ const mapStateToProps = (state: AppStateType) => {
     }
 };
 
-
 export default compose(
     withStyles(styles),
     withSnackbar,

@@ -10,23 +10,6 @@ const instance = axios.create({
     }
 });
 
-export const usersAPI = {
-    getUsers: (currentPage: number, pageSize: number, searchText: string) => {
-        return instance.get(`users?page=${currentPage}&count=${pageSize}&term=${searchText}`)
-            .then(response => response.data);
-    },
-
-    followUser: (id: number) => {
-        return instance.post(`follow/${id}`)
-            .then(response => response.data)
-    },
-
-    unfollowUser: (id: number) => {
-        return instance.delete(`follow/${id}`)
-            .then(response => response.data)
-    },
-
-};
 
 export enum ResultCodes {
     Success = 0,
@@ -59,6 +42,30 @@ type WithoutDataResponseType = {
     messages: Array<string>,
     data: {}
 }
+
+export const usersAPI = {
+    getUsers: (currentPage: number, pageSize: number, searchText: string) => {
+        return instance.get(`users?page=${currentPage}&count=${pageSize}&term=${searchText}`)
+            .then(response => response.data);
+    },
+
+    isUserFollowed: (id: number) => {
+        return instance.get<string>(`follow/${id}`)
+            .then(response => response.data)
+    },
+
+    followUser: (id: number) => {
+        return instance.post<WithoutDataResponseType>(`follow/${id}`)
+            .then(response => response.data)
+    },
+
+    unfollowUser: (id: number) => {
+        return instance.delete<WithoutDataResponseType>(`follow/${id}`)
+            .then(response => response.data)
+    },
+
+};
+
 
 export const authAPI = {
     auth: () => {

@@ -8,12 +8,7 @@ import Search from "./Search/Search";
 type PropsType = {
     users: Array<UserType>,
     currentPage: number,
-    followInProgress: Array<number>,
-    history: any,
-    follow: (id: number) => void,
-    unfollow: (id: number) => void,
     onSetCurrentPage: (event: React.ChangeEvent<unknown>, page: number) => void
-    startChat: (userId: number, history: any) => void,
     onChangeSearchText: ({searchText}: { searchText: string }) => void,
     onResetSearch: () => void,
     isLoading: boolean,
@@ -24,13 +19,8 @@ type PropsType = {
 const Users: FC<PropsType> = ({
                                   users,
                                   currentPage,
-                                  follow,
                                   onResetSearch,
-                                  unfollow,
                                   onSetCurrentPage,
-                                  followInProgress,
-                                  startChat,
-                                  history,
                                   onChangeSearchText,
                                   isLoading,
                                   searchRequest,
@@ -48,11 +38,6 @@ const Users: FC<PropsType> = ({
                     <Grid item xs={12} sm={6} md={4} lg={3} key={user.id}>
                         <User
                             user={user}
-                            follow={follow}
-                            unfollow={unfollow}
-                            followInProgress={followInProgress}
-                            startChat={startChat}
-                            history={history}
                             isLoading={isLoading}
                         />
                     </Grid>

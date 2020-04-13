@@ -3,19 +3,24 @@ import Profile from "./Profile";
 import {connect} from "react-redux";
 import {
     getUserProfile,
-    getUserStatus,
+    getUserStatus, getIsUserFollowed,
     loadPhoto, setProfileInfo,
     setUserProfile,
     setUserStatus,
 } from "../../redux/reducers/profile-reducer";
 import {useParams, withRouter, useHistory} from "react-router-dom";
 import {compose} from "redux";
-import {getProfile, getProfileError, getStatus, getProfileIsLoading} from "../../redux/reducers/profile-selectors";
+import {
+    getProfile,
+    getProfileError,
+    getStatus,
+    getProfileIsLoading,
+    getIsFollowed
+} from "../../redux/reducers/profile-selectors";
 import {getCurrentUserInfo, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 import {AppStateType} from "../../redux/redux-store";
 import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
 import ProfileError from './ProfileError/ProfileError';
-import Preloader from "../Preloader/Preloader";
 import {withAuthRedirect} from "../Redirects/AuthRedirect";
 
 type MapStatePropsType = {
@@ -23,6 +28,7 @@ type MapStatePropsType = {
     status: string
     userId?: number | null | undefined
     isAuth: boolean,
+    isFollowed: boolean,
     profileError: string | null,
     profileIsLoading: boolean,
     currentUserInfo: ProfileType | null
@@ -34,7 +40,8 @@ type MapDispatchPropsType = {
     setUserStatus: (status: string) => void
     setUserProfile: (profile: ProfileType) => void,
     loadPhoto: (photo: any) => void,
-    setProfileInfo: (info: ProfileType, userId: number) => void
+    setProfileInfo: (info: ProfileType, userId: number) => void,
+    getIsUserFollowed: (id: number) => void
 }
 
 type PropsType = MapStatePropsType & MapDispatchPropsType
@@ -51,7 +58,9 @@ const ProfileContainer: FC<PropsType> = ({
                                              setProfileInfo,
                                              profileError,
                                              profileIsLoading,
-                                             currentUserInfo
+                                             currentUserInfo,
+                                             isFollowed,
+                                             getIsUserFollowed
                                          }) => {
     let {id} = useParams();
     let history = useHistory();
@@ -66,6 +75,9 @@ const ProfileContainer: FC<PropsType> = ({
 
             getUserProfile(Number(newId));
             getUserStatus(Number(newId));
+            if(!isOwner) {
+                getIsUserFollowed(Number(newId));
+            }
         };
 
         checkProfile();
@@ -90,10 +102,6 @@ const ProfileContainer: FC<PropsType> = ({
         }
     };
 
-    if (profileIsLoading) {
-        return <Preloader showPreloader={true}/>
-    }
-
     if (profileError) {
         return (
             <ProfileError profileError={profileError}/>
@@ -109,6 +117,8 @@ const ProfileContainer: FC<PropsType> = ({
             loadPhoto={loadPhoto}
             setProfileInfo={updateProfileInfo}
             currentUserInfo={currentUserInfo}
+            profileIsLoading={profileIsLoading}
+            followed={isFollowed}
         />
     )
 };
@@ -121,7 +131,8 @@ const mapStateToProps = (state: AppStateType) => {
         isAuth: getIsAuth(state),
         profileError: getProfileError(state),
         profileIsLoading: getProfileIsLoading(state),
-        currentUserInfo: getCurrentUserInfo(state)
+        currentUserInfo: getCurrentUserInfo(state),
+        isFollowed: getIsFollowed(state),
     }
 };
 
@@ -132,7 +143,8 @@ export default compose(
         setUserStatus,
         setUserProfile,
         loadPhoto,
-        setProfileInfo
+        setProfileInfo,
+        getIsUserFollowed
     }),
     withRouter,
     withAuthRedirect,

@@ -70,12 +70,6 @@ export const enqueueSnackbar = (notification: any) => {
     };
 };
 
-export const closeSnackbar = (key: any) => ({
-    type: CLOSE_SNACKBAR,
-    dismissAll: !key, // dismiss all if no key has been defined
-    key,
-});
-
 export const removeSnackbar = (key: any) => ({
     type: REMOVE_SNACKBAR,
     key,

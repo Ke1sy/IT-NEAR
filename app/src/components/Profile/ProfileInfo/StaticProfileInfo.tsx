@@ -7,9 +7,11 @@ import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import classNames from "classnames";
 import StyledDivider from "../Posts/StyledDivider";
+import {Skeleton} from "@material-ui/lab";
 
 type PropsType = {
-    profile: ProfileType
+    profile: ProfileType,
+    profileIsLoading: boolean
 }
 
 const useStyles = makeStyles(theme => ({
@@ -68,45 +70,38 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const StaticProfileInfo: FC<PropsType> = ({profile}) => {
+const StaticProfileInfo: FC<PropsType> = ({profile: {fullName, lookingForAJobDescription, aboutMe, lookingForAJob}, profileIsLoading}) => {
     const classes = useStyles();
-    const {fullName, lookingForAJobDescription, aboutMe, lookingForAJob} = profile;
+    const blocks = [
+        {id: 1, title: 'Full Name: ', text: fullName},
+        {id: 2, title: 'About me:  ', text: aboutMe},
+        {id: 3, title: 'Looking for a job:  ', text: lookingForAJob ?
+                <DoneOutlineIcon fontSize="small" className={classNames(classes.jobIcon, 'success')}/> :
+                <NotInterestedIcon fontSize="small" className={classNames(classes.jobIcon, 'error')}/>
+        },
+        {id: 4, title: 'Job Description: ', text: lookingForAJobDescription},
+    ];
+
     return (
         <>
             <StyledDivider customClasses={classes.divider}/>
-            <Paper className={classNames(`${classes.paper}`, {[`${classes.withBg}`]: lookingForAJob})}>
-                <div className={classes.block}>
-                    <Typography variant="subtitle1" component="span">Full Name: </Typography>
-                    <Typography variant="body1" component="span">{fullName}</Typography>
-                </div>
-                {aboutMe &&
-                <div className={classes.block}>
-                    <Typography variant="subtitle1" component="span">About me: </Typography>
-                    <Typography variant="body1" component="span">{aboutMe}</Typography>
-                </div>
-                }
-                <div className={classes.block}>
-                    <Typography variant="subtitle1" component="span">Looking for a job: </Typography>
-                    <Typography variant="body1" component="span">
-                        {lookingForAJob ?
-                            <DoneOutlineIcon fontSize="small" className={classNames(
-                                classes.jobIcon,
-                                'success')}/> :
-                            <NotInterestedIcon fontSize="small" className={classNames(
-                                classes.jobIcon,
-                                'error'
-                            )}/>
-                        }
-                    </Typography>
-                </div>
-                {lookingForAJob &&
-                <div className={classes.block}>
-                    <Typography variant="subtitle1" component="span">Job Description: </Typography>
-                    <Typography variant="body1" component="span">
-                        {lookingForAJobDescription}
-                    </Typography>
-                </div>
-                }
+            <Paper className={classNames(`${classes.paper}`, {[`${classes.withBg}`]: lookingForAJob && !profileIsLoading})}>
+                {blocks.map(({id, title, text}) => {
+                    if (!text) {
+                        return null
+                    }
+                    return (
+                        <div className={classes.block} key={id}>
+                            {profileIsLoading ?
+                                <Skeleton animation="wave" width="100%" className="MuiTypography-subtitle1"/> :
+                                <>
+                                    <Typography variant="subtitle1" component="span">{title}</Typography>
+                                    <Typography variant="body1" component="span">{text}</Typography>
+                                </>
+                            }
+                        </div>
+                    )
+                })}
             </Paper>
         </>
     )

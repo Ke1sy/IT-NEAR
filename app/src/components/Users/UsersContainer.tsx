@@ -23,7 +23,6 @@ type MapStatePropsType = {
     pageSize: number
     searchQuery: string | null
     isLoading: boolean
-    followInProgress: Array<number>
     users: Array<UserType>
     totalUsersCount: number
     currentPage: number
@@ -31,9 +30,6 @@ type MapStatePropsType = {
 
 type MapDispatchPropsType = {
     requestUsers: (currentPage: number, pageSize: number, searchText: string) => void
-    startChat: (userId: number, history: any) => void
-    follow: (id: number) => void
-    unfollow: (id: number) => void
 }
 
 type PropsType = MapStatePropsType & MapDispatchPropsType
@@ -42,13 +38,10 @@ const UsersContainer: FC<PropsType> = ({
                                            pageSize,
                                            searchQuery,
                                            isLoading,
-                                           followInProgress,
                                            users,
                                            totalUsersCount,
                                            currentPage,
                                            requestUsers,
-                                           startChat, follow,
-                                           unfollow
                                        }) => {
 
     const [searchRequest, setSearchRequest] = useState<any>(null);
@@ -91,14 +84,9 @@ const UsersContainer: FC<PropsType> = ({
 
     return (
         <Users
-            follow={follow}
-            unfollow={unfollow}
             onSetCurrentPage={onSetCurrentPage}
             users={users}
             currentPage={currentPage}
-            followInProgress={followInProgress}
-            startChat={startChat}
-            history={history}
             onChangeSearchText={onChangeSearchText}
             onResetSearch={onResetSearch}
             isLoading={isLoading}
@@ -122,10 +110,7 @@ let mapStateToProps = (state: AppStateType) => {
 
 export default compose(
     connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {
-        unfollow,
         requestUsers,
-        follow,
-        startChat
     }),
     withRouter,
     withAuthRedirect,

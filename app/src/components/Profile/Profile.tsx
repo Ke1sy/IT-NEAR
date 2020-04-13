@@ -12,10 +12,12 @@ type PropsType = {
     setUserStatus: (status: string) => void
     loadPhoto: (photo: any) => void
     setProfileInfo: (info: UpdatedProfileType) => void,
-    currentUserInfo: ProfileType | null
+    currentUserInfo: ProfileType | null,
+    profileIsLoading: boolean,
+    followed: boolean
 }
 
-const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo}) => {
+const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo, profileIsLoading, followed}) => {
     return (
         <>
             <ProfileLayout
@@ -24,6 +26,8 @@ const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile,
                 isOwner={isOwner}
                 setUserStatus={setUserStatus}
                 loadPhoto={loadPhoto}
+                profileIsLoading={profileIsLoading}
+                followed={followed}
             >
 
                 <Switch>
@@ -40,6 +44,7 @@ const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile,
                             profile={profile}
                             isOwner={isOwner}
                             currentUserInfo={currentUserInfo}
+                            profileIsLoading={profileIsLoading}
                         />
                         }
                     </Route>

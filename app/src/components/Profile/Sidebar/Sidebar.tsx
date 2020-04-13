@@ -28,13 +28,16 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ConfirmDialog from "../Dialogs/ConfirmDialog";
 import {compose} from "redux";
 import ProfileActions from "./ProfileActions";
+import {Skeleton} from "@material-ui/lab";
 
 type PropsType = {
-    status: string,
-    profile: ProfileType,
-    setUserStatus: (status: string) => void,
-    isOwner: boolean,
-    loadPhoto: (photo: any) => void,
+    status: string
+    profile: ProfileType
+    setUserStatus: (status: string) => void
+    isOwner: boolean
+    loadPhoto: (photo: any) => void
+    profileIsLoading: boolean
+    followed: boolean
 }
 
 type IconsType = {
@@ -62,7 +65,7 @@ const SocialIcon = (props: any) => {
     return <TagName {...other}/>
 };
 
-const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserStatus, isOwner, loadPhoto}) => {
+const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserStatus, isOwner, loadPhoto, profileIsLoading, followed}) => {
     const {photos, fullName, contacts} = profile;
     const userAvatar = photos.large !== null ? photos.large : userPlaceholder;
     const [contactsArr, setContactsArr] = useState<Array<ContactsArrType>>([]);
@@ -116,7 +119,7 @@ const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserS
             <Paper className={classes.paper}>
                 <div className={classes.body}>
                     <div className={classes.avatar}>
-                        {isOwner &&
+                        {isOwner && !profileIsLoading &&
                         <>
                             <IconButton className={classes.avatarBtn} aria-label="load-photo"
                                         onClick={() => openDialog(true, 'edit')}>
@@ -129,14 +132,37 @@ const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserS
                             </IconButton>
                         </>
                         }
-                        <Avatar src={userAvatar} alt={fullName ? fullName : 'avatar'} className={classes.avatarImg}/>
+                        {profileIsLoading ?
+                            <Skeleton animation="wave" variant="circle" className={classes.avatarImg}/>
+                            : <Avatar src={userAvatar} alt={fullName ? fullName : 'avatar'}
+                                      className={classes.avatarImg}/>
+                        }
+
                     </div>
-                    <Typography variant="h6">{fullName}</Typography>
-                    <ProfileStatus status={status} setUserStatus={setUserStatus} isOwner={isOwner}/>
+                    {
+                        profileIsLoading ?
+                            <>
+                                <Skeleton animation="wave" width="85%"
+                                          className={classNames(classes.autoMargin, "MuiTypography-h6")}/>
+                                <Skeleton animation="wave" width="60%"
+                                          className={classNames(classes.autoMargin, "MuiTypography-body1")}/>
+                            </>
+                            :
+                            <>
+                                <Typography variant="h6">{fullName}</Typography>
+                                <ProfileStatus status={status} setUserStatus={setUserStatus} isOwner={isOwner}/>
+                            </>
+                    }
+
                 </div>
 
                 <Hidden lgUp>
-                    <ProfileActions isOwner={isOwner}/>
+                    <ProfileActions
+                        isOwner={isOwner}
+                        profileIsLoading={profileIsLoading}
+                        userId={profile.userId}
+                        followed={followed}
+                    />
                 </Hidden>
 
                 <List aria-label="socials" disablePadding={true} className={classes.socials} component="div">
@@ -146,11 +172,19 @@ const Sidebar: FC<PropsType & WithStyles> = ({profile, status, classes, setUserS
                                 <Hidden mdDown>
                                     <Divider orientation='horizontal' light={true}/>
                                 </Hidden>
-                                <ListItem button component={Link} href={url} target="_blank" rel="noopener noreferrer" className={classes.socialsItem}>
-                                    <SocialIcon name={name}
-                                                className={classNames(`${classes.socialsIcon}`, `${name}`)}/>
-                                    <Typography variant="body2" noWrap className={classes.socialsText}>{url}</Typography>
-                                </ListItem>
+                                {profileIsLoading ?
+                                    <div className={classNames(classes.socialsItem, 'MuiListItem-gutters')}>
+                                        <Skeleton animation="wave" height={41} style={{minWidth: 25}}/>
+                                    </div> :
+                                    <ListItem button component={Link} href={url} target="_blank"
+                                              rel="noopener noreferrer"
+                                              className={classes.socialsItem}>
+                                        <SocialIcon name={name}
+                                                    className={classNames(`${classes.socialsIcon}`, `${name}`)}/>
+                                        <Typography variant="body2" noWrap
+                                                    className={classes.socialsText}>{url}</Typography>
+                                    </ListItem>
+                                }
                             </Fragment>
                         )
                     }
