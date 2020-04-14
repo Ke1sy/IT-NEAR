@@ -1,16 +1,14 @@
 import React, {FC} from 'react';
+import {NavLink} from "react-router-dom";
+import RM from "../../../RouterManager";
 import Markdown from 'markdown-to-jsx';
 import classNames from 'classnames';
+import {Avatar, Tooltip, Typography, WithStyles} from "@material-ui/core";
+import {DeleteOutlineOutlined, RestoreOutlined, ErrorOutlineOutlined} from '@material-ui/icons';
 import readIcon from "../../../assets/images/read.svg";
 import unreadIcon from "../../../assets/images/unread.svg";
 import {MessagesType, ProfileType} from "../../../redux/reducers/types";
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
-import {Avatar, Tooltip, Typography, WithStyles} from "@material-ui/core";
-import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
-import RestoreOutlinedIcon from '@material-ui/icons/RestoreOutlined';
-import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
-import {NavLink} from "react-router-dom";
-import RM from "../../../RouterManager";
 import withMessageStyles from './messageStyles'
 
 type PropsType = {
@@ -19,7 +17,6 @@ type PropsType = {
     spamedMessages: Array<string>
     selectedFriend: ProfileType | null
     currentUserInfo: ProfileType,
-
     deleteMessage: (messageId: string) => void
     spamMessage: (messageId: string) => void
     restoreMessage: (messageId: string) => void
@@ -69,13 +66,13 @@ const Message: FC<PropsType & WithStyles> = ({message, deleteMessage, spamMessag
             <>
                 <button className={classNames(classes.actionBtn, classes.delete)} onClick={() => deleteMessage(id)}>
                     <Tooltip title="Delete" aria-label="Delete">
-                        <DeleteOutlineOutlinedIcon color="primary" className={classes.messageIcon}/>
+                        <DeleteOutlineOutlined color="primary" className={classes.messageIcon}/>
                     </Tooltip>
                 </button>
                 {!isOwnerMessage &&
                 <button className={classNames(classes.actionBtn, classes.spam)} onClick={() => spamMessage(id)}>
                     <Tooltip title="Spam" aria-label="Spam">
-                        <ErrorOutlineOutlinedIcon color="primary" className={classes.messageIcon}/>
+                        <ErrorOutlineOutlined color="primary" className={classes.messageIcon}/>
                     </Tooltip>
                 </button>
                 }
@@ -84,7 +81,7 @@ const Message: FC<PropsType & WithStyles> = ({message, deleteMessage, spamMessag
             {messageInactive &&
             <button className={classNames(classes.actionBtn, classes.restore)} onClick={() => restoreMessage(id)}>
                 <Tooltip title="Restore" aria-label="Restore">
-                    <RestoreOutlinedIcon color="primary" className={classes.messageIcon}/>
+                    <RestoreOutlined color="primary" className={classes.messageIcon}/>
                 </Tooltip>
             </button>
             }

@@ -15,6 +15,7 @@ const styles = createStyles((theme: Theme) => ({
     },
     textarea: {
         borderRadius: 0,
+        backgroundColor: 'white',
         [theme.breakpoints.down(769)]: {
             padding: '10px 14px'
         },
