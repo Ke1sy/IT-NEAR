@@ -1,6 +1,7 @@
 import React, {FC} from "react";
 import {WrappedFieldProps} from "redux-form/lib/Field";
-import {TextField, TextFieldProps, makeStyles, Checkbox, FormControlLabel, Switch} from "@material-ui/core";
+import {TextField, TextFieldProps, Checkbox, FormControlLabel, Switch, WithStyles} from "@material-ui/core";
+import withFormControlStyles from "./formControlStyles";
 
 const inputTypes = [
     'text',
@@ -10,30 +11,14 @@ const inputTypes = [
     'textarea'
 ];
 
-const useStyles = makeStyles(theme => ({
-    textInput: {
-        marginBottom: 25,
-        '& .MuiFormHelperText-root': {
-            fontSize: 10,
-            position: 'absolute',
-            bottom: 0,
-            transform: 'translateY(100%)',
-            [theme.breakpoints.up('sm')]: {
-                fontSize: 12,
-            }
-        }
-    }
-}));
-
 type OwnPropsType = {
     label?: string,
     type: string,
     rest?: any,
 };
-type PropsType = WrappedFieldProps & OwnPropsType & TextFieldProps;
+type PropsType = WrappedFieldProps & OwnPropsType & TextFieldProps & WithStyles;
 
-export const RenderField: FC<PropsType> = ({input, label, type, meta: {touched, error}, ...rest}) => {
-    const classes = useStyles();
+const Field: FC<PropsType> = ({classes, input, label, type, meta: {touched, error}, ...rest}) => {
 
     return (
         <>
@@ -76,3 +61,5 @@ export const RenderField: FC<PropsType> = ({input, label, type, meta: {touched, 
         </>
     )
 };
+
+export const RenderField = withFormControlStyles(Field);

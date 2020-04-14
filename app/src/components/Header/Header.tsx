@@ -4,16 +4,16 @@ import logoImg from '../../assets/images/logo.png';
 import {
     AppBar,
     Toolbar,
-    makeStyles,
     Grid,
     Container,
-    Divider, Hidden
+    Divider, Hidden, WithStyles
 } from '@material-ui/core';
 import Navbar from "./Navbar";
 import {ProfileType} from "../../redux/reducers/types";
 import AuthBtn from "./AuthBtn";
 import RM from "../../RouterManager";
 import MobileMenu from "./MobileMenu";
+import withHeaderStyles from "./headerStyles";
 
 type PropsType = {
     userId: number | null,
@@ -24,60 +24,7 @@ type PropsType = {
     openLogoutDialog: (open: boolean) => void
 }
 
-const useStyles = makeStyles((theme) => ({
-        grid: {
-            display: 'flex',
-        },
-
-        appBar: {
-            zIndex: theme.zIndex.drawer + 1,
-            color: theme.palette.common.white,
-        },
-        content: {
-            flexGrow: 1,
-            padding: theme.spacing(3),
-        },
-        logo: {
-            display: 'flex',
-            alignItems: 'center',
-            height: '100%',
-            lineHeight: 1
-        },
-        logoImg: {
-            height: 30,
-            [theme.breakpoints.up('sm')]: {
-                height: 35,
-            },
-        },
-        logoutBtn: {
-            padding: theme.spacing(1),
-        },
-        logoTxt: {
-            padding: theme.spacing(1),
-            color: theme.palette.common.white,
-            fontWeight: 300
-        },
-        rightColumn: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            height: '100%'
-        },
-        avatar: {
-            display: 'flex',
-            alignItems: 'center',
-            paddingLeft: 20,
-            paddingRight: 20,
-            textTransform: 'none'
-        },
-
-        avatarText: {
-            padding: '0 5px'
-        }
-    }));
-
-const Header: FC<PropsType> = ({userId, login, isAuth, newMessagesCount, currentUserInfo, openLogoutDialog}) => {
-    const classes = useStyles();
+const Header: FC<PropsType & WithStyles> = ({userId, login, isAuth, newMessagesCount, currentUserInfo, openLogoutDialog, classes}) => {
     return (
         <AppBar position="fixed" component="header" className={classes.appBar}>
             <Container maxWidth="lg">
@@ -125,4 +72,4 @@ const Header: FC<PropsType> = ({userId, login, isAuth, newMessagesCount, current
     )
 };
 
-export default Header;
+export default withHeaderStyles(Header);

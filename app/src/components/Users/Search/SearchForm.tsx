@@ -2,52 +2,23 @@ import React, {FC} from 'react';
 import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import {RenderField} from "../../Forms/components/FormControl";
 import {minLength, required} from "../../../utils/validate";
-import {IconButton, Paper, makeStyles} from '@material-ui/core';
+import {IconButton, Paper, WithStyles} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import {Skeleton} from '@material-ui/lab';
+import withSearchFormStyles from "./searchFormStyles";
 
 const minLength3 = minLength(3);
-const useStyles = makeStyles(theme => ({
-    root: {
-        margin: '15px 0 25px',
-        padding: '2px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        width: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-        position: 'relative',
-        minHeight: 80,
-        [theme.breakpoints.up('sm')]: {
-            marginBottom: 40,
-        }
-    },
-    input: {
-        marginLeft: theme.spacing(1),
-        flex: 1,
-        color: theme.palette.primary.main
-    },
-    iconButton: {
-        marginRight: 10,
-        padding: 10,
-        color: theme.palette.primary.main
-    },
-}));
 
 type FormDataType = {
     searchText: string,
 }
-
 type OwnPropsType = {
     onResetSearch: () => void,
     isLoading: boolean
-
 }
+type PropsType = InjectedFormProps<FormDataType> & OwnPropsType & WithStyles;
 
-type PropsType = InjectedFormProps<FormDataType> & OwnPropsType;
-
-const SearchForm: FC<PropsType> = ({handleSubmit, submitting, isLoading}) => {
-    const classes = useStyles();
-
+const SearchForm: FC<PropsType> = ({handleSubmit, submitting, isLoading, classes}) => {
     return (
         <Paper component="form" className={classes.root} onSubmit={handleSubmit}>
             {isLoading ?
@@ -67,14 +38,12 @@ const SearchForm: FC<PropsType> = ({handleSubmit, submitting, isLoading}) => {
                     />
                 </>
             }
-
         </Paper>
     )
 };
 
 const SearchReduxForm = reduxForm<FormDataType, OwnPropsType>({
     form: 'search'
-})(SearchForm);
-
+})(withSearchFormStyles(SearchForm));
 
 export default SearchReduxForm;

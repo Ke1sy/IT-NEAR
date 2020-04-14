@@ -4,7 +4,8 @@ import MessageForm from "./../Message/MessageForm";
 import {MessagesType, ProfileType} from "../../../redux/reducers/types";
 import Preloader from "../../Preloader/Preloader";
 import ChatHeader from "./ChatHeader";
-import {makeStyles} from "@material-ui/core";
+import {WithStyles} from "@material-ui/core";
+import withMessagesChatStyles from "./messagesChatStyles";
 
 type PropsType = {
     messages: Array<MessagesType>
@@ -27,50 +28,22 @@ type FilteredMessagesType = {
     messages: Array<MessagesType>
 };
 
-const useStyles = makeStyles(theme => ({
-    chat: {
-        position: "relative",
-        paddingTop: "68px",
-        display: "flex",
-        flexDirection: "column",
-        height: "100%"
-    },
-
-    chatWrapper: {
-        position: "relative",
-
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        flexGrow: 1,
-        overflowY: "auto",
-        padding: "0 10px 20px"
-    },
-    date: {
-        color: theme.palette.grey[400],
-        margin: "5px auto",
-        [theme.breakpoints.up('sm')]: {
-            margin: "15px auto",
-        },
-    }
-}));
-
-const MessagesChat: FC<PropsType> = ({
-                                         friendId,
-                                         messages,
-                                         deleteMessage,
-                                         spamMessage,
-                                         lastUserActivityDate,
-                                         restoreMessage,
-                                         getMessages,
-                                         sendMessage,
-                                         deletedMessages,
-                                         spamedMessages,
-                                         selectedFriend,
-                                         currentUserInfo,
-                                         messagesLoading
-                                     }) => {
-    const classes = useStyles();
+const MessagesChat: FC<PropsType & WithStyles> = ({
+                                                      classes,
+                                                      friendId,
+                                                      messages,
+                                                      deleteMessage,
+                                                      spamMessage,
+                                                      lastUserActivityDate,
+                                                      restoreMessage,
+                                                      getMessages,
+                                                      sendMessage,
+                                                      deletedMessages,
+                                                      spamedMessages,
+                                                      selectedFriend,
+                                                      currentUserInfo,
+                                                      messagesLoading
+                                                  }) => {
     const [filteredMessages, setFilteredMessages] = useState<[] | Array<FilteredMessagesType>>([]);
     const filterByDate = () => {
         let newArr: any = {};
@@ -132,7 +105,8 @@ const MessagesChat: FC<PropsType> = ({
         <>
             <div className={classes.chat}>
                 {selectedFriend &&
-                <ChatHeader lastUserActivityDate={lastUserActivityDate} selectedFriend={selectedFriend} messagesLoading={messagesLoading}/>
+                <ChatHeader lastUserActivityDate={lastUserActivityDate} selectedFriend={selectedFriend}
+                            messagesLoading={messagesLoading}/>
                 }
                 <div className={classes.chatWrapper} id="wrapper">
                     {messagesLoading ?
@@ -165,4 +139,4 @@ const MessagesChat: FC<PropsType> = ({
     )
 };
 
-export default MessagesChat;
+export default withMessagesChatStyles(MessagesChat);

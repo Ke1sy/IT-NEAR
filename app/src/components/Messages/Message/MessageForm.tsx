@@ -1,41 +1,15 @@
-import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import React, {FC} from "react";
+import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import {RenderField} from "../../Forms/components/FormControl";
-import Button from "@material-ui/core/Button";
 import SendIcon from '@material-ui/icons/Send';
-import {makeStyles} from "@material-ui/core";
+import {WithStyles, Button} from "@material-ui/core";
+import withMessageFormStyles from "./messageFormStyles";
 
 type FormDataType = {
     message: string
 };
 
-const useStyles = makeStyles(theme => ({
-    form: {
-        display: "flex",
-        backgroundColor: "#f3f5f7",
-        padding: 10,
-        [theme.breakpoints.up(769)]: {
-            padding: 30,
-        },
-    },
-    root: {
-        flexGrow: 1,
-        marginBottom: 0
-    },
-    textarea: {
-        borderRadius: 0,
-        [theme.breakpoints.down(769)]: {
-            padding: '10px 14px'
-        },
-    },
-    button: {
-        height: "100%",
-        borderRadius: 0
-    }
-}));
-
-const MessageForm: FC<InjectedFormProps<FormDataType>> = ({handleSubmit, submitting}) => {
-    const classes = useStyles();
+const MessageForm: FC<InjectedFormProps<FormDataType> & WithStyles> = ({handleSubmit, submitting, classes}) => {
     return (
         <form className={classes.form} onSubmit={handleSubmit}>
             <Field
@@ -64,6 +38,6 @@ const MessageForm: FC<InjectedFormProps<FormDataType>> = ({handleSubmit, submitt
 
 const MessageReduxForm = reduxForm<FormDataType>({
     form: 'message'
-})(MessageForm);
+})(withMessageFormStyles(MessageForm));
 
 export default MessageReduxForm;

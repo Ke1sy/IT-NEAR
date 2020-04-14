@@ -1,41 +1,13 @@
 import React, {FC} from 'react';
-import {
-    makeStyles,
-    SwipeableDrawer,
-    IconButton
-} from '@material-ui/core';
+import {SwipeableDrawer, IconButton, WithStyles} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import {NavLink} from "react-router-dom";
 import RM from "../../RouterManager";
 import logoImg from "../../assets/images/logo.png";
+import withMobileMenuStyles from "./mobileMenuStyles";
 
-const useStyles = makeStyles(theme => ({
-    list: {
-        width: 250,
-    },
-    menuButton: {
-        marginRight: 0,
-        padding: theme.spacing(1)
-    },
-    paper: {
-        backgroundColor: theme.palette.common.white
-    },
-    head: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        lineHeight: 1,
-        backgroundColor: theme.palette.primary.main,
-        height: 49,
-    },
-    headImg: {
-        height: 30
-    },
-}));
-
-const MobileMenu:FC = ({children}) => {
-    const classes = useStyles();
+const MobileMenu:FC<WithStyles> = ({children, classes}) => {
     const [open, setOpen] = React.useState(false);
 
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent,) => {
@@ -82,4 +54,4 @@ const MobileMenu:FC = ({children}) => {
     )
 };
 
-export default MobileMenu;
+export default withMobileMenuStyles(MobileMenu);

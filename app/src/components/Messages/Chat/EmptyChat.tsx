@@ -1,30 +1,8 @@
-import React from 'react';
-import chatPlaceholder from "../../../assets/images/chat-bg.svg";
-import {Hidden, makeStyles, Typography} from "@material-ui/core";
+import React, {FC} from 'react';
+import {Hidden, Typography, WithStyles} from "@material-ui/core";
+import withEmptyChatStyles from "./emptyChatStyles";
 
-const useStyles = makeStyles(() =>
-    ({
-        empty: {
-            width: '100%',
-            height: '100%',
-            padding: 30,
-            display: 'flex',
-            flexDirection: 'column'
-        },
-        emptyImg: {
-            background: `url(${chatPlaceholder}) no-repeat center` ,
-            backgroundSize: 'contain',
-            flexGrow: 1
-        },
-        emptyText: {
-            margin: '30px 0',
-            textAlign: 'center'
-        }
-    }),
-);
-const EmptyChat = () => {
-    const classes = useStyles();
-
+const EmptyChat:FC<WithStyles> = ({classes}) => {
     return (
         <div className={classes.empty}>
             <div className={classes.emptyImg}/>
@@ -41,4 +19,4 @@ const EmptyChat = () => {
         </div>
     )
 };
-export default EmptyChat;
+export default withEmptyChatStyles(EmptyChat);

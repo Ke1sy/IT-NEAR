@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import Header from "./Header";
 import {connect} from "react-redux";
 import {logout} from "../../redux/reducers/auth-reducer";
@@ -14,7 +14,6 @@ import {AppStateType} from "../../redux/redux-store";
 import {getNewMessagesCount} from "../../redux/reducers/dialogs-selectors";
 import {ProfileType} from "../../redux/reducers/types";
 import ConfirmDialog from "../Profile/Dialogs/ConfirmDialog";
-import {Typography} from "@material-ui/core";
 
 type MapStatePropsType = {
     userId: number | null,

@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useSnackbar, TransitionCloseHandler} from 'notistack';
+import {useSnackbar} from 'notistack';
 import {removeSnackbar} from "../../redux/reducers/app-reducer";
 
 let displayed = [];

@@ -1,13 +1,13 @@
 import React, {FC, useState} from 'react';
-import {makeStyles, Typography, Paper, IconButton, Avatar, Divider} from "@material-ui/core";
+import {Typography, Paper, IconButton, Avatar, Divider, WithStyles} from "@material-ui/core";
 import {PostsData_posts} from "../../../server/types/PostsData";
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import {grey} from '@material-ui/core/colors';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import {OpenPostDialogType, ProfileType} from "../../../redux/reducers/types";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PostSubmenu from "./PostSubmenu";
 import classNames from "classnames";
+import withPostStyles from './postStyles';
 
 type PropsType = {
     post: PostsData_posts,
@@ -18,71 +18,8 @@ type PropsType = {
     openDialog: (isOpen: boolean, type: OpenPostDialogType, selectedItem: PostsData_posts | null) => void,
 }
 
-const useStyles = makeStyles(theme => ({
-    post: {
-        backgroundColor: theme.palette.common.white,
-        padding: '20px 25px 10px',
-        marginBottom: 20,
-        position: 'relative',
-    },
-    content: {
-        padding: '20px 0'
-    },
-    footer: {
-        display: 'flex',
-        alignItems: 'center',
-        marginTop: 10
-    },
-    likeBtn: {
-        cursor: 'pointer',
-        marginRight: 10,
-
-        '&:hover': {
-            '& $likeIcon': {
-                color: theme.palette.secondary.main
-            }
-        }
-    },
-    isLiked: {
-        '& $likeIcon': {
-            color: theme.palette.secondary.main
-        }
-    },
-    likeIcon: {
-        color: grey[300],
-        transition: 'color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-    },
-    date: {
-        fontSize: 12,
-        color: grey[500],
-    },
-    head: {
-        display: 'flex',
-        alignItems: 'center'
-    },
-    avatar: {
-        marginRight: 10,
-        width: 50,
-        height: 50,
-    },
-    more: {
-        position: 'absolute',
-        right: 10,
-        top: 10
-    },
-    moreIcon: {
-        transition: 'color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-        color: theme.palette.primary.light,
-
-        ' &:hover': {
-            color: theme.palette.primary.main
-        }
-    }
-}));
-
-const Post: FC<PropsType> = ({post, author: {fullName, photos}, openDialog, onLikePost, ownerId, isOwner}) => {
+const Post: FC<PropsType & WithStyles> = ({post, author: {fullName, photos}, openDialog, onLikePost, ownerId, isOwner, classes}) => {
     const {text, date, likedBy} = post;
-    const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const userAvatar = photos.large !== null ? photos.large : userPlaceholder;
     const likedByCurrentUser = likedBy.includes(String(ownerId));
@@ -105,7 +42,9 @@ const Post: FC<PropsType> = ({post, author: {fullName, photos}, openDialog, onLi
         const formattedDate = new Date(+date);
         return formattedDate.toLocaleDateString() + ' at ' + formattedDate.toLocaleTimeString().split(":").slice(0, -1).join(':');
     };
+
     const postDate = getDate(date);
+
     return (
         <Paper className={classes.post}>
             <div className={classes.head}>
@@ -157,4 +96,4 @@ const Post: FC<PropsType> = ({post, author: {fullName, photos}, openDialog, onLi
     )
 };
 
-export default Post;
+export default withPostStyles(Post);

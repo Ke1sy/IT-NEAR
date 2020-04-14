@@ -5,10 +5,11 @@ import {required} from "../../../utils/validate";
 import {RenderField} from '../../Forms/components/FormControl';
 import {ProfileType, UpdatedProfileType} from "../../../redux/reducers/types";
 import {Alert} from "@material-ui/lab";
-import {Button, makeStyles, Paper, Typography} from '@material-ui/core';
+import {Button, Paper, Typography, WithStyles} from '@material-ui/core';
 import CheckCircleOutlineOutlinedIcon from "@material-ui/icons/CheckCircleOutlineOutlined";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import StyledDivider from "../Posts/StyledDivider";
+import withSettingsFormStyles from "./settingsFormStyles";
 
 type OwnPropsType = {
     profile: ProfileType,
@@ -16,49 +17,11 @@ type OwnPropsType = {
 
 type FormDataType = UpdatedProfileType;
 
-type PropsType = InjectedFormProps<FormDataType> & OwnPropsType;
-
-const useStyles = makeStyles(theme => ({
-    paper: {
-        padding: '20px 25px 5px',
-        backgroundColor: theme.palette.common.white,
-        marginBottom: theme.spacing(2),
-    },
-    title: {
-        marginBottom: 20,
-        fontWeight: 500
-    },
-    buttons: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        margin: '25px 0 15px',
-        [theme.breakpoints.up('sm')]: {
-            justifyContent: 'center',
-        },
-    },
-    error: {
-        marginBottom: 15
-    },
-    button: {
-        minWidth: '48%',
-        marginLeft: 15,
-        [theme.breakpoints.up('sm')]: {
-            minWidth: 200
-        },
-        '&:first-of-type': {
-            marginLeft: 0
-        },
-    },
-    divider: {
-        position: 'relative',
-        top: 4
-    }
-}));
+type PropsType = InjectedFormProps<FormDataType> & OwnPropsType & WithStyles;
 
 const socialsFields = ['website', 'facebook', 'vk', 'twitter', 'instagram', 'youtube', 'github'];
 
-const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting, reset, initialize, profile}) => {
-    const classes = useStyles();
+const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting, reset, initialize, profile, classes}) => {
     useEffect(() => {
         if (profile) {
             initForm()
@@ -68,7 +31,6 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
     const initForm = () => {
         if (profile) {
             const {aboutMe, contacts: {facebook, website, github, instagram, youtube, twitter, vk}, lookingForAJob, lookingForAJobDescription, fullName} = profile;
-
             initialize({
                 fullName,
                 aboutMe,
@@ -181,6 +143,6 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
 
 const SettingsReduxForm = reduxForm<FormDataType, OwnPropsType>({
     form: 'settings',
-})(SettingsForm);
+})(withSettingsFormStyles(SettingsForm));
 
 export default SettingsReduxForm;

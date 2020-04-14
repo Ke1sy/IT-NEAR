@@ -2,19 +2,20 @@ import React, {FC} from "react";
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
 import {RenderField} from "../Forms/components/FormControl";
 import {required, email, minLength} from "../../utils/validate";
-import styles from './login-form.module.scss';
 import {LoginFormDataPropsType} from "../../redux/reducers/types";
-import {Button} from "@material-ui/core";
+import {Button, WithStyles} from "@material-ui/core";
 import InputIcon from '@material-ui/icons/Input';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import {Alert} from "@material-ui/lab";
+import withLoginFormStyles from "./loginFormStyles";
+
 const minLength4 = minLength(4);
 
 type OwnPropsType = {
     captchaUrl?: string | null
 }
 
-type PropsType = InjectedFormProps<LoginFormDataPropsType> & OwnPropsType;
+type PropsType = InjectedFormProps<LoginFormDataPropsType> & OwnPropsType  & WithStyles;
 
 const LoginForm: FC<PropsType> = (
     {
@@ -23,11 +24,12 @@ const LoginForm: FC<PropsType> = (
         submitting,
         reset,
         error,
-        captchaUrl
+        captchaUrl,
+        classes
     }
 ) => {
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit} className={classes.form}>
             <Field
                 component={RenderField}
                 type="email"
@@ -56,7 +58,7 @@ const LoginForm: FC<PropsType> = (
             />
 
             {captchaUrl &&
-            <div className={styles.captcha}>
+            <div className={classes.captcha}>
                 <img src={captchaUrl} alt=""/>
                 <Field
                     name="captcha"
@@ -68,12 +70,13 @@ const LoginForm: FC<PropsType> = (
                 />
             </div>
             }
-            <div className={styles.form__btns}>
+            <div className={classes.buttons}>
                 <Button
                     type="submit"
                     disabled={pristine || submitting}
                     variant="contained"
                     color="primary"
+                    className={classes.btn}
                     startIcon={<InputIcon/>}
                 >
                     Submit
@@ -83,6 +86,7 @@ const LoginForm: FC<PropsType> = (
                     disabled={pristine || submitting}
                     onClick={reset}
                     variant="contained"
+                    className={classes.btn}
                     color="secondary"
                     startIcon={<CancelOutlinedIcon/>}
                 >
@@ -91,7 +95,7 @@ const LoginForm: FC<PropsType> = (
             </div>
 
             {error &&
-            <Alert severity="error" className={styles.error}>{error}</Alert>
+            <Alert severity="error" className={classes.error}>{error}</Alert>
             }
         </form>
     )
@@ -100,7 +104,7 @@ const LoginForm: FC<PropsType> = (
 
 const LoginReduxForm = reduxForm<LoginFormDataPropsType, OwnPropsType>({
     form: 'login'
-})(LoginForm);
+})(withLoginFormStyles(LoginForm));
 
 
 export default LoginReduxForm;

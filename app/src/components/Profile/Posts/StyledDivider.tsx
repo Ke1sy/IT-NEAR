@@ -11,7 +11,6 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-
 const StyledDivider = ({customClasses}: {customClasses?: any}) => {
     const classes = useStyles();
     return (

@@ -10,8 +10,7 @@ import {
     getTotalUsersCount,
     getUsers
 } from "../../redux/reducers/users-selectors";
-import {follow, unfollow, requestUsers} from "../../redux/reducers/users-reducer";
-import {startChat} from "../../redux/reducers/dialogs-reducer";
+import {requestUsers} from "../../redux/reducers/users-reducer";
 import {withRouter, useLocation, useHistory} from "react-router-dom";
 import {compose} from "redux";
 import queryString from 'query-string';

@@ -2,85 +2,28 @@ import React, {FC} from 'react';
 import userPlaceholder from '../../../assets/images/user-placeholder.png';
 import {NavLink} from "react-router-dom";
 import {UserType} from "../../../redux/reducers/types";
-import PersonAddRoundedIcon from '@material-ui/icons/PersonAddRounded';
-import PersonAddDisabledRoundedIcon from '@material-ui/icons/PersonAddDisabledRounded';
-import EmailRoundedIcon from '@material-ui/icons/EmailRounded';
 import classNames from 'classnames';
 import {
     Avatar,
-    Button,
     Card,
     CardActionArea,
     CardContent,
     Link,
     Typography,
     CardActions,
-    makeStyles
+    WithStyles
 } from '@material-ui/core';
 import RM from "../../../RouterManager";
 import {Skeleton} from "@material-ui/lab";
 import FollowMessageBtns from "../../Buttons/FollowMessageBtns";
+import withUserStyles from "./userStyles";
 
 type PropsType = {
     user: UserType,
     isLoading: boolean
 };
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        background: theme.palette.common.white,
-        paddingTop: 20,
-        borderRadius: 0,
-        textAlign: 'center',
-        display: 'flex',
-        height: '100%',
-        flexDirection: 'column'
-    },
-    avatarImg: {
-        height: 100,
-        width: 100,
-        margin: '0 auto'
-    },
-    content: {
-        padding: '15px 20px',
-        flexGrow: 1
-    },
-
-    buttons: {
-        padding: '0 20px 25px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: '100%',
-        maxWidth: 320,
-        margin: '0 auto'
-    },
-    btnLabel: {
-        fontSize: 14,
-    },
-    bottom: {
-        marginTop: 'auto',
-        borderTop: '1px solid ' + theme.palette.grey[200],
-    },
-    btn: {
-        width: '48%',
-        maxWidth: '48%'
-    },
-    bottomLink: {
-        display: 'block',
-        width: '100%',
-        padding: '1rem 0',
-        color: theme.palette.secondary.light
-    },
-    autoMargin: {
-        margin: '0 auto'
-    },
-    noHover: {
-        pointerEvents: 'none'
-    }
-}));
-
-const User: FC<PropsType> = ({user, isLoading}) => {
-    const classes = useStyles();
+const User: FC<PropsType & WithStyles> = ({user, isLoading, classes}) => {
     const {id, photos, name, status, followed} = user;
     const userAvatar = photos.small !== null ? photos.small : userPlaceholder;
     return (
@@ -144,4 +87,4 @@ const User: FC<PropsType> = ({user, isLoading}) => {
     )
 };
 
-export default User;
+export default withUserStyles(User);

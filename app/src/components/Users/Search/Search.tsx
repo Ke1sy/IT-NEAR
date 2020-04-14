@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import SearchReduxForm from "./SearchForm";
-import {makeStyles, Typography, Chip} from "@material-ui/core";
+import {Typography, Chip, WithStyles} from "@material-ui/core";
+import withSearchStyles from "./searchStyles";
 
 type PropsType = {
     onChangeSearchText: ({searchText}: {searchText: string}) => void
@@ -9,19 +10,7 @@ type PropsType = {
     isLoading: boolean
 }
 
-const useStyles = makeStyles(theme => ({
-    searchTxt: {
-        marginLeft: 10
-    },
-    search: {
-        width: '100%'
-    },
-}));
-
-
-
-const Search: FC<PropsType> = ({onChangeSearchText, searchRequest, onResetSearch, isLoading}) => {
-    const classes = useStyles();
+const Search: FC<PropsType & WithStyles> = ({onChangeSearchText, searchRequest, onResetSearch, isLoading, classes}) => {
     return (
         <div className={classes.search}>
             {searchRequest &&
@@ -36,4 +25,4 @@ const Search: FC<PropsType> = ({onChangeSearchText, searchRequest, onResetSearch
 };
 
 
-export default Search;
+export default withSearchStyles(Search);

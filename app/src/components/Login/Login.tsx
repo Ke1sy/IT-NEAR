@@ -8,7 +8,6 @@ type PropsType = {
     captchaUrl: string | null
 }
 
-
 const Login: FC<PropsType> = ({captchaUrl, login}) => {
     return (
         <div>

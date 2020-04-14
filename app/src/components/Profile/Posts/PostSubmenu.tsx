@@ -1,11 +1,10 @@
 import React, { FC } from "react";
-import {Menu, MenuItem, Typography} from "@material-ui/core";
+import {Menu, MenuItem, Typography, WithStyles} from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import {makeStyles} from "@material-ui/core/styles";
 import {PostsData_posts} from "../../../server/types/PostsData";
-import {grey} from '@material-ui/core/colors';
 import {OpenPostDialogType} from "../../../redux/reducers/types";
+import withPostSubmenuStyles from "./postSubmenuStyles";
 
 type PropsType = {
     post: PostsData_posts,
@@ -14,22 +13,7 @@ type PropsType = {
     openDialog: (isOpen: boolean, type: OpenPostDialogType, selectedItem: PostsData_posts | null) => void,
 }
 
-const useStyles = makeStyles(theme => ({
-    menuItemText: {
-        paddingLeft: 10,
-        color: grey[600],
-
-    },
-    menuItemIcon: {
-        color: grey[600],
-    },
-    paper: {
-        backgroundColor: theme.palette.common.white,
-    }
-}));
-
-const PostSubmenu:FC<PropsType> = ({post, anchorEl, handleClose, openDialog}) => {
-    const classes = useStyles();
+const PostSubmenu:FC<PropsType & WithStyles> = ({post, anchorEl, handleClose, openDialog, classes}) => {
     return (
         <div>
             <Menu
@@ -59,4 +43,4 @@ const PostSubmenu:FC<PropsType> = ({post, anchorEl, handleClose, openDialog}) =>
     )
 };
 
-export default PostSubmenu;
+export default withPostSubmenuStyles(PostSubmenu);

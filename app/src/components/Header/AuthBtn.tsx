@@ -2,8 +2,8 @@ import React, {FC, useEffect} from 'react';
 import {
     Avatar,
     Button, Hidden,
-    Link, makeStyles,
-    Typography,
+    Link,
+    Typography, WithStyles,
 } from "@material-ui/core";
 import {NavLink} from "react-router-dom";
 import userPlaceholder from "../../assets/images/user-placeholder.png";
@@ -11,6 +11,7 @@ import {ProfileType} from "../../redux/reducers/types";
 import Submenu from "./Submenu";
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
 import RM from "../../RouterManager";
+import withAuthBtnStyles from "./authBtnStyles";
 
 type PropsType = {
     login: string | null,
@@ -20,38 +21,7 @@ type PropsType = {
     openLogoutDialog: (open: boolean) => void
 }
 
-const useStyles = makeStyles(theme => ({
-    avatar: {
-        display: 'flex',
-        alignItems: 'center',
-        paddingLeft: 20,
-        paddingRight: 20,
-        textTransform: 'none',
-    },
-    avatarRoot: {
-        marginRight: 10
-    },
-    loginLink: {
-        paddingLeft: 20,
-        paddingRight: 20,
-        color: theme.palette.common.white
-    },
-
-    avatarText: {
-        padding: '0 5px'
-    },
-
-    avatarIcon: {
-      '&.active': {
-          transform: 'rotate(180deg)',
-          transition: '0.1s linear'
-      }
-    }
-}));
-
-
-const AuthBtn: FC<PropsType> = ({isAuth, login, currentUserInfo, userId, openLogoutDialog}) => {
-    const classes = useStyles();
+const AuthBtn: FC<PropsType & WithStyles> = ({isAuth, login, currentUserInfo, userId, openLogoutDialog, classes}) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const avatar = currentUserInfo  && currentUserInfo.photos.small ? currentUserInfo.photos.small : userPlaceholder;
 
@@ -62,6 +32,10 @@ const AuthBtn: FC<PropsType> = ({isAuth, login, currentUserInfo, userId, openLog
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    useEffect(() => {
+        handleClose()
+    }, []);
 
     return (
         <>
@@ -98,4 +72,4 @@ const AuthBtn: FC<PropsType> = ({isAuth, login, currentUserInfo, userId, openLog
     )
 };
 
-export default AuthBtn;
+export default withAuthBtnStyles(AuthBtn);

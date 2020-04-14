@@ -12,6 +12,7 @@ import {createStyles, StyleRules, Theme, WithStyles, withStyles, CssBaseline, Co
 import Notifier from "./components/Notifier/Notifier";
 import {withSnackbar, WithSnackbarProps} from 'notistack';
 import RM from "./RouterManager";
+import Footer from "./components/Footer/Footer";
 
 const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
@@ -78,6 +79,7 @@ class App extends React.Component<PropsType> {
                         <Route path="*" component={withSuspense(NotFound)}/>
                     </Switch>
                 </Container>
+                <Footer/>
             </>
         );
     }

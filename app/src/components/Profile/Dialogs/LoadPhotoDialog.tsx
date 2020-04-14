@@ -1,5 +1,5 @@
 import React, {useEffect, useState, FC, ChangeEvent, useRef} from 'react';
-import { makeStyles, Tooltip, Typography, Button} from "@material-ui/core";
+import {Tooltip, Typography, Button, WithStyles} from "@material-ui/core";
 import {ProfileType} from "../../../redux/reducers/types";
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/lib/ReactCrop.scss';
@@ -7,6 +7,7 @@ import {Alert} from "@material-ui/lab";
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import SimpleDialogTemplate from "../Dialogs/SimpleDialogTemplate";
 import {getCroppedImg} from '../../../utils/crop';
+import withLoadPhotoStyles from "./loadPhotoDialogStyles";
 
 type PropsType = {
     profile: ProfileType
@@ -14,41 +15,6 @@ type PropsType = {
     open: boolean,
     handleClose: () => void,
 }
-
-const useStyles = makeStyles(theme => ({
-    photo: {
-        position: 'relative',
-        textAlign: 'center',
-
-        '& .ReactCrop__image': {
-            maxHeight: 250
-        }
-    },
-    load: {
-        display: 'block',
-        width: '100%',
-        backgroundColor: '#eee',
-        border: `1px dashed ${theme.palette.primary.main}`,
-        marginBottom: 20,
-        borderRadius: 4
-    },
-    loadContent: {
-        display: 'flex',
-        width: '100%',
-        height: 60,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    loadInput: {
-        display: 'none'
-    },
-    loadIcon: {
-        marginRight: 10
-    },
-    message: {
-        marginTop: 15
-    }
-}));
 
 type Crop = {
     aspect?: number;
@@ -59,8 +25,7 @@ type Crop = {
     unit?: 'px' | '%';
 }
 
-const LoadPhotoDialog: FC<PropsType> = ({profile, open, handleClose, loadPhoto}) => {
-    const classes = useStyles();
+const LoadPhotoDialog: FC<PropsType & WithStyles> = ({profile, open, handleClose, loadPhoto, classes}) => {
     const [imgSrc, setImgSrc] = useState<any>(null);
     const [imgRef, setImgRef] = useState<any>(null);
     const [croppedImageUrl, setCroppedImageUrl] = useState<any>(null);
@@ -69,7 +34,6 @@ const LoadPhotoDialog: FC<PropsType> = ({profile, open, handleClose, loadPhoto})
         aspect: 1,
     });
     let inputFile: any = useRef(null);
-
 
     useEffect(() => {
         toDefaultState();
@@ -176,10 +140,10 @@ const LoadPhotoDialog: FC<PropsType> = ({profile, open, handleClose, loadPhoto})
                 }
             </div>
             {imgSrc && !croppedImageUrl &&
-            <Alert severity="warning" className={classes.message}>Crop the image</Alert>
+            <Alert severity="warning" className={classes.message}>Crop the image or it will be done automatically</Alert>
             }
         </SimpleDialogTemplate>
     )
 };
 
-export default LoadPhotoDialog;
+export default withLoadPhotoStyles(LoadPhotoDialog);

@@ -2,10 +2,11 @@ import React, {FC} from 'react';
 import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import {required} from "../../../utils/validate";
 import {RenderField} from "../../Forms/components/FormControl";
-import {IconButton, makeStyles, Paper} from "@material-ui/core";
+import {IconButton, Paper, WithStyles} from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import StyledDivider from "./StyledDivider";
 import Preloader from "../../Preloader/Preloader";
+import withPostsFormStyles from "./postFormStyles";
 
 type OwnPropsType = {
     addPostLoading: boolean
@@ -15,33 +16,9 @@ type FormDataType = {
     postText: string,
 }
 
-const useStyles = makeStyles(theme => ({
-    paper: {
-        padding: '30px 25px',
-        backgroundColor: theme.palette.common.white,
-        marginBottom: 20
-    },
-    form: {
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'flex-start'
-    },
-    root: {
-        flexGrow: 1,
-        marginBottom: 0,
-    },
-    button: {
-        marginLeft: 10
-    },
-    buttonIcon: {
-        fontSize: '1.7rem'
-    },
-}));
+type PropsType = InjectedFormProps<FormDataType> & OwnPropsType & WithStyles
 
-type PropsType = InjectedFormProps<FormDataType> & OwnPropsType
-
-const PostsForm: FC<PropsType> = ({handleSubmit, submitting, addPostLoading}) => {
-    const classes = useStyles();
+const PostsForm: FC<PropsType> = ({handleSubmit, submitting, addPostLoading, classes}) => {
     return (
         <>
             <StyledDivider/>
@@ -54,6 +31,8 @@ const PostsForm: FC<PropsType> = ({handleSubmit, submitting, addPostLoading}) =>
                         type="textarea"
                         component={RenderField}
                         validate={[required]}
+                        multiline
+                        rowsMax="3"
                         classes={{
                             root: classes.root,
                         }}
@@ -70,6 +49,6 @@ const PostsForm: FC<PropsType> = ({handleSubmit, submitting, addPostLoading}) =>
 
 const PostsReduxForm = reduxForm<FormDataType, OwnPropsType>({
     form: 'posts',
-})(PostsForm);
+})(withPostsFormStyles(PostsForm));
 
 export default PostsReduxForm;

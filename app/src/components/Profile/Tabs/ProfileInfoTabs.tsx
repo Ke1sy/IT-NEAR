@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {ProfileType} from "../../../redux/reducers/types";
-import {Grid, isWidthUp, makeStyles, Tab, Tabs, WithWidth} from "@material-ui/core";
+import {Grid, isWidthUp, Tab, Tabs, WithStyles, WithWidth} from "@material-ui/core";
 import TabPanel from "./TabPanel";
 import StaticProfileInfo from "../ProfileInfo/StaticProfileInfo";
 import PostsContainer from "../Posts/PostsContainer";
@@ -8,6 +8,8 @@ import SwipeableViews from 'react-swipeable-views';
 import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 import withWidth from "@material-ui/core/withWidth";
+import withProfileInfoTabsStyles from "./profileInfoTabsStyles";
+import {compose} from "redux";
 
 type PropsType = {
     profile: ProfileType
@@ -16,30 +18,7 @@ type PropsType = {
     profileIsLoading: boolean
 }
 
-const useStyles = makeStyles(theme => ({
-    tab: {
-        fontWeight: 400,
-        textTransform: 'none',
-        minWidth: 'auto',
-        color: theme.palette.primary.light,
-        '&:not($selected):hover': {
-            color: theme.palette.primary.main
-        },
-        [theme.breakpoints.up('lg')]: {
-            minWidth: 90,
-        }
-    },
-    selected: {
-        color: theme.palette.secondary.main,
-        cursor: 'auto'
-    },
-    indicator: {
-        backgroundColor: 'transparent'
-    },
-}));
-
-const ProfileInfoTabs: FC<PropsType & WithWidth> = ({profile, isOwner, currentUserInfo, width, profileIsLoading}) => {
-    const classes = useStyles();
+const ProfileInfoTabs: FC<PropsType & WithWidth & WithStyles> = ({profile, isOwner, currentUserInfo, width, profileIsLoading, classes}) => {
     const [selectedTab, setSelectedTab] = React.useState(0);
     const widthUpMd = isWidthUp('md', width);
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -102,4 +81,7 @@ const ProfileInfoTabs: FC<PropsType & WithWidth> = ({profile, isOwner, currentUs
     )
 };
 
-export default withWidth()(ProfileInfoTabs);
+export default compose(
+    withWidth(),
+    withProfileInfoTabsStyles
+)(ProfileInfoTabs) as FC<PropsType>;

@@ -3,13 +3,13 @@ import {
     DialogTitle,
     Dialog,
     DialogContent,
-    makeStyles,
     DialogActions,
     DialogProps,
-    Button,
+    Button, WithStyles,
 } from '@material-ui/core';
 import CheckCircleOutlineOutlinedIcon from "@material-ui/icons/CheckCircleOutlineOutlined";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
+import withSimpleDialogStyles from "./simpleDialogStyles";
 
 type PropsType = {
     open: boolean,
@@ -21,25 +21,7 @@ type PropsType = {
     rest?: any
 }
 
-const useStyles = makeStyles(theme => ({
-    paper: {
-        backgroundColor: theme.palette.common.white,
-    },
-    title: {
-        textAlign: 'center',
-        padding: '16px 24px 8px'
-    },
-    buttons: {
-        justifyContent: 'space-between',
-        padding: '8px 24px 16px'
-    },
-    btn: {
-        width: '48%'
-    }
-}));
-
-const SimpleDialogTemplate: FC<DialogProps & PropsType> = ({open, title, children, submitAction, resetAction, submitName, submitDisabled, ...rest}) => {
-    const classes = useStyles();
+const SimpleDialogTemplate: FC<DialogProps & PropsType & WithStyles> = ({open, title, children, submitAction, resetAction, submitName, submitDisabled, classes, ...rest}) => {
     return (
         <Dialog
             open={open}
@@ -79,4 +61,4 @@ const SimpleDialogTemplate: FC<DialogProps & PropsType> = ({open, title, childre
     );
 };
 
-export default SimpleDialogTemplate;
+export default withSimpleDialogStyles(SimpleDialogTemplate);

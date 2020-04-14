@@ -1,4 +1,4 @@
-import {profileAPI, ResultCodes, usersAPI} from "../../api/api";
+import {profileAPI, ResultCodes} from "../../api/api";
 import {reset, stopSubmit} from 'redux-form';
 import {PhotosType, ProfileType} from "./types";
 import {ThunkAction} from "redux-thunk";

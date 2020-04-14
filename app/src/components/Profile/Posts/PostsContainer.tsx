@@ -1,6 +1,5 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import Posts from "./Posts";
-import Preloader from "../../Preloader/Preloader";
 import {useQuery, useMutation} from '@apollo/react-hooks';
 import {GET_POSTS} from "../../../server/queries";
 import {ADD_POST, DELETE_POST, UPDATE_POST} from "../../../server/mutations";
@@ -10,7 +9,8 @@ import {DeletePostMutation, DeletePostMutationVariables} from '../../../server/t
 import {UpdatePostMutation, UpdatePostMutationVariables} from '../../../server/types/UpdatePostMutation';
 import {ProfileType, OpenPostDialogType} from "../../../redux/reducers/types";
 import {reset} from "redux-form";
-import { useDispatch } from 'react-redux';
+import {useDispatch} from 'react-redux';
+import PostsEmpty from "./PostsEmpty";
 
 type PropsType = {
     authorId: number,
@@ -32,7 +32,7 @@ const PostsContainer: FC<PropsType> = ({authorId, isOwner, author, currentUserIn
     const [selectedPost, setSelectedPost] = useState<PostsData_posts | null>(null);
     const dispatch = useDispatch();
 
-    const onAddPost = ({postText}: { postText: string}) => {
+    const onAddPost = ({postText}: { postText: string }) => {
         if (postText && postText.length > 0) {
             addPost({
                 variables: {
@@ -98,7 +98,8 @@ const PostsContainer: FC<PropsType> = ({authorId, isOwner, author, currentUserIn
         }
     };
 
-    if (dataLoading  || !data) return <Preloader showPreloader={true}/>;
+    if (dataLoading || !data) return <PostsEmpty isLoading={true} isOwner={isOwner}/>;
+
     const {posts} = data;
     return (
         <Posts
