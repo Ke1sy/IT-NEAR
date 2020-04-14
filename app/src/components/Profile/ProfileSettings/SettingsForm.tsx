@@ -6,8 +6,7 @@ import {RenderField} from '../../Forms/components/FormControl';
 import {ProfileType, UpdatedProfileType} from "../../../redux/reducers/types";
 import {Alert} from "@material-ui/lab";
 import {Button, Paper, Typography, WithStyles} from '@material-ui/core';
-import CheckCircleOutlineOutlinedIcon from "@material-ui/icons/CheckCircleOutlineOutlined";
-import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
+import {CancelOutlinedIcon, CheckCircleOutlineOutlinedIcon} from "../../Icons/MeterialIcons";
 import StyledDivider from "../Posts/StyledDivider";
 import withSettingsFormStyles from "./settingsFormStyles";
 

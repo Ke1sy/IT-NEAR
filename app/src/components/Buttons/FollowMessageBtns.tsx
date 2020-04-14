@@ -1,9 +1,7 @@
 import React, {FC} from 'react';
 import {Button, WithStyles} from "@material-ui/core";
 import classNames from "classnames";
-import PersonAddDisabledRoundedIcon from "@material-ui/icons/PersonAddDisabledRounded";
-import PersonAddRoundedIcon from "@material-ui/icons/PersonAddRounded";
-import EmailRoundedIcon from "@material-ui/icons/EmailRounded";
+
 import {useHistory} from "react-router-dom";
 import {AppStateType} from "../../redux/redux-store";
 import {getFollowInProgress} from "../../redux/reducers/users-selectors";
@@ -12,6 +10,7 @@ import {follow, unfollow} from "../../redux/reducers/users-reducer";
 import {startChat} from "../../redux/reducers/dialogs-reducer";
 import {Skeleton} from "@material-ui/lab";
 import withFollowMessageStyles from "./followMessageStyles";
+import {PersonAddDisabledRoundedIcon, PersonAddRoundedIcon, EmailRoundedIcon} from "../Icons/MeterialIcons";
 
 type OwnPropsType = {
     userId: number,

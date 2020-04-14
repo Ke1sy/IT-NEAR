@@ -2,11 +2,10 @@ import React, {FC} from 'react';
 import classNames from "classnames";
 import {ProfileType} from "../../../redux/reducers/types";
 import {Typography, WithStyles, Paper} from "@material-ui/core";
-import NotInterestedIcon from '@material-ui/icons/NotInterested';
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import {Skeleton} from "@material-ui/lab";
 import StyledDivider from "../Posts/StyledDivider";
 import withStaticProfileStyles from "./staticProfileInfoStyles";
+import {DoneOutlineIcon, NotInterestedIcon} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     profile: ProfileType,

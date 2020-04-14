@@ -4,9 +4,9 @@ import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import {DialogsType} from "../../../redux/reducers/types";
 import {Avatar, Hidden, ListItem, ListItemAvatar, ListItemText, WithStyles} from "@material-ui/core";
 import RM from "../../../RouterManager";
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import classNames from "classnames";
 import withDialogStyles from "./dialogStyles";
+import {KeyboardBackspaceIcon} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     user: DialogsType

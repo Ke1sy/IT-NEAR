@@ -2,11 +2,11 @@ import React, {FC} from 'react';
 import {Avatar, Hidden, IconButton, Link, Typography, WithStyles} from "@material-ui/core";
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import {NavLink} from "react-router-dom";
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import RM from "../../../RouterManager";
 import {ProfileType} from "../../../redux/reducers/types";
 import {Skeleton} from "@material-ui/lab";
 import withChatHeaderStyles from "./chatHeaderStyles";
+import {KeyboardBackspaceIcon} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     lastUserActivityDate: string | null

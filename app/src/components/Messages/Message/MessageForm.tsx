@@ -1,9 +1,9 @@
 import React, {FC} from "react";
 import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import {RenderField} from "../../Forms/components/FormControl";
-import SendIcon from '@material-ui/icons/Send';
 import {WithStyles, Button} from "@material-ui/core";
 import withMessageFormStyles from "./messageFormStyles";
+import {SendIcon} from "../../Icons/MeterialIcons";
 
 type FormDataType = {
     message: string

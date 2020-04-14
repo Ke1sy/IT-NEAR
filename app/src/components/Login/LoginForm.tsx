@@ -4,10 +4,9 @@ import {RenderField} from "../Forms/components/FormControl";
 import {required, email, minLength} from "../../utils/validate";
 import {LoginFormDataPropsType} from "../../redux/reducers/types";
 import {Button, WithStyles} from "@material-ui/core";
-import InputIcon from '@material-ui/icons/Input';
-import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import {Alert} from "@material-ui/lab";
 import withLoginFormStyles from "./loginFormStyles";
+import {CancelOutlinedIcon, InputIcon} from "../Icons/MeterialIcons";
 
 const minLength4 = minLength(4);
 

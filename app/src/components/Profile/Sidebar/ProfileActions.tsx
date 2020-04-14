@@ -1,12 +1,11 @@
 import React, {FC} from 'react';
 import {Button, Hidden, WithStyles} from "@material-ui/core";
 import {NavLink, useLocation} from "react-router-dom";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import SettingsIcon from "@material-ui/icons/Settings";
 import RM from "../../../RouterManager";
 import {Skeleton} from "@material-ui/lab";
 import FollowMessageBtns from "../../Buttons/FollowMessageBtns";
 import withProfileActionsStyles from "./profileActionsStyles";
+import {AccountCircleIcon, SettingsIcon} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     isOwner: boolean,

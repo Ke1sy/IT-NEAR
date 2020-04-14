@@ -1,8 +1,8 @@
 import React, {useState, FC} from 'react';
 import {Tooltip, Typography, WithStyles} from "@material-ui/core";
-import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import StatusDialog from "../Dialogs/StatusDialog";
 import withProfileStatusStyles from "./profileStatusStyles";
+import {CreateOutlinedIcon} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     status: string

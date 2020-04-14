@@ -1,5 +1,8 @@
 import React, {FC} from 'react';
 import {NavLink} from "react-router-dom";
+import RM from "../../RouterManager";
+import classNames from "classnames";
+import {MailIcon, PeopleAltIcon, HomeIcon, SettingsIcon, ExitToAppIcon} from "../Icons/MeterialIcons";
 import {
     List,
     ListItem,
@@ -8,13 +11,6 @@ import {
     Tooltip,
     Badge, Hidden, Typography, WithStyles,
 } from "@material-ui/core";
-import MailIcon from '@material-ui/icons/Mail';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import HomeIcon from '@material-ui/icons/Home';
-import SettingsIcon from '@material-ui/icons/Settings';
-import RM from "../../RouterManager";
-import classNames from "classnames";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import withNavbarStyles from "./navbarStyles";
 
 type PropsType = {

@@ -9,9 +9,9 @@ import {NavLink} from "react-router-dom";
 import userPlaceholder from "../../assets/images/user-placeholder.png";
 import {ProfileType} from "../../redux/reducers/types";
 import Submenu from "./Submenu";
-import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
 import RM from "../../RouterManager";
 import withAuthBtnStyles from "./authBtnStyles";
+import {ExpandMoreRoundedIcon} from "../Icons/MeterialIcons";
 
 type PropsType = {
     login: string | null,

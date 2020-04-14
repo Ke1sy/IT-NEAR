@@ -1,13 +1,12 @@
 import React, {FC, useState} from 'react';
 import {Typography, Paper, IconButton, Avatar, Divider, WithStyles} from "@material-ui/core";
 import {PostsData_posts} from "../../../server/types/PostsData";
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import userPlaceholder from "../../../assets/images/user-placeholder.png";
 import {OpenPostDialogType, ProfileType} from "../../../redux/reducers/types";
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PostSubmenu from "./PostSubmenu";
 import classNames from "classnames";
 import withPostStyles from './postStyles';
+import {MoreVertIcon, FavoriteIcon} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     post: PostsData_posts,

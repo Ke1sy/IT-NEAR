@@ -7,9 +7,8 @@ import {
     DialogProps,
     Button, WithStyles,
 } from '@material-ui/core';
-import CheckCircleOutlineOutlinedIcon from "@material-ui/icons/CheckCircleOutlineOutlined";
-import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import withSimpleDialogStyles from "./simpleDialogStyles";
+import {CheckCircleOutlineOutlinedIcon, CancelOutlinedIcon} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     open: boolean,

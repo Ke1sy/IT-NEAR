@@ -3,9 +3,9 @@ import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import {RenderField} from "../../Forms/components/FormControl";
 import {minLength, required} from "../../../utils/validate";
 import {IconButton, Paper, WithStyles} from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
 import {Skeleton} from '@material-ui/lab';
 import withSearchFormStyles from "./searchFormStyles";
+import {SearchIcon} from "../../Icons/MeterialIcons";
 
 const minLength3 = minLength(3);
 

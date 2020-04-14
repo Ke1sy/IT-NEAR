@@ -1,6 +1,15 @@
 import React, {FC, useState, useEffect, Fragment} from 'react';
 import {ProfileType} from "../../../redux/reducers/types";
 import withSidebarStyles from './sidebarStyles'
+import userPlaceholder from "../../../assets/images/user-placeholder.png";
+import ProfileStatus from "../Status/ProfileStatus";
+import VkIcon from '../../Icons/VkIcon';
+import classNames from "classnames";
+import LoadPhotoDialog from "../Dialogs/LoadPhotoDialog";
+import ConfirmDialog from "../Dialogs/ConfirmDialog";
+import {compose} from "redux";
+import ProfileActions from "./ProfileActions";
+import {Skeleton} from "@material-ui/lab";
 import {
     WithStyles,
     Paper,
@@ -12,23 +21,16 @@ import {
     Link, IconButton,
     Hidden,
 } from '@material-ui/core';
-import userPlaceholder from "../../../assets/images/user-placeholder.png";
-import ProfileStatus from "../Status/ProfileStatus";
-import FacebookIcon from '@material-ui/icons/Facebook';
-import LanguageIcon from '@material-ui/icons/Language';
-import TwitterIcon from '@material-ui/icons/Twitter';
-import InstagramIcon from '@material-ui/icons/Instagram';
-import YouTubeIcon from '@material-ui/icons/YouTube';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import VkIcon from '../../Svg/VkIcon';
-import classNames from "classnames";
-import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
-import LoadPhotoDialog from "../Dialogs/LoadPhotoDialog";
-import DeleteIcon from '@material-ui/icons/Delete';
-import ConfirmDialog from "../Dialogs/ConfirmDialog";
-import {compose} from "redux";
-import ProfileActions from "./ProfileActions";
-import {Skeleton} from "@material-ui/lab";
+import {
+    FacebookIcon,
+    LanguageIcon,
+    TwitterIcon,
+    InstagramIcon,
+    YouTubeIcon,
+    GitHubIcon,
+    AddAPhotoIcon,
+    DeleteIcon
+} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     status: string

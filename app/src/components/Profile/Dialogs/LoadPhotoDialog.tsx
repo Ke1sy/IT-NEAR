@@ -4,10 +4,10 @@ import {ProfileType} from "../../../redux/reducers/types";
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/lib/ReactCrop.scss';
 import {Alert} from "@material-ui/lab";
-import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import SimpleDialogTemplate from "../Dialogs/SimpleDialogTemplate";
 import {getCroppedImg} from '../../../utils/crop';
 import withLoadPhotoStyles from "./loadPhotoDialogStyles";
+import {AddAPhotoIcon} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     profile: ProfileType

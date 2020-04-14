@@ -5,11 +5,10 @@ import TabPanel from "./TabPanel";
 import StaticProfileInfo from "../ProfileInfo/StaticProfileInfo";
 import PostsContainer from "../Posts/PostsContainer";
 import SwipeableViews from 'react-swipeable-views';
-import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
-import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 import withWidth from "@material-ui/core/withWidth";
 import withProfileInfoTabsStyles from "./profileInfoTabsStyles";
 import {compose} from "redux";
+import {AssignmentOutlinedIcon, ListAltOutlinedIcon} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     profile: ProfileType

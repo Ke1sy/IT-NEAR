@@ -9,12 +9,10 @@ import {
     WithStyles
 } from '@material-ui/core';
 import {NavLink} from "react-router-dom";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import withSubmenuStyles from './submenuStyles'
-import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
-import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import RM from "../../RouterManager";
 import classNames from "classnames";
+import {EditRoundedIcon, PersonRoundedIcon, ExitToAppIcon} from "../Icons/MeterialIcons";
 
 type PropsType = {
     userId: number | null,

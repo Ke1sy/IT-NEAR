@@ -1,11 +1,10 @@
 import React, {FC} from 'react';
 import {SwipeableDrawer, IconButton, WithStyles} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import {NavLink} from "react-router-dom";
 import RM from "../../RouterManager";
 import logoImg from "../../assets/images/logo.png";
 import withMobileMenuStyles from "./mobileMenuStyles";
+import {CloseRoundedIcon, MenuIcon} from "../Icons/MeterialIcons";
 
 const MobileMenu:FC<WithStyles> = ({children, classes}) => {
     const [open, setOpen] = React.useState(false);

@@ -3,10 +3,10 @@ import {Field, reduxForm, InjectedFormProps} from "redux-form";
 import {required} from "../../../utils/validate";
 import {RenderField} from "../../Forms/components/FormControl";
 import {IconButton, Paper, WithStyles} from "@material-ui/core";
-import SendIcon from "@material-ui/icons/Send";
 import StyledDivider from "./StyledDivider";
 import Preloader from "../../Preloader/Preloader";
 import withPostsFormStyles from "./postFormStyles";
+import {SendIcon} from "../../Icons/MeterialIcons";
 
 type OwnPropsType = {
     addPostLoading: boolean

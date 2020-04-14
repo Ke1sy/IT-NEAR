@@ -1,10 +1,9 @@
-import React, { FC } from "react";
+import React, {FC} from "react";
 import {Menu, MenuItem, Typography, WithStyles} from "@material-ui/core";
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import {PostsData_posts} from "../../../server/types/PostsData";
 import {OpenPostDialogType} from "../../../redux/reducers/types";
 import withPostSubmenuStyles from "./postSubmenuStyles";
+import {DeleteIcon, EditIcon} from "../../Icons/MeterialIcons";
 
 type PropsType = {
     post: PostsData_posts,
@@ -13,7 +12,7 @@ type PropsType = {
     openDialog: (isOpen: boolean, type: OpenPostDialogType, selectedItem: PostsData_posts | null) => void,
 }
 
-const PostSubmenu:FC<PropsType & WithStyles> = ({post, anchorEl, handleClose, openDialog, classes}) => {
+const PostSubmenu: FC<PropsType & WithStyles> = ({post, anchorEl, handleClose, openDialog, classes}) => {
     return (
         <div>
             <Menu
@@ -26,13 +25,13 @@ const PostSubmenu:FC<PropsType & WithStyles> = ({post, anchorEl, handleClose, op
                     className: classes.paper
                 }}
             >
-                <MenuItem onClick={() => openDialog(true,  'edit', post)}>
-                <EditIcon fontSize="small" className={classes.menuItemIcon}/>
+                <MenuItem onClick={() => openDialog(true, 'edit', post)}>
+                    <EditIcon fontSize="small" className={classes.menuItemIcon}/>
                     <Typography variant="body2" className={classes.menuItemText}>
                         Edit
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={() => openDialog(true, 'confirm',  post,)}>
+                <MenuItem onClick={() => openDialog(true, 'confirm', post,)}>
                     <DeleteIcon fontSize="small" className={classes.menuItemIcon}/>
                     <Typography variant="body2" className={classes.menuItemText}>
                         Delete
