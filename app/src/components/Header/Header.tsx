@@ -41,6 +41,7 @@ const Header: FC<PropsType & WithStyles> = ({userId, login, isAuth, newMessagesC
                             <div className={classes.rightColumn}>
                                 <Hidden xsDown>
                                     <Navbar
+                                        isAuth={isAuth}
                                         newMessagesCount={newMessagesCount}
                                         userId={currentUserInfo ? currentUserInfo.userId : null}
                                         openLogoutDialog={openLogoutDialog}
@@ -57,6 +58,7 @@ const Header: FC<PropsType & WithStyles> = ({userId, login, isAuth, newMessagesC
                                 <Hidden smUp>
                                     <MobileMenu>
                                         <Navbar
+                                            isAuth={isAuth}
                                             openLogoutDialog={openLogoutDialog}
                                             newMessagesCount={newMessagesCount}
                                             userId={currentUserInfo ? currentUserInfo.userId : null}
