@@ -43,14 +43,14 @@ const Submenu: FC<PropsType & WithStyles> = ({userId, handleClose, anchorEl, cla
                 horizontal: 'center',
             }}
         >
-            <MenuItem component={NavLink} to={RM.profile.getPath(userId)} className={classes.menuItem}>
+            <MenuItem component={NavLink} to={RM.profile.getPath(userId)} className={classes.menuItem} onClick={() => handleClose()}>
                     <span className={classNames('MuiListItemIcon-root', classes.menuIcon)}>
                         <PersonRoundedIcon fontSize="small"/>
                     </span>
                 <Typography variant="body1" component="span" className={classes.menuItemTxt}>Profile</Typography>
             </MenuItem>
             <Divider orientation="horizontal" light={true}/>
-            <MenuItem component={NavLink} to={RM.settings.path} className={classes.menuItem}>
+            <MenuItem component={NavLink} to={RM.settings.path} className={classes.menuItem} onClick={() => handleClose()}>
                      <span className={classNames('MuiListItemIcon-root', classes.menuIcon)}>
                         <EditRoundedIcon fontSize="small"/>
                     </span>
@@ -58,13 +58,11 @@ const Submenu: FC<PropsType & WithStyles> = ({userId, handleClose, anchorEl, cla
             </MenuItem>
             <Divider orientation="horizontal" light={true}/>
 
-            <MenuItem className={classes.menuItem} onClick={() => openLogoutDialog(true)}>
+            <MenuItem className={classes.menuItem} onClick={() => {openLogoutDialog(true); handleClose()}}>
                 <ListItemIcon className={classes.menuIcon}>
                     <ExitToAppIcon fontSize="small"/>
                 </ListItemIcon>
-                <ListItemText classes={{
-                    primary: classes.menuItemTxt
-                }} primary="Logout"/>
+                <ListItemText classes={{primary: classes.menuItemTxt}} primary="Logout"/>
             </MenuItem>
         </Menu>
     )

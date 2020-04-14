@@ -1,5 +1,5 @@
 import {takeEvery, put, call, select} from 'redux-saga/effects';
-import {profileAPI, ResultCodes, usersAPI} from "../../api/api";
+import {dialogsAPI, profileAPI, ResultCodes, usersAPI} from "../../api/api";
 import {
     GET_USER_PROFILE,
     LOAD_PHOTO,
@@ -32,7 +32,28 @@ import {
     UNFOLLOW,
 } from "../reducers/users-reducer";
 import {ProfileType} from "../reducers/types";
-import {stopSubmit} from "redux-form";
+import {reset, stopSubmit} from "redux-form";
+import {
+    addMessage,
+    addMessageToDeleted, addMessageToSpam,
+    DELETE_MESSAGE,
+    DeleteMessagesType,
+    GET_DIALOGS,
+    GET_MESSAGES, GET_NEW_MESSAGES_COUNT,
+    GetMessagesType,
+    RESTORE_MESSAGE,
+    restoreFromSpamDeleted,
+    RestoreMessagesType,
+    SEND_MESSAGE,
+    SendMessageType,
+    setActivityDate,
+    setDialogs,
+    setMessages,
+    setMessagesLoading, setNewMessagesCount,
+    setSelectedFriend, SPAM_MESSAGE, SpamMessagesType,
+    START_CHAT,
+    StartChatType
+} from "../reducers/dialogs-reducer";
 
 //PROFILE
 function* getUserProfileAsync({id, updateCurrentUserInfo}: GetUserProfileType) {
@@ -150,26 +171,108 @@ function* toggleFollowAsync({action, id, updateProfileFollow}: FollowActionType)
         yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
     }
 }
+//dialogs
+function* getDialogsAsync() {
+    try {
+        const response = yield call(requestDialogs);
+        yield put(setDialogs(response));
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* startChatAsync({userId, history}: StartChatType) {
+    try {
+        const {resultCode} = yield call(startChat, userId);
+        if (resultCode === ResultCodes.Success) {
+            history.push(`/dialogs/${userId}`)
+        }
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* sendMessageAsync({userId, message}: SendMessageType) {
+    try {
+        const {data, resultCode} =  yield call(sendMessage, userId, message);
+        if (resultCode === ResultCodes.Success) {
+            yield put(addMessage(data.message));
+            yield put(reset('message'));
+        }
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* deleteMessagesAsync({messageId}: DeleteMessagesType) {
+    try {
+        const {resultCode} =  yield call(deleteMessage, messageId);
+        if (resultCode === ResultCodes.Success) {
+            yield put(addMessageToDeleted(messageId));
+        }
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* restoreMessagesAsync({messageId}: RestoreMessagesType) {
+    try {
+        const {resultCode} =  yield call(restoreMessage, messageId);
+        if (resultCode === ResultCodes.Success) {
+            yield put(restoreFromSpamDeleted(messageId));
+        }
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* spamMessagesAsync({messageId}: SpamMessagesType) {
+    try {
+        const {resultCode} =  yield call(spamMessage, messageId);
+        if (resultCode === ResultCodes.Success) {
+            yield put(addMessageToSpam(messageId));
+        }
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* getMessagesAsync({userId}: GetMessagesType) {
+    try {
+        yield put(setMessagesLoading(true));
+        const {error, items} = yield call(getMessages, userId);
+        const data = yield call(getProfileById, userId);
+        if (!error) {
+            yield put(setMessages(items));
+            yield put(setActivityDate(userId));
+            yield put(setSelectedFriend(data));
+        }
+        yield put(setMessagesLoading(false));
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* getNewMessagesCountAsync() {
+    try {
+        const data = yield call(newMessagesCount);
+        yield put(setNewMessagesCount(data));
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
 
 // API REQUESTS
 async function getUserStatus(id: number) {
     return await profileAPI.getStatus(id);
 }
 
+async function loadPhoto(photo: any) {
+    return await profileAPI.loadPhoto(photo);
+}
+
 async function setUserStatus(status: string) {
     return await profileAPI.setStatus(status)
-}
-
-async function getUserIsFollowed(id: number) {
-    return await usersAPI.isUserFollowed(id);
-}
-
-async function followUser(id: number) {
-    return await usersAPI.followUser(id)
-}
-
-async function unfollowUser(id: number) {
-    return await usersAPI.unfollowUser(id)
 }
 
 async function getProfileById(id: number) {
@@ -184,8 +287,46 @@ async function requestUsers(currentPage: number, pageSize: number, searchText: s
     return await usersAPI.getUsers(currentPage, pageSize, searchText)
 }
 
-async function loadPhoto(photo: any) {
-    return await profileAPI.loadPhoto(photo);
+async function getUserIsFollowed(id: number) {
+    return await usersAPI.isUserFollowed(id);
+}
+
+async function followUser(id: number) {
+    return await usersAPI.followUser(id)
+}
+
+async function unfollowUser(id: number) {
+    return await usersAPI.unfollowUser(id)
+}
+
+async function requestDialogs() {
+    return await dialogsAPI.getDialogs();
+}
+
+async function startChat(userId: number) {
+    return await dialogsAPI.startChat(userId);
+}
+
+async function sendMessage(userId: number, message: string) {
+    return await dialogsAPI.sendMessage(userId, message);
+}
+
+async function getMessages(userId: number) {
+    return await dialogsAPI.getMessages(userId);
+}
+
+async function deleteMessage(messageId: string) {
+    return await dialogsAPI.deleteMessage(messageId)
+}
+
+async function restoreMessage(messageId: string) {
+    return await dialogsAPI.restoreMessage(messageId)
+}
+async function spamMessage(messageId: string) {
+    return await dialogsAPI.spamMessage(messageId);
+}
+async function newMessagesCount() {
+    return await dialogsAPI.newMessagesCount()
 }
 
 //SAGA
@@ -199,6 +340,14 @@ function* mySaga() {
     yield takeEvery(GET_STATUS, getStatusAsync);
     yield takeEvery(SET_STATUS, setUserStatusAsync);
     yield takeEvery(UPDATE_USER_PROFILE, updateProfileInfoAsync);
+    yield takeEvery(GET_DIALOGS, getDialogsAsync);
+    yield takeEvery(START_CHAT, startChatAsync);
+    yield takeEvery(SEND_MESSAGE, sendMessageAsync);
+    yield takeEvery(GET_MESSAGES, getMessagesAsync);
+    yield takeEvery(DELETE_MESSAGE, deleteMessagesAsync);
+    yield takeEvery(RESTORE_MESSAGE, restoreMessagesAsync);
+    yield takeEvery(SPAM_MESSAGE, spamMessagesAsync);
+    yield takeEvery(GET_NEW_MESSAGES_COUNT, getNewMessagesCountAsync);
 }
 
 export default mySaga;

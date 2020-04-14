@@ -33,10 +33,6 @@ const AuthBtn: FC<PropsType & WithStyles> = ({isAuth, login, currentUserInfo, us
         setAnchorEl(null);
     };
 
-    useEffect(() => {
-        handleClose()
-    }, []);
-
     return (
         <>
             {

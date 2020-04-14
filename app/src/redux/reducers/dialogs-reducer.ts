@@ -1,19 +1,23 @@
-import {reset} from "redux-form";
-import {dialogsAPI, profileAPI, ResultCodes} from "../../api/api";
 import {DialogsType, MessagesType, ProfileType} from "./types";
-import { ThunkAction } from 'redux-thunk'
-import {AppStateType} from "../redux-store";
 
-const SET_DIALOGS = 'dialogs/SET_DIALOGS';
-const SET_MESSAGES = 'dialogs/SET_MESSAGES';
-const NEW_MESSAGES_COUNT = 'dialogs/NEW_MESSAGES_COUNT';
-const SET_ACTIVITY_DATE = 'dialogs/SET_ACTIVITY_DATE';
-const ADD_MESSAGE = 'dialogs/ADD_MESSAGE';
-const DELETE_MESSAGE = 'dialogs/DELETE_MESSAGE';
-const RESTORE_MESSAGE = 'dialogs/RESTORE_MESSAGE';
-const SPAM_MESSAGE = 'dialogs/SPAM_MESSAGE';
-const SET_SELECTED_FRIEND = 'dialogs/SET_SELECTED_FRIEND';
-const SET_MESSAGES_LOADING = 'dialogs/SET_MESSAGES_LOADING';
+export const GET_DIALOGS = 'dialogs/GET_DIALOGS';
+export const SET_DIALOGS = 'dialogs/SET_DIALOGS';
+export const GET_MESSAGES = 'dialogs/GET_MESSAGES';
+export const SET_MESSAGES = 'dialogs/SET_MESSAGES';
+export const START_CHAT = 'dialogs/START_CHAT';
+export const SEND_MESSAGE = 'dialogs/SEND_MESSAGE';
+export const SET_NEW_MESSAGES_COUNT = 'dialogs/SET_NEW_MESSAGES_COUNT';
+export const GET_NEW_MESSAGES_COUNT = 'dialogs/GET_NEW_MESSAGES_COUNT';
+export const SET_ACTIVITY_DATE = 'dialogs/SET_ACTIVITY_DATE';
+export const ADD_MESSAGE = 'dialogs/ADD_MESSAGE';
+export const DELETE_MESSAGE = 'dialogs/DELETE_MESSAGE';
+export const ADD_MESSAGE_TO_DELETED = 'dialogs/ADD_MESSAGE_TO_DELETED';
+export const RESTORE_FROM_SPAM_DELETED = 'dialogs/RESTORE_FROM_SPAM_DELETED';
+export const RESTORE_MESSAGE = 'dialogs/RESTORE_MESSAGE';
+export const ADD_MESSAGE_TO_SPAM = 'dialogs/ADD_MESSAGE_TO_SPAM';
+export const SPAM_MESSAGE = 'dialogs/SPAM_MESSAGE';
+export const SET_SELECTED_FRIEND = 'dialogs/SET_SELECTED_FRIEND';
+export const SET_MESSAGES_LOADING = 'dialogs/SET_MESSAGES_LOADING';
 
 const initialState = {
     dialogs: [] as Array<DialogsType>,
@@ -28,11 +32,35 @@ const initialState = {
 
 export type InitialStateType = typeof initialState;
 
+type PayloadType = {
+    dialogs: Array<DialogsType>,
+    messages: Array<MessagesType>,
+    count: number | null,
+    userId: number,
+    message: MessagesType,
+    messageId: string,
+    selectedFriend: ProfileType,
+    messagesLoading: boolean,
+    type: ActionsTypes
+};
+
+type ActionsTypes =
+    typeof SET_DIALOGS
+    | typeof SET_MESSAGES
+    | typeof SET_MESSAGES_LOADING
+    | typeof SET_SELECTED_FRIEND
+    | typeof ADD_MESSAGE
+    | typeof ADD_MESSAGE_TO_DELETED
+    | typeof ADD_MESSAGE_TO_SPAM
+    | typeof RESTORE_FROM_SPAM_DELETED
+    | typeof SET_NEW_MESSAGES_COUNT
+    | typeof SET_ACTIVITY_DATE;
+
 const dialogsReducer = (
     state = initialState,
-    action: any
+    {type, messages, dialogs, count, userId, message, messageId, selectedFriend, messagesLoading}: PayloadType
 ): InitialStateType => {
-    const {type, messages, dialogs, count, userId, message, messageId, selectedFriend, messagesLoading} = action;
+
     switch (type) {
         case SET_DIALOGS:
             return {...state, dialogs};
@@ -44,17 +72,17 @@ const dialogsReducer = (
             return {...state, selectedFriend};
         case ADD_MESSAGE:
             return {...state, messages: [...state.messages, message]};
-        case DELETE_MESSAGE:
+        case ADD_MESSAGE_TO_DELETED:
             return {...state, deletedMessages: [...state.deletedMessages, messageId]};
-        case SPAM_MESSAGE:
+        case ADD_MESSAGE_TO_SPAM:
             return {...state, spamedMessages: [...state.spamedMessages, messageId]};
-        case RESTORE_MESSAGE:
+        case RESTORE_FROM_SPAM_DELETED:
             return {
                 ...state,
                 deletedMessages: [...state.deletedMessages].filter(id => id !== messageId),
                 spamedMessages: [...state.spamedMessages].filter(id => id !== messageId)
             };
-        case NEW_MESSAGES_COUNT:
+        case SET_NEW_MESSAGES_COUNT:
             return {...state, newMessagesCount: count};
         case SET_ACTIVITY_DATE:
             let selectedUser = [...state.dialogs].find(dialog => dialog.id === Number(userId));
@@ -68,147 +96,56 @@ const dialogsReducer = (
     }
 };
 
-type SetMessagesLoadingActionType = {
-    type: typeof SET_MESSAGES_LOADING,
-    messagesLoading: boolean
-};
+type SetMessagesLoadingActionType = { type: typeof SET_MESSAGES_LOADING, messagesLoading: boolean };
 export const setMessagesLoading = (messagesLoading: boolean): SetMessagesLoadingActionType => ({type: SET_MESSAGES_LOADING, messagesLoading});
 
-type SetDialogsActionType = {
-    type: typeof SET_DIALOGS,
-    dialogs: Array<DialogsType>
-};
+type SetDialogsActionType = { type: typeof SET_DIALOGS, dialogs: Array<DialogsType> };
 export const setDialogs = (dialogs: Array<DialogsType>): SetDialogsActionType => ({type: SET_DIALOGS, dialogs});
 
-export const setSelectedFriend = (selectedFriend: ProfileType) => ({
-    type: SET_SELECTED_FRIEND,
-    selectedFriend
-});
+type SetSelectedFriendType = { type: typeof SET_SELECTED_FRIEND, selectedFriend: ProfileType };
+export const setSelectedFriend = (selectedFriend: ProfileType): SetSelectedFriendType => ({type: SET_SELECTED_FRIEND, selectedFriend});
 
-type SetMessagesActionType = {
-    type: typeof SET_MESSAGES,
-    messages: Array<MessagesType>
-}
+type SetMessagesActionType = { type: typeof SET_MESSAGES, messages: Array<MessagesType>}
 
 export const setMessages = (messages: Array<MessagesType>): SetMessagesActionType => ({type: SET_MESSAGES, messages});
 
-type SetActivityDateActionType = {
-    type: typeof SET_ACTIVITY_DATE,
-    userId: number
-}
+type SetActivityDateActionType = { type: typeof SET_ACTIVITY_DATE, userId: number }
 export const setActivityDate = (userId: number): SetActivityDateActionType => ({type: SET_ACTIVITY_DATE, userId});
 
-export type SetNewMessagesCountActionType = {
-    type: typeof NEW_MESSAGES_COUNT,
-    count: number
-}
-export const setNewMessagesCount = (count: number): SetNewMessagesCountActionType => ({
-    type: NEW_MESSAGES_COUNT,
-    count
-});
+export type SetNewMessagesCountActionType = { type: typeof SET_NEW_MESSAGES_COUNT, count: number }
+export const setNewMessagesCount = (count: number): SetNewMessagesCountActionType => ({type: SET_NEW_MESSAGES_COUNT, count});
 
-type AddMessageActionType = {
-    type: typeof ADD_MESSAGE,
-    message: MessagesType
-}
+type AddMessageActionType = { type: typeof ADD_MESSAGE, message: MessagesType }
 export const addMessage = (message: MessagesType): AddMessageActionType => ({type: ADD_MESSAGE, message});
 
-type AddMessageToDeletedActionType = {
-    type: typeof DELETE_MESSAGE,
-    messageId: string
-}
-export const addMessageToDeleted = (messageId: string): AddMessageToDeletedActionType => ({
-    type: DELETE_MESSAGE,
-    messageId
-});
+type AddMessageToDeletedActionType = { type: typeof ADD_MESSAGE_TO_DELETED, messageId: string }
+export const addMessageToDeleted = (messageId: string): AddMessageToDeletedActionType => ({type: ADD_MESSAGE_TO_DELETED, messageId});
 
-type AddMessageToSpamActionType = {
-    type: typeof SPAM_MESSAGE,
-    messageId: string
-}
-export const addMessageToSpam = (messageId: string): AddMessageToSpamActionType => ({type: SPAM_MESSAGE, messageId});
+type AddMessageToSpamActionType = { type: typeof ADD_MESSAGE_TO_SPAM, messageId: string }
+export const addMessageToSpam = (messageId: string): AddMessageToSpamActionType => ({type: ADD_MESSAGE_TO_SPAM, messageId});
 
-type RestoreFromSpamDeletedActionType = {
-    type: typeof RESTORE_MESSAGE,
-    messageId: string
-}
-export const restoreFromSpamDeleted = (messageId: string): RestoreFromSpamDeletedActionType => ({
-    type: RESTORE_MESSAGE,
-    messageId
-});
+type RestoreFromSpamDeletedActionType = { type: typeof RESTORE_FROM_SPAM_DELETED, messageId: string }
+export const restoreFromSpamDeleted = (messageId: string): RestoreFromSpamDeletedActionType => ({type: RESTORE_FROM_SPAM_DELETED, messageId});
 
-type FormResetType = ReturnType<typeof reset>
+export type StartChatType = { type: typeof START_CHAT, userId: number, history: any };
+export const startChat = (userId: number, history: any): StartChatType => ({type: START_CHAT, userId, history});
 
-type ActionsTypes =
-    SetDialogsActionType
-    | SetMessagesActionType
-    | SetActivityDateActionType
-    | SetNewMessagesCountActionType
-    | AddMessageActionType
-    | AddMessageToDeletedActionType
-    | AddMessageToSpamActionType
-    | RestoreFromSpamDeletedActionType
-    | SetMessagesLoadingActionType
-    | FormResetType;
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>
+export type SendMessageType = { type: typeof SEND_MESSAGE, userId: number, message: string };
+export const sendMessage = (userId: number, message: string): SendMessageType => ({type: SEND_MESSAGE, userId, message});
 
-export const getDialogs = (): ThunkType => async (dispatch) => {
-    const response = await dialogsAPI.getDialogs();
-    dispatch(setDialogs(response));
-};
+export type GetMessagesType = { type: typeof GET_MESSAGES, userId: number }
+export const getMessages = (userId: number): GetMessagesType => ({type: GET_MESSAGES, userId});
 
-export const startChat = (userId: number, history: any): ThunkType => async () => {
-    const {resultCode} = await dialogsAPI.startChat(userId);
-    if (resultCode === ResultCodes.Success) {
-        history.push(`/dialogs/${userId}`)
-    }
-};
+export type DeleteMessagesType = { type: typeof DELETE_MESSAGE, messageId: string }
+export const deleteMessage = (messageId: string): DeleteMessagesType => ({type: DELETE_MESSAGE, messageId});
 
-export const sendMessage = (userId: number, message: string): ThunkType => async (dispatch) => {
-    const {data, resultCode} = await dialogsAPI.sendMessage(userId, message);
-    if (resultCode === ResultCodes.Success) {
-        dispatch(addMessage(data.message));
-        dispatch(reset('message'));
-    }
-};
+export type RestoreMessagesType = { type: typeof RESTORE_MESSAGE, messageId: string }
+export const restoreMessage = (messageId: string): RestoreMessagesType => ({type: RESTORE_MESSAGE, messageId});
 
-export const getMessages = (userId: number): ThunkType => async (dispatch) => {
-    dispatch(setMessagesLoading(true));
-    const {error, items} = await dialogsAPI.getMessages(userId);
-    const data = await profileAPI.getProfile(userId);
-    if (!error) {
-        dispatch(setMessages(items));
-        dispatch(setActivityDate(userId));
-        dispatch(setSelectedFriend(data));
-    }
-    dispatch(setMessagesLoading(false));
+export type SpamMessagesType = { type: typeof SPAM_MESSAGE, messageId: string }
+export const spamMessage = (messageId: string): SpamMessagesType => ({type: SPAM_MESSAGE, messageId});
 
-};
-
-export const deleteMessage = (messageId: string): ThunkType => async (dispatch) => {
-    const {resultCode} = await dialogsAPI.deleteMessage(messageId);
-    if (resultCode === ResultCodes.Success) {
-        dispatch(addMessageToDeleted(messageId));
-    }
-};
-
-export const restoreMessage = (messageId: string): ThunkType => async (dispatch) => {
-    const {resultCode} = await dialogsAPI.restoreMessage(messageId);
-    if (resultCode === ResultCodes.Success) {
-        dispatch(restoreFromSpamDeleted(messageId));
-    }
-};
-
-export const spamMessage = (messageId: string): ThunkType => async (dispatch) => {
-    const data = await dialogsAPI.spamMessage(messageId);
-    if (data.resultCode === ResultCodes.Success) {
-        dispatch(addMessageToSpam(messageId));
-    }
-};
-
-export const requestNewMessagesCount = (): ThunkType => async (dispatch) => {
-    const data = await dialogsAPI.newMessagesCount();
-    dispatch(setNewMessagesCount(data));
-};
+export const requestNewMessagesCount = () => ({type: GET_NEW_MESSAGES_COUNT});
+export const getDialogs = () => ({type: GET_DIALOGS});
 
 export default dialogsReducer;

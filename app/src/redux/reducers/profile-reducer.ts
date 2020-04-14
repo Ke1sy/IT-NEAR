@@ -1,7 +1,4 @@
-import {profileAPI, ResultCodes} from "../../api/api";
-import {reset, stopSubmit} from 'redux-form';
 import {PhotosType, ProfileType} from "./types";
-import {enqueueSnackbar} from "./app-reducer";
 
 export const UPDATE_STATUS = 'profile/UPDATE_STATUS';
 export const GET_STATUS = 'profile/GET_STATUS';
