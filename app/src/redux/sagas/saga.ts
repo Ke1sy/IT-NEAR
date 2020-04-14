@@ -9,7 +9,14 @@ import {
     toggleProfileLoading,
     setPhoto,
     getIsUserFollowed,
-    updateIsFollowed
+    updateIsFollowed,
+    GET_STATUS,
+    setStatus,
+    GetStatusType,
+    SET_STATUS,
+    SetUserStatusType,
+    UPDATE_USER_PROFILE,
+    getUserProfile, UpdateProfileInfoType, GetUserProfileType, loadPhotoType
 } from "../reducers/profile-reducer";
 import {setCurrentUserInfo} from "../reducers/auth-reducer";
 import {enqueueSnackbar} from "../reducers/app-reducer";
@@ -24,9 +31,10 @@ import {
     toggleFollowInProgress, toggleIsLoading,
     UNFOLLOW,
 } from "../reducers/users-reducer";
+import {ProfileType} from "../reducers/types";
+import {stopSubmit} from "redux-form";
 
 //PROFILE
-type GetUserProfileType = { type: typeof GET_USER_PROFILE, id: number, updateCurrentUserInfo: boolean }
 function* getUserProfileAsync({id, updateCurrentUserInfo}: GetUserProfileType) {
     try {
         const state = yield select();
@@ -48,7 +56,41 @@ function* getUserProfileAsync({id, updateCurrentUserInfo}: GetUserProfileType) {
     }
 }
 
-type loadPhotoType = { type: typeof LOAD_PHOTO, photo: any };
+function* updateProfileInfoAsync({info, userId}: UpdateProfileInfoType) {
+    try {
+        const {resultCode, messages} =  yield call(updateProfile, info);
+        if (resultCode === ResultCodes.Success) {
+            yield put(getUserProfile(userId, true));
+            yield put(enqueueSnackbar({message: 'Profile successfully updated!', options: {variant: 'success'}}))
+        } else {
+            yield put(stopSubmit("settings", {_error: messages}));
+        }
+    } catch (e) {
+        yield put(setUserProfileError(e.message));
+    }
+}
+
+function* getStatusAsync({id}: GetStatusType) {
+    try {
+        const data = yield call(getUserStatus, id);
+        yield put(setStatus(data));
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* setUserStatusAsync({status}: SetUserStatusType) {
+    try {
+        const {resultCode} = yield call(setUserStatus, status);
+        if (resultCode === ResultCodes.Success) {
+            yield put(setStatus(status));
+            yield put(enqueueSnackbar({message: 'Status updated!', options: {variant: 'success'}}))
+        }
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
 function* loadPhotoAsync({photo}: loadPhotoType) {
     try {
         const {data, resultCode, messages} = yield call(loadPhoto, photo);
@@ -110,6 +152,14 @@ function* toggleFollowAsync({action, id, updateProfileFollow}: FollowActionType)
 }
 
 // API REQUESTS
+async function getUserStatus(id: number) {
+    return await profileAPI.getStatus(id);
+}
+
+async function setUserStatus(status: string) {
+    return await profileAPI.setStatus(status)
+}
+
 async function getUserIsFollowed(id: number) {
     return await usersAPI.isUserFollowed(id);
 }
@@ -124,6 +174,10 @@ async function unfollowUser(id: number) {
 
 async function getProfileById(id: number) {
     return await profileAPI.getProfile(id);
+}
+
+async function updateProfile(info: ProfileType) {
+    return await profileAPI.updateProfileInfo(info);
 }
 
 async function requestUsers(currentPage: number, pageSize: number, searchText: string) {
@@ -142,6 +196,9 @@ function* mySaga() {
     yield takeEvery(FOLLOW, toggleFollowAsync);
     yield takeEvery(UNFOLLOW, toggleFollowAsync);
     yield takeEvery(REQUEST_USERS, requestUsersAsync);
+    yield takeEvery(GET_STATUS, getStatusAsync);
+    yield takeEvery(SET_STATUS, setUserStatusAsync);
+    yield takeEvery(UPDATE_USER_PROFILE, updateProfileInfoAsync);
 }
 
 export default mySaga;

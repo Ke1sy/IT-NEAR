@@ -11,13 +11,13 @@ type PropsType = {
     isOwner: boolean
     setUserStatus: (status: string) => void
     loadPhoto: (photo: any) => void
-    setProfileInfo: (info: UpdatedProfileType) => void,
+    updateInfo: (info: UpdatedProfileType) => void,
     currentUserInfo: ProfileType | null,
     profileIsLoading: boolean,
     followed: boolean
 }
 
-const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile, status, setUserStatus, isOwner, loadPhoto, setProfileInfo, profileIsLoading, followed}) => {
+const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile, status, setUserStatus, isOwner, loadPhoto, updateInfo, profileIsLoading, followed}) => {
     return (
         <ProfileLayout
             profile={profile}
@@ -32,7 +32,7 @@ const Profile: FC<PropsType & RouteComponentProps> = ({currentUserInfo, profile,
                 {isOwner &&
                 <Route exact path={`/settings`}>
                     {currentUserInfo &&
-                    <SettingsReduxForm profile={currentUserInfo} onSubmit={setProfileInfo}/>
+                    <SettingsReduxForm profile={currentUserInfo} onSubmit={updateInfo}/>
                     }
                 </Route>
                 }

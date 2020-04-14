@@ -130,7 +130,7 @@ export const profileAPI = {
             .then(response => response.data);
     },
 
-    setProfileInfo: (info: ProfileType) => {
+    updateProfileInfo: (info: ProfileType) => {
         return instance.put<WithoutDataResponseType>(`profile`, info)
             .then(response => response.data);
     }

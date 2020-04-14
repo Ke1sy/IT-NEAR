@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {
     getUserProfile,
     getUserStatus, getIsUserFollowed,
-    loadPhoto, setProfileInfo,
+    loadPhoto, updateProfileInfo,
     setUserProfile,
     setUserStatus,
 } from "../../redux/reducers/profile-reducer";
@@ -40,7 +40,7 @@ type MapDispatchPropsType = {
     setUserStatus: (status: string) => void
     setUserProfile: (profile: ProfileType) => void,
     loadPhoto: (photo: any) => void,
-    setProfileInfo: (info: ProfileType, userId: number) => void,
+    updateProfileInfo: (info: ProfileType, userId: number) => void,
     getIsUserFollowed: (id: number) => void
 }
 
@@ -55,7 +55,7 @@ const ProfileContainer: FC<PropsType> = ({
                                              status,
                                              setUserStatus,
                                              loadPhoto,
-                                             setProfileInfo,
+                                             updateProfileInfo,
                                              profileError,
                                              profileIsLoading,
                                              currentUserInfo,
@@ -83,7 +83,7 @@ const ProfileContainer: FC<PropsType> = ({
         checkProfile();
     }, [id, isAuth, getUserProfile, userId, getUserStatus, history]);
 
-    const updateProfileInfo = (info: UpdatedProfileType) => {
+    const updateInfo = (info: UpdatedProfileType) => {
         const {aboutMe, lookingForAJob, lookingForAJobDescription, fullName, ...contacts} = info;
 
         if (userId && profile) {
@@ -98,7 +98,7 @@ const ProfileContainer: FC<PropsType> = ({
                     ...contacts
                 }
             };
-            setProfileInfo(updatedProfile, userId)
+            updateProfileInfo(updatedProfile, userId)
         }
     };
 
@@ -115,7 +115,7 @@ const ProfileContainer: FC<PropsType> = ({
             setUserStatus={setUserStatus}
             isOwner={isOwner}
             loadPhoto={loadPhoto}
-            setProfileInfo={updateProfileInfo}
+            updateInfo={updateInfo}
             currentUserInfo={currentUserInfo}
             profileIsLoading={profileIsLoading}
             followed={isFollowed}
@@ -143,7 +143,7 @@ export default compose(
         setUserStatus,
         setUserProfile,
         loadPhoto,
-        setProfileInfo,
+        updateProfileInfo,
         getIsUserFollowed
     }),
     withRouter,

@@ -19,7 +19,6 @@ type PropsType = {
     currentUserInfo: ProfileType | null
 }
 
-
 const PostsContainer: FC<PropsType> = ({authorId, isOwner, author, currentUserInfo}) => {
     const {data, loading: dataLoading} = useQuery<PostsData, PostsDataVariables>(GET_POSTS, {
         variables: {authorId},
