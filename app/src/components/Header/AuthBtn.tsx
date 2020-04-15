@@ -1,10 +1,5 @@
-import React, {FC, useEffect} from 'react';
-import {
-    Avatar,
-    Button, Hidden,
-    Link,
-    Typography, WithStyles,
-} from "@material-ui/core";
+import React, {FC} from 'react';
+import {Avatar, Button, Hidden, Link, Typography, WithStyles} from "@material-ui/core";
 import {NavLink} from "react-router-dom";
 import userPlaceholder from "../../assets/images/user-placeholder.png";
 import {ProfileType} from "../../redux/reducers/types";

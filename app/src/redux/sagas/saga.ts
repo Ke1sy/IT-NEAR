@@ -1,58 +1,71 @@
 import {takeEvery, put, call, select} from 'redux-saga/effects';
-import {dialogsAPI, profileAPI, ResultCodes, usersAPI} from "../../api/api";
+import {authAPI, dialogsAPI, profileAPI, ResultCodeForCaptcha, ResultCodes, securityAPI, usersAPI} from "../../api/api";
 import {
-    GET_USER_PROFILE,
-    LOAD_PHOTO,
-    GET_IS_FOLLOWED,
+    GET_USER_PROFILE_ASYNC,
+    LOAD_PHOTO_ASYNC,
+    GET_IS_FOLLOWED_ASYNC,
     setUserProfile,
     setUserProfileError,
     toggleProfileLoading,
     setPhoto,
     getIsUserFollowed,
     updateIsFollowed,
-    GET_STATUS,
+    GET_STATUS_ASYNC,
     setStatus,
     GetStatusType,
-    SET_STATUS,
+    SET_STATUS_ASYNC,
     SetUserStatusType,
-    UPDATE_USER_PROFILE,
+    UPDATE_USER_PROFILE_ASYNC,
     getUserProfile, UpdateProfileInfoType, GetUserProfileType, loadPhotoType
 } from "../reducers/profile-reducer";
-import {setCurrentUserInfo} from "../reducers/auth-reducer";
-import {enqueueSnackbar} from "../reducers/app-reducer";
+import {
+    AUTH_ASYNC,
+    LOGIN_ASYNC,
+    LOGOUT_ASYNC,
+    LoginType,
+    LogoutType,
+    setCaptchaUrl,
+    setCurrentUserInfo,
+    setUserData
+} from "../reducers/auth-reducer";
+import {enqueueSnackbar, INIT_APP_ASYNC, setAppIsInited} from "../reducers/app-reducer";
 import {getCurrentUserId} from "../reducers/auth-selectors";
 import {getProfile} from "../reducers/profile-selectors";
 import {
+    FOLLOW_ASYNC,
+    REQUEST_USERS_ASYNC,
+    UNFOLLOW_ASYNC,
     acceptFollow,
     acceptUnfollow,
-    FOLLOW,
-    REQUEST_USERS,
     setPage, setSearchText, setUsers, setUsersTotalCount,
     toggleFollowInProgress, toggleIsLoading,
-    UNFOLLOW,
 } from "../reducers/users-reducer";
 import {ProfileType} from "../reducers/types";
 import {reset, stopSubmit} from "redux-form";
 import {
-    addMessage,
-    addMessageToDeleted, addMessageToSpam,
-    DELETE_MESSAGE,
+    DELETE_MESSAGE_ASYNC,
     DeleteMessagesType,
-    GET_DIALOGS,
-    GET_MESSAGES, GET_NEW_MESSAGES_COUNT,
+    GET_DIALOGS_ASYNC,
+    GET_MESSAGES_ASYNC, GET_NEW_MESSAGES_COUNT_ASYNC,
+    RESTORE_MESSAGE_ASYNC,
+    SEND_MESSAGE_ASYNC,
+    SPAM_MESSAGE_ASYNC,
+    START_CHAT_ASYNC,
     GetMessagesType,
-    RESTORE_MESSAGE,
-    restoreFromSpamDeleted,
     RestoreMessagesType,
-    SEND_MESSAGE,
     SendMessageType,
+    SpamMessagesType,
+    StartChatType,
+    requestNewMessagesCount,
+    addMessage,
+    addMessageToDeleted,
+    addMessageToSpam,
+    restoreFromSpamDeleted,
     setActivityDate,
     setDialogs,
     setMessages,
     setMessagesLoading, setNewMessagesCount,
-    setSelectedFriend, SPAM_MESSAGE, SpamMessagesType,
-    START_CHAT,
-    StartChatType
+    setSelectedFriend,
 } from "../reducers/dialogs-reducer";
 
 //PROFILE
@@ -118,7 +131,7 @@ function* loadPhotoAsync({photo}: loadPhotoType) {
         if (resultCode === ResultCodes.Success) {
             const state = yield select();
             yield put(setPhoto(data.photos));
-            yield put({type: GET_USER_PROFILE, id: getCurrentUserId(state), updateCurrentUserInfo: true});
+            yield put({type: GET_USER_PROFILE_ASYNC, id: getCurrentUserId(state), updateCurrentUserInfo: true});
         } else {
             yield put(enqueueSnackbar({message: messages, options: {variant: 'error'}}))
         }
@@ -128,7 +141,7 @@ function* loadPhotoAsync({photo}: loadPhotoType) {
 }
 
 //USERS
-type setUserIsFollowedType = { type: typeof GET_IS_FOLLOWED, id: number };
+type setUserIsFollowedType = { type: typeof GET_IS_FOLLOWED_ASYNC, id: number };
 function* setUserIsFollowedAsync({id}: setUserIsFollowedType) {
     try {
         const isFollowed = yield call(getUserIsFollowed, id);
@@ -138,7 +151,7 @@ function* setUserIsFollowedAsync({id}: setUserIsFollowedType) {
     }
 }
 
-type RequestUsersType = { type: typeof REQUEST_USERS, currentPage: number, pageSize: number, searchText: string }
+type RequestUsersType = { type: typeof REQUEST_USERS_ASYNC, currentPage: number, pageSize: number, searchText: string }
 function* requestUsersAsync({currentPage, pageSize, searchText}: RequestUsersType) {
     try {
         yield put(setSearchText(searchText));
@@ -153,7 +166,7 @@ function* requestUsersAsync({currentPage, pageSize, searchText}: RequestUsersTyp
     }
 }
 
-type FollowActionType = { type: typeof FOLLOW | typeof UNFOLLOW, action: 'follow' | 'unfollow', id: number, updateProfileFollow: boolean };
+type FollowActionType = { type: typeof FOLLOW_ASYNC | typeof UNFOLLOW_ASYNC, action: 'follow' | 'unfollow', id: number, updateProfileFollow: boolean };
 function* toggleFollowAsync({action, id, updateProfileFollow}: FollowActionType) {
     try {
         yield put(toggleFollowInProgress(true, id));
@@ -171,7 +184,8 @@ function* toggleFollowAsync({action, id, updateProfileFollow}: FollowActionType)
         yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
     }
 }
-//dialogs
+
+//DIALOGS
 function* getDialogsAsync() {
     try {
         const response = yield call(requestDialogs);
@@ -262,7 +276,77 @@ function* getNewMessagesCountAsync() {
     }
 }
 
+//AUTH
+function* authenticateAsync() {
+    try {
+        const {data, resultCode} = yield call(authenticate);
+        if (resultCode === ResultCodes.Success) {
+            const {id, login, email} = data;
+            yield put(setUserData(id, login, email, true));
+            yield put(getUserProfile(id, true));
+            yield put(requestNewMessagesCount());
+        }
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* loginAsync({email, password, rememberMe, captcha}: LoginType) {
+    try {
+        const {resultCode, messages} = yield call(login, email, password, rememberMe, captcha);
+        if (resultCode === ResultCodes.Success) {
+            yield put({type: AUTH_ASYNC});
+        } else {
+            if (resultCode === ResultCodeForCaptcha.CaptchaRequired) {
+                const {url} = yield call(getCaptcha);
+                yield put(setCaptchaUrl(url));
+            }
+            yield put(stopSubmit("login", {_error: messages}));
+        }
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* logoutAsync({history}: LogoutType) {
+    try {
+        const {resultCode} = yield call(logout);
+        if (resultCode === ResultCodes.Success) {
+            yield put(setUserData(null, null, null, false));
+            history.push('/login')
+        }
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+function* appInitAsync() {
+    try {
+        yield put({type: AUTH_ASYNC});
+        yield put(setAppIsInited());
+    } catch (e) {
+        yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
+    }
+}
+
+
 // API REQUESTS
+async function authenticate() {
+    return await authAPI.auth();
+}
+
+async function login(email: string, password: string, rememberMe: boolean, captcha: string | null) {
+    return await authAPI.login(email, password, rememberMe, captcha)
+}
+
+async function logout() {
+    return await authAPI.logout();
+}
+
+async function getCaptcha() {
+    return await securityAPI.getCaptcha();
+}
+
 async function getUserStatus(id: number) {
     return await profileAPI.getStatus(id);
 }
@@ -331,23 +415,27 @@ async function newMessagesCount() {
 
 //SAGA
 function* mySaga() {
-    yield takeEvery(GET_USER_PROFILE, getUserProfileAsync);
-    yield takeEvery(LOAD_PHOTO, loadPhotoAsync);
-    yield takeEvery(GET_IS_FOLLOWED, setUserIsFollowedAsync);
-    yield takeEvery(FOLLOW, toggleFollowAsync);
-    yield takeEvery(UNFOLLOW, toggleFollowAsync);
-    yield takeEvery(REQUEST_USERS, requestUsersAsync);
-    yield takeEvery(GET_STATUS, getStatusAsync);
-    yield takeEvery(SET_STATUS, setUserStatusAsync);
-    yield takeEvery(UPDATE_USER_PROFILE, updateProfileInfoAsync);
-    yield takeEvery(GET_DIALOGS, getDialogsAsync);
-    yield takeEvery(START_CHAT, startChatAsync);
-    yield takeEvery(SEND_MESSAGE, sendMessageAsync);
-    yield takeEvery(GET_MESSAGES, getMessagesAsync);
-    yield takeEvery(DELETE_MESSAGE, deleteMessagesAsync);
-    yield takeEvery(RESTORE_MESSAGE, restoreMessagesAsync);
-    yield takeEvery(SPAM_MESSAGE, spamMessagesAsync);
-    yield takeEvery(GET_NEW_MESSAGES_COUNT, getNewMessagesCountAsync);
+    yield takeEvery(INIT_APP_ASYNC, appInitAsync);
+    yield takeEvery(AUTH_ASYNC, authenticateAsync);
+    yield takeEvery(LOGIN_ASYNC, loginAsync);
+    yield takeEvery(LOGOUT_ASYNC, logoutAsync);
+    yield takeEvery(GET_USER_PROFILE_ASYNC, getUserProfileAsync);
+    yield takeEvery(LOAD_PHOTO_ASYNC, loadPhotoAsync);
+    yield takeEvery(GET_IS_FOLLOWED_ASYNC, setUserIsFollowedAsync);
+    yield takeEvery(FOLLOW_ASYNC, toggleFollowAsync);
+    yield takeEvery(UNFOLLOW_ASYNC, toggleFollowAsync);
+    yield takeEvery(REQUEST_USERS_ASYNC, requestUsersAsync);
+    yield takeEvery(GET_STATUS_ASYNC, getStatusAsync);
+    yield takeEvery(SET_STATUS_ASYNC, setUserStatusAsync);
+    yield takeEvery(UPDATE_USER_PROFILE_ASYNC, updateProfileInfoAsync);
+    yield takeEvery(GET_DIALOGS_ASYNC, getDialogsAsync);
+    yield takeEvery(START_CHAT_ASYNC, startChatAsync);
+    yield takeEvery(SEND_MESSAGE_ASYNC, sendMessageAsync);
+    yield takeEvery(GET_MESSAGES_ASYNC, getMessagesAsync);
+    yield takeEvery(DELETE_MESSAGE_ASYNC, deleteMessagesAsync);
+    yield takeEvery(RESTORE_MESSAGE_ASYNC, restoreMessagesAsync);
+    yield takeEvery(SPAM_MESSAGE_ASYNC, spamMessagesAsync);
+    yield takeEvery(GET_NEW_MESSAGES_COUNT_ASYNC, getNewMessagesCountAsync);
 }
 
 export default mySaga;

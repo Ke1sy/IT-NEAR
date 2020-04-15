@@ -1,11 +1,12 @@
 import {updateObjectInArray} from "../../utils/helpers";
 import {UserType} from "./types";
 
-export const FOLLOW = 'users/FOLLOW';
+export const FOLLOW_ASYNC = 'users/FOLLOW_ASYNC';
+export const UNFOLLOW_ASYNC = 'users/UNFOLLOW_ASYNC';
+export const REQUEST_USERS_ASYNC = 'users/REQUEST_USERS_ASYNC';
+
 export const FOLLOW_ACCEPT = 'users/FOLLOW_ACCEPT';
-export const UNFOLLOW = 'users/UNFOLLOW';
 export const UNFOLLOW_ACCEPT = 'users/UNFOLLOW_ACCEPT';
-export const REQUEST_USERS = 'users/REQUEST_USERS';
 export const SET_USERS = 'users/SET_USERS';
 export const SET_PAGE = 'users/SET_PAGE';
 export const SET_TOTAL_COUNT = 'users/SET_TOTAL_COUNT';
@@ -24,7 +25,7 @@ const initialState = {
 };
 
 type PayloadType = {
-    type: any,
+    type: ActionsTypes,
     userId: number,
     users: Array<UserType>,
     page: number,
@@ -33,6 +34,16 @@ type PayloadType = {
     inProgress: boolean,
     query: string,
 };
+
+type ActionsTypes =
+    typeof FOLLOW_ACCEPT
+    | typeof UNFOLLOW_ACCEPT
+    | typeof SET_USERS
+    | typeof SET_PAGE
+    | typeof SET_TOTAL_COUNT
+    | typeof TOGGLE_IS_LOADING
+    | typeof SET_SEARCH_TEXT
+    | typeof TOGGLE_FOLLOW_IN_PROGRESS;
 
 export type InitialStateType = typeof initialState;
 
@@ -96,21 +107,21 @@ type SetSearchTextActionType = { type: typeof SET_SEARCH_TEXT, query: string }
 export const setSearchText = (query: string): SetSearchTextActionType => ({type: SET_SEARCH_TEXT, query});
 
 export const requestUsers = (currentPage: number, pageSize: number, searchText: string) => ({
-    type: REQUEST_USERS,
+    type: REQUEST_USERS_ASYNC,
     currentPage,
     pageSize,
     searchText
 });
 
 export const follow = (id: number, updateProfileFollow: boolean) => ({
-    type: FOLLOW,
+    type: FOLLOW_ASYNC,
     action: 'follow',
     id,
     updateProfileFollow
 });
 
 export const unfollow = (id: number, updateProfileFollow: boolean) => ({
-    type: UNFOLLOW,
+    type: UNFOLLOW_ASYNC,
     action: 'unfollow',
     id,
     updateProfileFollow

@@ -1,9 +1,8 @@
-import {authenticate} from "./auth-reducer";
-
-const SET_INITED = 'app/SET_INITED';
+export const INIT_APP_ASYNC = 'app/INIT_APP_ASYNC';
 export const ENQUEUE_SNACKBAR = 'app/ENQUEUE_SNACKBAR';
 export const CLOSE_SNACKBAR = 'app/CLOSE_SNACKBAR';
 export const REMOVE_SNACKBAR = 'app/REMOVE_SNACKBAR';
+const SET_INITED = 'app/SET_INITED';
 
 type InitialStateType = {
     inited: boolean,
@@ -15,7 +14,9 @@ const initialState: InitialStateType = {
     notifications: [],
 };
 
-const appReducer = (state = initialState, {type, key, notification, dismissAll}: { type: any, key: any, dismissAll: any, notification: any }): InitialStateType => {
+type ActionsTypes = typeof SET_INITED | typeof ENQUEUE_SNACKBAR | typeof CLOSE_SNACKBAR | typeof REMOVE_SNACKBAR;
+
+const appReducer = (state = initialState, {type, key, notification, dismissAll}: { type: ActionsTypes, key: any, dismissAll: any, notification: any }): InitialStateType => {
     switch (type) {
         case SET_INITED:
             return {
@@ -39,8 +40,8 @@ const appReducer = (state = initialState, {type, key, notification, dismissAll}:
                 ...state,
                 notifications: state.notifications.map(notification => (
                     (dismissAll || notification.key === key)
-                        ? { ...notification, dismissed: true }
-                        : { ...notification }
+                        ? {...notification, dismissed: true}
+                        : {...notification}
                 )),
             };
 
@@ -56,9 +57,6 @@ const appReducer = (state = initialState, {type, key, notification, dismissAll}:
     }
 };
 
-type SetAppIsInitedActionType = {
-    type: typeof SET_INITED
-}
 export const enqueueSnackbar = (notification: any) => {
     const key = notification.options && notification.options.key;
     return {
@@ -70,16 +68,11 @@ export const enqueueSnackbar = (notification: any) => {
     };
 };
 
-export const removeSnackbar = (key: any) => ({
-    type: REMOVE_SNACKBAR,
-    key,
-});
+export const removeSnackbar = (key: any) => ({type: REMOVE_SNACKBAR, key});
 
+type SetAppIsInitedActionType = { type: typeof SET_INITED }
 export const setAppIsInited = (): SetAppIsInitedActionType => ({type: SET_INITED});
 
-export const appInitialize = () => (dispatch: any) => {
-    let promise = dispatch(authenticate());
-    Promise.all([promise]).then(() => dispatch(setAppIsInited()));
-};
+export const appInitialize = () => ({type: INIT_APP_ASYNC});
 
 export default appReducer;

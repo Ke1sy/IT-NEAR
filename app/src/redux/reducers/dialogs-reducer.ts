@@ -1,21 +1,22 @@
 import {DialogsType, MessagesType, ProfileType} from "./types";
 
-export const GET_DIALOGS = 'dialogs/GET_DIALOGS';
+export const GET_DIALOGS_ASYNC = 'dialogs/GET_DIALOGS_ASYNC';
+export const GET_MESSAGES_ASYNC = 'dialogs/GET_MESSAGES_ASYNC';
+export const SEND_MESSAGE_ASYNC = 'dialogs/SEND_MESSAGE_ASYNC';
+export const START_CHAT_ASYNC = 'dialogs/START_CHAT_ASYNC';
+export const GET_NEW_MESSAGES_COUNT_ASYNC = 'dialogs/GET_NEW_MESSAGES_COUNT_ASYNC';
+export const DELETE_MESSAGE_ASYNC = 'dialogs/DELETE_MESSAGE_ASYNC';
+export const RESTORE_MESSAGE_ASYNC = 'dialogs/RESTORE_MESSAGE_ASYNC';
+export const SPAM_MESSAGE_ASYNC = 'dialogs/SPAM_MESSAGE_ASYNC';
+
 export const SET_DIALOGS = 'dialogs/SET_DIALOGS';
-export const GET_MESSAGES = 'dialogs/GET_MESSAGES';
 export const SET_MESSAGES = 'dialogs/SET_MESSAGES';
-export const START_CHAT = 'dialogs/START_CHAT';
-export const SEND_MESSAGE = 'dialogs/SEND_MESSAGE';
 export const SET_NEW_MESSAGES_COUNT = 'dialogs/SET_NEW_MESSAGES_COUNT';
-export const GET_NEW_MESSAGES_COUNT = 'dialogs/GET_NEW_MESSAGES_COUNT';
 export const SET_ACTIVITY_DATE = 'dialogs/SET_ACTIVITY_DATE';
 export const ADD_MESSAGE = 'dialogs/ADD_MESSAGE';
-export const DELETE_MESSAGE = 'dialogs/DELETE_MESSAGE';
 export const ADD_MESSAGE_TO_DELETED = 'dialogs/ADD_MESSAGE_TO_DELETED';
 export const RESTORE_FROM_SPAM_DELETED = 'dialogs/RESTORE_FROM_SPAM_DELETED';
-export const RESTORE_MESSAGE = 'dialogs/RESTORE_MESSAGE';
 export const ADD_MESSAGE_TO_SPAM = 'dialogs/ADD_MESSAGE_TO_SPAM';
-export const SPAM_MESSAGE = 'dialogs/SPAM_MESSAGE';
 export const SET_SELECTED_FRIEND = 'dialogs/SET_SELECTED_FRIEND';
 export const SET_MESSAGES_LOADING = 'dialogs/SET_MESSAGES_LOADING';
 
@@ -106,7 +107,6 @@ type SetSelectedFriendType = { type: typeof SET_SELECTED_FRIEND, selectedFriend:
 export const setSelectedFriend = (selectedFriend: ProfileType): SetSelectedFriendType => ({type: SET_SELECTED_FRIEND, selectedFriend});
 
 type SetMessagesActionType = { type: typeof SET_MESSAGES, messages: Array<MessagesType>}
-
 export const setMessages = (messages: Array<MessagesType>): SetMessagesActionType => ({type: SET_MESSAGES, messages});
 
 type SetActivityDateActionType = { type: typeof SET_ACTIVITY_DATE, userId: number }
@@ -127,25 +127,25 @@ export const addMessageToSpam = (messageId: string): AddMessageToSpamActionType 
 type RestoreFromSpamDeletedActionType = { type: typeof RESTORE_FROM_SPAM_DELETED, messageId: string }
 export const restoreFromSpamDeleted = (messageId: string): RestoreFromSpamDeletedActionType => ({type: RESTORE_FROM_SPAM_DELETED, messageId});
 
-export type StartChatType = { type: typeof START_CHAT, userId: number, history: any };
-export const startChat = (userId: number, history: any): StartChatType => ({type: START_CHAT, userId, history});
+export type StartChatType = { type: typeof START_CHAT_ASYNC, userId: number, history: any };
+export const startChat = (userId: number, history: any): StartChatType => ({type: START_CHAT_ASYNC, userId, history});
 
-export type SendMessageType = { type: typeof SEND_MESSAGE, userId: number, message: string };
-export const sendMessage = (userId: number, message: string): SendMessageType => ({type: SEND_MESSAGE, userId, message});
+export type SendMessageType = { type: typeof SEND_MESSAGE_ASYNC, userId: number, message: string };
+export const sendMessage = (userId: number, message: string): SendMessageType => ({type: SEND_MESSAGE_ASYNC, userId, message});
 
-export type GetMessagesType = { type: typeof GET_MESSAGES, userId: number }
-export const getMessages = (userId: number): GetMessagesType => ({type: GET_MESSAGES, userId});
+export type GetMessagesType = { type: typeof GET_MESSAGES_ASYNC, userId: number }
+export const getMessages = (userId: number): GetMessagesType => ({type: GET_MESSAGES_ASYNC, userId});
 
-export type DeleteMessagesType = { type: typeof DELETE_MESSAGE, messageId: string }
-export const deleteMessage = (messageId: string): DeleteMessagesType => ({type: DELETE_MESSAGE, messageId});
+export type DeleteMessagesType = { type: typeof DELETE_MESSAGE_ASYNC, messageId: string }
+export const deleteMessage = (messageId: string): DeleteMessagesType => ({type: DELETE_MESSAGE_ASYNC, messageId});
 
-export type RestoreMessagesType = { type: typeof RESTORE_MESSAGE, messageId: string }
-export const restoreMessage = (messageId: string): RestoreMessagesType => ({type: RESTORE_MESSAGE, messageId});
+export type RestoreMessagesType = { type: typeof RESTORE_MESSAGE_ASYNC, messageId: string }
+export const restoreMessage = (messageId: string): RestoreMessagesType => ({type: RESTORE_MESSAGE_ASYNC, messageId});
 
-export type SpamMessagesType = { type: typeof SPAM_MESSAGE, messageId: string }
-export const spamMessage = (messageId: string): SpamMessagesType => ({type: SPAM_MESSAGE, messageId});
+export type SpamMessagesType = { type: typeof SPAM_MESSAGE_ASYNC, messageId: string }
+export const spamMessage = (messageId: string): SpamMessagesType => ({type: SPAM_MESSAGE_ASYNC, messageId});
 
-export const requestNewMessagesCount = () => ({type: GET_NEW_MESSAGES_COUNT});
-export const getDialogs = () => ({type: GET_DIALOGS});
+export const requestNewMessagesCount = () => ({type: GET_NEW_MESSAGES_COUNT_ASYNC});
+export const getDialogs = () => ({type: GET_DIALOGS_ASYNC});
 
 export default dialogsReducer;

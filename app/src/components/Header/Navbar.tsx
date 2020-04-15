@@ -81,7 +81,7 @@ const Navbar: FC<PropsType & WithStyles> = ({newMessagesCount, userId, openLogou
 
             <Hidden smUp>
                 {MOBILE_LINKS.map(({id, text, url, icon}) => {
-                        if (id == 5 && !isAuth) return null;
+                        if (id === 5 && !isAuth) return null;
                         return (
                             <ListItem key={id} className={classes.listItem}>
                                 <Link component={url ? NavLink : 'span'}
