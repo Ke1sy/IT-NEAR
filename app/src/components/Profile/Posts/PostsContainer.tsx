@@ -22,6 +22,7 @@ type PropsType = {
 const PostsContainer: FC<PropsType> = ({authorId, isOwner, author, currentUserInfo}) => {
     const {data, loading: dataLoading} = useQuery<PostsData, PostsDataVariables>(GET_POSTS, {
         variables: {authorId},
+
     });
     const [addPost, {loading: addPostLoading}] = useMutation<AddPostMutation, AddPostMutationVariables>(ADD_POST);
     const [deletePost] = useMutation<DeletePostMutation, DeletePostMutationVariables>(DELETE_POST);
