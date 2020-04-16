@@ -47,7 +47,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && rimraf ../public && mv build ../public",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "apollo:generate": "apollo codegen:generate --target=typescript --excludes=node_modules/* --includes=src/server/*.ts --endpoint=http://localhost:3005/graphql  --tagName=gql --outputFlat src/server/types --passthroughCustomScalars --customScalarsPrefix=Custom"
