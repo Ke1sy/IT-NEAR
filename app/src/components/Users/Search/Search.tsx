@@ -1,23 +1,28 @@
 import React, {FC} from 'react';
-import styles from './search.module.scss';
 import SearchReduxForm from "./SearchForm";
+import {Typography, Chip, WithStyles} from "@material-ui/core";
+import withSearchStyles from "./searchStyles";
 
 type PropsType = {
     onChangeSearchText: ({searchText}: {searchText: string}) => void
-    searchRequest: string | string[] | null | undefined
+    searchRequest: string | string[] | null | undefined,
+    onResetSearch: () => void,
+    isLoading: boolean
 }
 
-const Search: FC<PropsType> = ({onChangeSearchText, searchRequest}) => {
+const Search: FC<PropsType & WithStyles> = ({onChangeSearchText, searchRequest, onResetSearch, isLoading, classes}) => {
     return (
-        <div className={styles.search}>
+        <div className={classes.search}>
             {searchRequest &&
-            <p>Found on query: {searchRequest}</p>
+            <Typography variant="body2">
+                Found on query:
+                <Chip label={searchRequest} onDelete={onResetSearch} color="secondary" className={classes.searchTxt} />
+            </Typography>
             }
-            {/*todo type for redux form*/}
-            <SearchReduxForm onSubmit={onChangeSearchText}/>
+            <SearchReduxForm onSubmit={onChangeSearchText} onResetSearch={onResetSearch} isLoading={isLoading}/>
         </div>
     )
 };
 
 
-export default Search;
+export default withSearchStyles(Search);

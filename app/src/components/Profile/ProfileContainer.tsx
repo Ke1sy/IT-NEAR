@@ -3,23 +3,35 @@ import Profile from "./Profile";
 import {connect} from "react-redux";
 import {
     getUserProfile,
-    getUserStatus,
-    loadPhoto, setProfileInfo,
+    getUserStatus, getIsUserFollowed,
+    loadPhoto, updateProfileInfo,
     setUserProfile,
     setUserStatus,
 } from "../../redux/reducers/profile-reducer";
-import {withRouter} from "react-router-dom";
+import {useParams, withRouter, useHistory} from "react-router-dom";
 import {compose} from "redux";
-import {getProfile, getStatus} from "../../redux/reducers/profile-selectors";
-import {getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
+import {
+    getProfile,
+    getProfileError,
+    getStatus,
+    getProfileIsLoading,
+    getIsFollowed
+} from "../../redux/reducers/profile-selectors";
+import {getCurrentUserInfo, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 import {AppStateType} from "../../redux/redux-store";
 import {ProfileType, UpdatedProfileType} from "../../redux/reducers/types";
+import ProfileError from './ProfileError/ProfileError';
+import {withAuthRedirect} from "../Redirects/AuthRedirect";
 
 type MapStatePropsType = {
     profile: ProfileType | null
     status: string
     userId?: number | null | undefined
     isAuth: boolean,
+    isFollowed: boolean,
+    profileError: string | null,
+    profileIsLoading: boolean,
+    currentUserInfo: ProfileType | null
 }
 
 type MapDispatchPropsType = {
@@ -28,46 +40,50 @@ type MapDispatchPropsType = {
     setUserStatus: (status: string) => void
     setUserProfile: (profile: ProfileType) => void,
     loadPhoto: (photo: any) => void,
-    setProfileInfo: (info: ProfileType, userId: number) => void
+    updateProfileInfo: (info: ProfileType, userId: number) => void,
+    getIsUserFollowed: (id: number) => void
 }
 
-type RouteProps = {
-    match: any,
-    history: any
-}
-
-type PropsType = MapStatePropsType & MapDispatchPropsType & RouteProps
+type PropsType = MapStatePropsType & MapDispatchPropsType
 
 const ProfileContainer: FC<PropsType> = ({
                                              isAuth,
                                              userId,
                                              getUserProfile,
                                              getUserStatus,
-                                             match,
-                                             history,
                                              profile,
                                              status,
                                              setUserStatus,
                                              loadPhoto,
-                                             setProfileInfo
+                                             updateProfileInfo,
+                                             profileError,
+                                             profileIsLoading,
+                                             currentUserInfo,
+                                             isFollowed,
+                                             getIsUserFollowed
                                          }) => {
-    const isOwner = match.params.id === undefined || Number(match.params.id) === userId;
+    let {id} = useParams();
+    let history = useHistory();
+    const isOwner = !id || Number(id) === userId;
 
     useEffect(() => {
-        let id = match.params.id;
-
+        let newId = id;
         const checkProfile = () => {
-            if (!id || id === 'undefined') {
-                isAuth ? id = userId : history.push('/login');
+            if (!id) {
+                isAuth ? newId = String(userId) : history.push('/login');
             }
-            getUserProfile(id);
-            getUserStatus(id);
+
+            getUserProfile(Number(newId));
+            getUserStatus(Number(newId));
+            if(!isOwner) {
+                getIsUserFollowed(Number(newId));
+            }
         };
 
         checkProfile();
-    }, [match.params.id, isAuth, getUserProfile, userId, getUserStatus, history]);
+    }, [id, isAuth, getUserProfile, userId, getUserStatus, history]);
 
-    const updateProfileInfo = (info: UpdatedProfileType) => {
+    const updateInfo = (info: UpdatedProfileType) => {
         const {aboutMe, lookingForAJob, lookingForAJobDescription, fullName, ...contacts} = info;
 
         if (userId && profile) {
@@ -82,13 +98,28 @@ const ProfileContainer: FC<PropsType> = ({
                     ...contacts
                 }
             };
-            setProfileInfo(updatedProfile, userId)
+            updateProfileInfo(updatedProfile, userId)
         }
     };
 
+    if (profileError) {
+        return (
+            <ProfileError profileError={profileError}/>
+        )
+    }
+
     return (
-        <Profile profile={profile} status={status} setUserStatus={setUserStatus} isOwner={isOwner} loadPhoto={loadPhoto}
-                 setProfileInfo={updateProfileInfo}/>
+        <Profile
+            profile={profile}
+            status={status}
+            setUserStatus={setUserStatus}
+            isOwner={isOwner}
+            loadPhoto={loadPhoto}
+            updateInfo={updateInfo}
+            currentUserInfo={currentUserInfo}
+            profileIsLoading={profileIsLoading}
+            followed={isFollowed}
+        />
     )
 };
 
@@ -98,19 +129,25 @@ const mapStateToProps = (state: AppStateType) => {
         status: getStatus(state),
         userId: getCurrentUserId(state),
         isAuth: getIsAuth(state),
+        profileError: getProfileError(state),
+        profileIsLoading: getProfileIsLoading(state),
+        currentUserInfo: getCurrentUserInfo(state),
+        isFollowed: getIsFollowed(state),
     }
 };
 
 export default compose(
-    connect<MapStatePropsType, MapDispatchPropsType, RouteProps, AppStateType>(mapStateToProps, {
+    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {
         getUserProfile,
         getUserStatus,
         setUserStatus,
         setUserProfile,
         loadPhoto,
-        setProfileInfo
+        updateProfileInfo,
+        getIsUserFollowed
     }),
     withRouter,
-)(ProfileContainer) as React.ComponentType<any>;
+    withAuthRedirect,
+)(ProfileContainer) as FC;
 
 

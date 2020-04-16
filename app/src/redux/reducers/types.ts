@@ -1,12 +1,3 @@
-
-export type PostType = {
-    id: string,
-    text: string,
-    likesCount: number,
-    date: Date,
-    authorId: number
-}
-
 export type ProfileType = {
     aboutMe: string | null,
     contacts: ContactsType,
@@ -23,6 +14,8 @@ export type UpdatedProfileType = {
     vk: string | null,
     twitter: string | null,
     instagram: string | null,
+    website: string | null,
+    youtube: string | null,
     github: string | null,
     lookingForAJob: boolean,
     lookingForAJobDescription: string | null,
@@ -83,3 +76,6 @@ export type LoginFormDataPropsType = {
     rememberMe: boolean,
     captcha: string | null
 }
+
+export type OpenPostDialogType = 'edit' | 'confirm';
+

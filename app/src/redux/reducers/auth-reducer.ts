@@ -1,34 +1,35 @@
-import {authAPI, ResultCodeForCaptcha, ResultCodes, securityAPI} from "../../api/api";
-import {requestNewMessagesCount, SetNewMessagesCountActionType} from "./dialogs-reducer";
-import {stopSubmit} from "redux-form";
-import {ThunkAction} from "redux-thunk";
-import {AppStateType} from "../redux-store";
+import {ProfileType} from "./types";
 
+export const AUTH_ASYNC = 'auth/AUTH_ASYNC';
+export const LOGIN_ASYNC = 'auth/LOGIN_ASYNC';
+export const LOGOUT_ASYNC = 'auth/LOGOUT_ASYNC';
 const SET_USER_DATA = 'auth/SET_USER_DATA';
 const SET_CAPTCHA_URL = 'auth/SET_CAPTCHA_URL';
+const SET_CURRENT_USER_INFO = 'auth/SET_CURRENT_USER_INFO';
 
 const initialState = {
     userId: null as number | null,
     login: null as string | null,
     email: null as string | null,
     isAuth: false,
-    captchaUrl: null as string | null
+    captchaUrl: null as string | null,
+    currentUserInfo: null as ProfileType | null
 };
-
-export type InitialStateType = typeof initialState
-
+type InitialStateType = typeof initialState
+type ActionsTypes = typeof SET_USER_DATA | typeof SET_CURRENT_USER_INFO | typeof SET_CAPTCHA_URL;
 type PayloadType = {
-    type: any,
+    type: ActionsTypes,
     userId: number | null,
     login: string | null,
     email: string | null,
     isAuth: boolean
-    captchaUrl: string
+    captchaUrl: string,
+    currentUserInfo: ProfileType | null
 }
 
 const authReducer = (
-    state: { isAuth: boolean; captchaUrl: string | null; login: string | null; userId: number | null; email: string | null } = initialState,
-    {type, userId, login, email, isAuth, captchaUrl}: PayloadType
+    state = initialState,
+    {type, userId, login, email, isAuth, captchaUrl, currentUserInfo}: PayloadType
 ): InitialStateType => {
     switch (type) {
         case SET_USER_DATA:
@@ -36,7 +37,13 @@ const authReducer = (
                 ...state,
                 userId,
                 login,
-                email, isAuth
+                email,
+                isAuth,
+            };
+        case SET_CURRENT_USER_INFO:
+            return {
+                ...state,
+                currentUserInfo
             };
         case SET_CAPTCHA_URL:
             return {...state, captchaUrl};
@@ -45,60 +52,40 @@ const authReducer = (
     }
 };
 
-type SetUserDataActionType = {
-    type: typeof SET_USER_DATA,
-    userId: number | null,
-    login: string | null,
-    email: string | null,
-    isAuth: boolean
-}
+type SetUserDataActionType = { type: typeof SET_USER_DATA, userId: number | null, login: string | null, email: string | null, isAuth: boolean, }
 export const setUserData = (userId: number | null, login: string | null, email: string | null, isAuth: boolean): SetUserDataActionType => ({
-    type: SET_USER_DATA, userId, login, email, isAuth
+    type: SET_USER_DATA,
+    userId,
+    login,
+    email,
+    isAuth,
 });
 
-type SetCaptchaUrlActionType = {
-    type: typeof SET_CAPTCHA_URL,
-    captchaUrl: string,
-}
-
+type SetCaptchaUrlActionType = { type: typeof SET_CAPTCHA_URL, captchaUrl: string, }
 export const setCaptchaUrl = (captchaUrl: string): SetCaptchaUrlActionType => ({
     type: SET_CAPTCHA_URL,
     captchaUrl
 });
 
-type stopSubmitType =  ReturnType<typeof stopSubmit>;
+type AuthenticateType = { type: typeof AUTH_ASYNC }
+export const authenticate = (): AuthenticateType => ({type: AUTH_ASYNC});
 
-type ActionsTypes = SetUserDataActionType | SetCaptchaUrlActionType | SetNewMessagesCountActionType | stopSubmitType
-type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>
+type SetCurrentUserInfoType = { type: typeof SET_CURRENT_USER_INFO, currentUserInfo: ProfileType | null }
+export const setCurrentUserInfo = (currentUserInfo: ProfileType | null): SetCurrentUserInfoType => ({
+    type: SET_CURRENT_USER_INFO,
+    currentUserInfo
+});
 
-export const authenticate = (): ThunkType => async (dispatch) => {
-    const {data, resultCode} = await authAPI.auth();
-    if (resultCode === ResultCodes.Success) {
-        const {id, login, email} = data;
-        dispatch(setUserData(id, login, email, true));
-        dispatch(requestNewMessagesCount());
-    }
-};
+export type LoginType = { type: typeof LOGIN_ASYNC, email: string, password: string, rememberMe: boolean, captcha: string | null }
+export const login = (email: string, password: string, rememberMe: boolean, captcha: string | null): LoginType => ({
+    type: LOGIN_ASYNC,
+    email,
+    password,
+    rememberMe,
+    captcha
+});
 
-export const login = (email: string, password: string, rememberMe: boolean, captcha: string | null): ThunkType => async (dispatch) => {
-    const {resultCode, messages} = await authAPI.login(email, password, rememberMe, captcha);
-    if (resultCode === ResultCodes.Success) {
-        dispatch(authenticate());
-    } else {
-        if (resultCode === ResultCodeForCaptcha.CaptchaRequired) {
-            const {url} = await securityAPI.getCaptcha();
-            dispatch(setCaptchaUrl(url));
-        }
-        dispatch(stopSubmit("login", {_error: messages}));
-    }
-};
-
-export const logout = (history: any): ThunkType => async (dispatch) => {
-    const {resultCode} = await authAPI.logout();
-    if (resultCode === ResultCodes.Success) {
-        dispatch(setUserData(null, null, null, false));
-        history.push('/login')
-    }
-};
+export type LogoutType = { type: typeof LOGOUT_ASYNC, history: any }
+export const logout = (history: any): LogoutType => ({type: LOGOUT_ASYNC, history});
 
 export default authReducer;

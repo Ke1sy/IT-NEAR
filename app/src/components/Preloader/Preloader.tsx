@@ -1,24 +1,23 @@
 import React, {FC, ReactNode} from 'react';
-import styles from './preloader.module.scss';
-import preloader from "../../assets/images/preloader.gif";
+import {CircularProgress, WithStyles} from "@material-ui/core";
+import withPreloaderStyles from "./preloaderStyles";
 
 type PropsType = {
     showPreloader: boolean,
     children?: ReactNode
 }
 
-const Preloader: FC<PropsType> = ({showPreloader, children}) => {
+const Preloader: FC<PropsType & WithStyles> = ({showPreloader, classes}) => {
+    if (!showPreloader) {
+        return null
+    }
     return (
-        <div className={styles.preloader}>
+        <div className={classes.preloader}>
             {showPreloader &&
-                <div className={styles.preloader__icon}>
-                    <img src={preloader} alt=""/>
-                </div>
+                <CircularProgress color="secondary"/>
             }
-
-            {children && children}
         </div>
     )
 };
 
-export default Preloader;
+export default withPreloaderStyles(Preloader);

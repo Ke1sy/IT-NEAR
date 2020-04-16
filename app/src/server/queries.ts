@@ -1,11 +1,11 @@
-import {gql} from 'apollo-boost';
+import gql from 'graphql-tag';
 
-export const postsQuery = gql`
-    query postsQuery($authorId: Int!) {
+export const GET_POSTS = gql`
+    query PostsData($authorId: Int!) {
         posts(authorId: $authorId){
             id,
             text,
-            likesCount,
+            likedBy,
             date,
             authorId
         }

@@ -4,19 +4,20 @@ import {connect} from "react-redux";
 import {compose} from "redux";
 import {appInitialize} from "./redux/reducers/app-reducer";
 import Preloader from "./components/Preloader/Preloader";
-import Footer from "./components/Footer/Footer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import withSuspense from "./components/HOC/Suspense";
-import NavbarContainer from "./components/Navbar/NavbarContainer";
 import {getAppInited} from "./redux/reducers/app-selectors";
 import {AppStateType} from "./redux/redux-store";
+import {createStyles, StyleRules, Theme, WithStyles, withStyles, CssBaseline, Container} from "@material-ui/core";
+import Notifier from "./components/Notifier/Notifier";
+import {withSnackbar, WithSnackbarProps} from 'notistack';
+import RM from "./RouterManager";
+import Footer from "./components/Footer/Footer";
 
 const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
 const LoginContainer = React.lazy(() => import(/* webpackChunkName: "LoginContainer" */"./components/Login/LoginContainer"));
 const UsersContainer = React.lazy(() => import(/* webpackChunkName: "UsersContainer" */"./components/Users/UsersContainer"));
-const News = React.lazy(() => import(/* webpackChunkName: "News" */"./components/News/News"));
-const Music = React.lazy(() => import(/* webpackChunkName: "Music" */"./components/Music/Music"));
 const NotFound = React.lazy(() => import(/* webpackChunkName: "Music" */"./components/NotFound/NotFound"));
 
 type MapStatePropsType = {
@@ -27,7 +28,20 @@ type MapDispatchPropsType = {
     appInitialize: () => void
 }
 
-type PropsType = MapStatePropsType & MapDispatchPropsType;
+const styles = (theme: Theme): StyleRules => createStyles({
+    root: {
+        display: 'flex',
+    },
+    content: {
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column'
+    },
+
+    toolbar: theme.mixins.toolbar,
+});
+
+type PropsType = MapStatePropsType & MapDispatchPropsType & WithStyles<typeof styles> & WithSnackbarProps;
 
 class App extends React.Component<PropsType> {
     componentDidMount() {
@@ -36,7 +50,7 @@ class App extends React.Component<PropsType> {
     }
 
     globalError = (e: any) => {
-        console.error(`Error has occured. Reason:  + ${e.reason}`);
+        this.props.enqueueSnackbar(`${e.reason}`, {variant: 'error'});
     };
 
     componentWillUnmount() {
@@ -44,27 +58,29 @@ class App extends React.Component<PropsType> {
     }
 
     render() {
+        const {classes} = this.props;
         if (!this.props.inited) {
-            return <Preloader showPreloader={true}/>
+            return <Preloader showPreloader={!this.props.inited}/>
         }
         return (
-            <div className="app">
+            <>
+                <Notifier/>
+                <CssBaseline/>
                 <HeaderContainer/>
-                <NavbarContainer/>
-                <div className="main">
+                <Container maxWidth="lg" component="main" className={classes.content}>
+                    <div className={classes.toolbar}/>
                     <Switch>
-                        <Route exact path='/' render={() => <Redirect to={"/profile"}/>}/>
-                        <Route path="/profile/:id?" component={withSuspense(ProfileContainer)}/>
-                        <Route path="/dialogs/:id?" component={withSuspense(MessagesContainer)}/>
-                        <Route path="/news" component={withSuspense(News)}/>
-                        <Route path="/login" component={withSuspense(LoginContainer)}/>
-                        <Route path="/music" component={withSuspense(Music)}/>
-                        <Route path="/users" component={withSuspense(UsersContainer)}/>
+                        <Route exact path={RM.home.path} render={() => <Redirect to={RM.profile.getPath(null)}/>}/>
+                        <Route path={RM.profile.path} component={withSuspense(ProfileContainer)}/>
+                        <Route path={RM.settings.path} component={withSuspense(ProfileContainer)}/>
+                        <Route path={RM.dialogs.path} component={withSuspense(MessagesContainer)}/>
+                        <Route path={RM.login.path} component={withSuspense(LoginContainer)}/>
+                        <Route path={RM.users.path} component={withSuspense(UsersContainer)}/>
                         <Route path="*" component={withSuspense(NotFound)}/>
                     </Switch>
-                </div>
+                </Container>
                 <Footer/>
-            </div>
+            </>
         );
     }
 }
@@ -75,9 +91,10 @@ const mapStateToProps = (state: AppStateType) => {
     }
 };
 
-
 export default compose(
-    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {appInitialize}),
+    withStyles(styles),
+    withSnackbar,
+    connect<MapStatePropsType, MapDispatchPropsType, WithSnackbarProps, AppStateType>(mapStateToProps, {appInitialize}),
     withRouter
 )(App) as React.ComponentType<any>;
 

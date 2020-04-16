@@ -1,16 +1,14 @@
-import React from 'react';
-import styles from './not-found.module.scss';
+import React, {FC} from 'react';
 import errorImg from '../../assets/images/404.png';
+import {WithStyles} from "@material-ui/core";
+import withNotFoundStyles from "./notFoundStyles";
 
-const NotFound = () => {
+const NotFound: FC<WithStyles> = ({classes}) => {
     return (
-        <div className={styles.notFound}>
-            <div className={styles.notFoundImg}>
-                <img src={errorImg} alt=""/>
-            </div>
-
+        <div className={classes.notFound}>
+            <img src={errorImg} alt=""/>
         </div>
     )
 };
 
-export default NotFound;
+export default withNotFoundStyles(NotFound);

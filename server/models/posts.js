@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
     text: String,
-    likesCount: Number,
+    likedBy: [],
     date: Date,
     authorId: Number,
 });

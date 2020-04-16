@@ -1,17 +1,20 @@
 import React, {FC} from "react";
 import {Field, InjectedFormProps, reduxForm} from 'redux-form'
-import {renderField} from "../Forms/components/FormControl";
+import {RenderField} from "../Forms/components/FormControl";
 import {required, email, minLength} from "../../utils/validate";
-import styles from './login-form.module.scss';
 import {LoginFormDataPropsType} from "../../redux/reducers/types";
+import {Button, WithStyles} from "@material-ui/core";
+import {Alert} from "@material-ui/lab";
+import withLoginFormStyles from "./loginFormStyles";
+import {CancelOutlinedIcon, InputIcon} from "../Icons/MeterialIcons";
 
-const minLength5 = minLength(5);
+const minLength4 = minLength(4);
 
 type OwnPropsType = {
     captchaUrl?: string | null
 }
 
-type PropsType = InjectedFormProps<LoginFormDataPropsType> & OwnPropsType;
+type PropsType = InjectedFormProps<LoginFormDataPropsType> & OwnPropsType  & WithStyles;
 
 const LoginForm: FC<PropsType> = (
     {
@@ -20,57 +23,79 @@ const LoginForm: FC<PropsType> = (
         submitting,
         reset,
         error,
-        captchaUrl
+        captchaUrl,
+        classes
     }
 ) => {
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit} className={classes.form}>
             <Field
-                component={renderField}
+                component={RenderField}
                 type="email"
                 name="email"
-                label="Email:"
+                label="Email"
                 required={true}
+                variant="outlined"
                 validate={[required, email]}
             />
             <Field
-                component={renderField}
+                component={RenderField}
                 type="password"
                 name="password"
                 label="Password:"
                 required={true}
-                validate={[required, minLength5]}
+                variant="outlined"
+                validate={[required, minLength4]}
             />
 
             <Field
-                groupClasses={styles.form__group_inline}
                 name="rememberMe"
                 id="rememberMe"
-                component={renderField}
+                component={RenderField}
                 type="checkbox"
-                label={"Remember me"}
+                label="Remember me"
             />
 
             {captchaUrl &&
-            <>
+            <div className={classes.captcha}>
                 <img src={captchaUrl} alt=""/>
                 <Field
                     name="captcha"
-                    component={renderField}
+                    component={RenderField}
                     type="text"
-                    label={"Type the symbols from image above: "}
+                    variant="outlined"
+                    label="Captcha"
                     validate={[required]}
                 />
-            </>
-            }
-            {error && <div className={styles.form__error}>{error}</div>}
-
-            <div className={styles.form__btns}>
-                <button type="submit" disabled={pristine || submitting}>Submit</button>
-                <button type="button" disabled={pristine || submitting} onClick={reset}>
-                    Clear Values
-                </button>
             </div>
+            }
+            <div className={classes.buttons}>
+                <Button
+                    type="submit"
+                    disabled={pristine || submitting}
+                    variant="contained"
+                    color="primary"
+                    className={classes.btn}
+                    startIcon={<InputIcon/>}
+                >
+                    Submit
+                </Button>
+                <Button
+                    type="button"
+                    disabled={pristine || submitting}
+                    onClick={reset}
+                    variant="contained"
+                    className={classes.btn}
+                    color="secondary"
+                    startIcon={<CancelOutlinedIcon/>}
+                >
+                    Clear
+                </Button>
+            </div>
+
+            {error &&
+            <Alert severity="error" className={classes.error}>{error}</Alert>
+            }
         </form>
     )
 };
@@ -78,7 +103,7 @@ const LoginForm: FC<PropsType> = (
 
 const LoginReduxForm = reduxForm<LoginFormDataPropsType, OwnPropsType>({
     form: 'login'
-})(LoginForm);
+})(withLoginFormStyles(LoginForm));
 
 
 export default LoginReduxForm;

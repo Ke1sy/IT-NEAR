@@ -6,6 +6,7 @@ import {Redirect} from "react-router-dom";
 import {getCaptchaUrl, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 import {AppStateType} from "../../redux/redux-store";
 import { LoginFormDataPropsType } from "../../redux/reducers/types";
+import RM from "../../RouterManager";
 
 type MapStatePropsType = {
     userId: number | null,
@@ -25,7 +26,7 @@ const LoginContainer: FC<PropsType> = ({login, isAuth, userId, captchaUrl}) => {
     };
 
     if (isAuth) {
-        return <Redirect to={`/profile/${userId}`}/>
+        return <Redirect to={RM.profile.getPath(userId)}/>
     }
 
     return (

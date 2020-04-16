@@ -23,3 +23,11 @@ export const getSpamedMessages = (state: AppStateType) => {
 export const getNewMessagesCount = (state: AppStateType) => {
     return state.dialogsReducer.newMessagesCount
 };
+
+export const getSelectedFriend = (state: AppStateType) => {
+    return state.dialogsReducer.selectedFriend
+};
+
+export const getMessagesLoading = (state: AppStateType) => {
+    return state.dialogsReducer.messagesLoading
+};

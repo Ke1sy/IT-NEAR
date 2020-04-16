@@ -1,36 +1,49 @@
 import React, {FC} from 'react';
 import {Field, reduxForm, InjectedFormProps} from "redux-form";
-import styles from "./search-form.module.scss";
-import {renderField} from "../../Forms/components/FormControl";
+import {RenderField} from "../../Forms/components/FormControl";
 import {minLength, required} from "../../../utils/validate";
+import {IconButton, Paper, WithStyles} from '@material-ui/core';
+import {Skeleton} from '@material-ui/lab';
+import withSearchFormStyles from "./searchFormStyles";
+import {SearchIcon} from "../../Icons/MeterialIcons";
 
 const minLength3 = minLength(3);
 
 type FormDataType = {
-    searchText: string
+    searchText: string,
 }
+type OwnPropsType = {
+    onResetSearch: () => void,
+    isLoading: boolean
+}
+type PropsType = InjectedFormProps<FormDataType> & OwnPropsType & WithStyles;
 
-const SearchForm: FC<InjectedFormProps<FormDataType>> = ({handleSubmit, submitting}) => {
+const SearchForm: FC<PropsType> = ({handleSubmit, submitting, isLoading, classes}) => {
     return (
-        <form className={styles.form} onSubmit={handleSubmit}>
-            <Field
-                name="searchText"
-                type="text"
-                component={renderField}
-                placeholder="Type search request..."
-                validate={[required, minLength3]}
-            />
-
-            <button type="submit" disabled={submitting} className={styles.button}>
-                Search
-            </button>
-        </form>
+        <Paper component="form" className={classes.root} onSubmit={handleSubmit}>
+            {isLoading ?
+                <Skeleton animation="wave" height={40} width='100%'/>
+                : <>
+                    <IconButton type="submit" className={classes.iconButton} aria-label="search" disabled={submitting}>
+                        <SearchIcon/>
+                    </IconButton>
+                    <Field
+                        name="searchText"
+                        type="search"
+                        label="Search"
+                        component={RenderField}
+                        autoComplete="off"
+                        placeholder="Type search request..."
+                        validate={[required, minLength3]}
+                    />
+                </>
+            }
+        </Paper>
     )
 };
 
-const SearchReduxForm = reduxForm<FormDataType>({
+const SearchReduxForm = reduxForm<FormDataType, OwnPropsType>({
     form: 'search'
-})(SearchForm);
-
+})(withSearchFormStyles(SearchForm));
 
 export default SearchReduxForm;

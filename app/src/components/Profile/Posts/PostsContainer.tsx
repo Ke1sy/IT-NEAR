@@ -1,138 +1,122 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import Posts from "./Posts";
-import {compose} from "redux";
-import {ChildDataProps, graphql} from "react-apollo";
-import {postsQuery} from "../../../server/queries";
-import {addPostMutation, updatePostMutation, deletePostMutation} from "../../../server/mutations";
-import {PostType} from "../../../redux/reducers/types";
-import Preloader from "../../Preloader/Preloader";
+import {useQuery, useMutation} from '@apollo/react-hooks';
+import {GET_POSTS} from "../../../server/queries";
+import {ADD_POST, DELETE_POST, UPDATE_POST} from "../../../server/mutations";
+import {PostsData, PostsDataVariables, PostsData_posts} from '../../../server/types/PostsData';
+import {AddPostMutation, AddPostMutationVariables} from '../../../server/types/AddPostMutation';
+import {DeletePostMutation, DeletePostMutationVariables} from '../../../server/types/DeletePostMutation';
+import {UpdatePostMutation, UpdatePostMutationVariables} from '../../../server/types/UpdatePostMutation';
+import {ProfileType, OpenPostDialogType} from "../../../redux/reducers/types";
+import {reset} from "redux-form";
+import {useDispatch} from 'react-redux';
+import PostsEmpty from "./PostsEmpty";
 
-type OwnProps = {
+type PropsType = {
     authorId: number,
-    isOwner: boolean
+    isOwner: boolean,
+    author: ProfileType,
+    currentUserInfo: ProfileType | null
 }
 
-type Response = {
-    posts: PostType[];
-};
+const PostsContainer: FC<PropsType> = ({authorId, isOwner, author, currentUserInfo}) => {
+    const {data, loading: dataLoading} = useQuery<PostsData, PostsDataVariables>(GET_POSTS, {
+        variables: {authorId},
 
-type ChildProps = ChildDataProps<{}, Response, {}>;
-
-type addPostProps = {
-    text: string,
-    date: string
-    authorId: number
-};
-
-type deletePostProps = {
-    id: string,
-    authorId: number
-};
-
-type updatePostProps = {
-    id: string,
-    text: string,
-    authorId: number
-};
-
-type mutationsPropsType = {
-    addPost: ({text, date, authorId}: addPostProps) => any,
-    deletePost: ({id, authorId}: deletePostProps) => any,
-    updatePost: ({id, text,  authorId}: updatePostProps) => any,
-}
-
-type PropsType = OwnProps & ChildProps & mutationsPropsType
-
-const PostsContainer: FC<PropsType> = ({
-           data: {loading, posts, error},
-           authorId,
-           isOwner,
-           addPost,
-           deletePost,
-           updatePost
-    }) => {
+    });
+    const [addPost, {loading: addPostLoading}] = useMutation<AddPostMutation, AddPostMutationVariables>(ADD_POST);
+    const [deletePost] = useMutation<DeletePostMutation, DeletePostMutationVariables>(DELETE_POST);
+    const [updatePost] = useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UPDATE_POST);
+    const [editDialogIsOpen, setEditDialogIsOpen] = useState(false);
+    const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
+    const [selectedPost, setSelectedPost] = useState<PostsData_posts | null>(null);
+    const dispatch = useDispatch();
 
     const onAddPost = ({postText}: { postText: string }) => {
-        if (postText.length > 0) {
+        if (postText && postText.length > 0) {
             addPost({
-                text: postText,
-                date: new Date().toString(),
-                authorId
-            });
+                variables: {
+                    text: postText,
+                    date: new Date().toString(),
+                    authorId,
+                    likedBy: []
+                },
+                refetchQueries: [{
+                    query: GET_POSTS,
+                    variables: {authorId}
+                }]
+            }).then(() => dispatch(reset('posts')))
         }
     };
 
     const onDeletePost = (id: string) => {
         deletePost({
-            id,
-            authorId
+            variables: {
+                id
+            },
+            refetchQueries: [{
+                query: GET_POSTS,
+                variables: {authorId}
+            }]
         });
     };
 
-    const onUpdatePost = (id: string, text: string) => {
+    const onEditPost = (newText: string, post: PostsData_posts) => {
+        let {id, likedBy} = post;
         updatePost({
-            id,
-            text,
-            authorId
+            variables: {id, text: newText, likedBy},
+            refetchQueries: [{
+                query: GET_POSTS,
+                variables: {authorId}
+            }]
         });
     };
 
-    if (loading) return <Preloader showPreloader={true}/>;
-    if (error) return <h1>ERROR</h1>;
-    return <Posts
-        posts={posts}
-        authorId={authorId}
-        isOwner={isOwner}
-        onAddPost={onAddPost}
-        onDeletePost={onDeletePost}
-        onUpdatePost={onUpdatePost}
-    />
+    const onLikePost = (userId: string, post: PostsData_posts) => {
+        let {id, text, likedBy} = post;
+        likedBy = likedBy.includes(userId) ? likedBy.filter(item => item !== userId) : [...likedBy, userId];
+        updatePost({
+            variables: {id, text, likedBy},
+            refetchQueries: [{
+                query: GET_POSTS,
+                variables: {authorId}
+            }]
+        });
+    };
+
+    const openDialog = (isOpen: boolean, type: OpenPostDialogType, selectedItem: PostsData_posts | null) => {
+        setSelectedPost(selectedItem);
+        switch (type) {
+            case "confirm":
+                setDeleteDialogIsOpen(isOpen);
+                break;
+            case "edit":
+                setEditDialogIsOpen(isOpen);
+                break;
+            default:
+                break;
+        }
+    };
+
+    if (dataLoading || !data) return <PostsEmpty isLoading={true} isOwner={isOwner}/>;
+
+    const {posts} = data;
+    return (
+        <Posts
+            posts={posts}
+            isOwner={isOwner}
+            ownerId={currentUserInfo ? currentUserInfo.userId : null}
+            onAddPost={onAddPost}
+            onDeletePost={onDeletePost}
+            onEditPost={onEditPost}
+            author={author}
+            editDialogIsOpen={editDialogIsOpen}
+            deleteDialogIsOpen={deleteDialogIsOpen}
+            selectedPost={selectedPost}
+            addPostLoading={addPostLoading}
+            onLikePost={onLikePost}
+            openDialog={openDialog}
+        />
+    )
 };
-
-const withGraphQL = compose(
-    graphql<OwnProps, Response, {}, ChildProps>(postsQuery, {
-        options: ({authorId}) => ({
-            variables: {authorId}
-        })
-    }),
-
-    graphql(addPostMutation, {
-        props: ({mutate}: any) => ({
-            addPost: ({text, date, authorId}: addPostProps) => mutate({
-                variables: {text, date, likesCount: 0, authorId},
-                refetchQueries: [{
-                    query: postsQuery,
-                    variables: {authorId}
-                }]
-            })
-        })
-    }),
-
-    graphql(deletePostMutation, {
-        props: ({mutate}: any) => ({
-            deletePost: ({id, authorId}: deletePostProps) => mutate({
-                variables: {id},
-                refetchQueries: [{
-                    query: postsQuery,
-                    variables: {authorId}
-                }]
-            })
-        })
-    }),
-
-    graphql(updatePostMutation, {
-        props: ({mutate}: any) => ({
-            updatePost: ({id, text, authorId}: updatePostProps) => mutate({
-                variables: {id, text},
-                refetchQueries: [{
-                    query: postsQuery,
-                    variables: {authorId}
-                }]
-            })
-        })
-    }),
-);
-
-export default compose(
-    withGraphQL
-)(PostsContainer)
+export default PostsContainer;

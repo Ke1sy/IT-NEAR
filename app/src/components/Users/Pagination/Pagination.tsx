@@ -1,33 +1,22 @@
 import React, {FC} from 'react';
-import styles from './pagination.module.scss';
-import ReactPaginate from 'react-paginate';
+import {compose} from "redux";
+import PaginationComponent from '@material-ui/lab/Pagination';
+import {WithStyles, WithWidth, withWidth} from "@material-ui/core";
+import withPaginationStyles from "./paginationStyles";
 
 type PropsType = {
     totalPages: number,
     currentPage: number,
-    onSetCurrentPage: ({selected}: {selected: number}) => void,
+    onSetCurrentPage: (event: React.ChangeEvent<unknown>, page: number) => void,
 }
 
-const Pagination: FC<PropsType> = ({totalPages, currentPage, onSetCurrentPage}) => {
+const Pagination: FC<PropsType & WithWidth & WithStyles> = ({classes, totalPages, currentPage, onSetCurrentPage, width}) => {
     return (
-        <div className={styles.pagination}>
-            <ReactPaginate
-                previousLabel={'previous'}
-                nextLabel={'next'}
-                breakLabel={'...'}
-                breakClassName={'break-me'}
-                pageCount={totalPages}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                forcePage={currentPage - 1}
-                onPageChange={onSetCurrentPage}
-                containerClassName={styles.pagination}
-                pageLinkClassName={styles.pagination__btn}
-                activeLinkClassName={styles.active}
-            />
-        </div>
+        <PaginationComponent size={width === 'xs' ? 'small': 'medium'} count={totalPages} page={currentPage} onChange={onSetCurrentPage} color="primary" className={classes.root}/>
     )
 };
 
-
-export default Pagination;
+export default compose(
+    withWidth(),
+    withPaginationStyles
+)(Pagination) as FC<PropsType>;

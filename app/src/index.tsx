@@ -8,17 +8,28 @@ import './index.scss';
 import App from './App';
 import ApolloClient from 'apollo-boost';
 import {ApolloProvider} from 'react-apollo';
+import {ThemeProvider} from '@material-ui/styles';
+import theme from './theme'
+import {ApolloProvider as ApolloHooksProvider} from "@apollo/react-hooks";
+import {SnackbarProvider} from 'notistack';
 
 const client = new ApolloClient({
     uri: '/graphql'
 });
 
+
 ReactDOM.render(
     <Router>
         <ApolloProvider client={client}>
-            <Provider store={store}>
-                <App/>
-            </Provider>
+            <ApolloHooksProvider client={client}>
+                <Provider store={store}>
+                    <SnackbarProvider maxSnack={3} anchorOrigin={{vertical: 'bottom', horizontal: 'right',}} autoHideDuration={2000}>
+                        <ThemeProvider theme={theme}>
+                            <App/>
+                        </ThemeProvider>
+                    </SnackbarProvider>
+                </Provider>
+            </ApolloHooksProvider>
         </ApolloProvider>
     </Router>, document.getElementById('root')
 );

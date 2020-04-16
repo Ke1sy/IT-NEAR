@@ -1,85 +1,80 @@
-import React, {useEffect, FC} from 'react';
-import styles from './messages.module.scss';
+import React, {FC} from 'react';
 import Dialog from "./Dialogs/Dialog";
-import MessagesChat from "./MessagesChat";
-import {DialogsType, MessagesType} from "../../redux/reducers/types";
+import MessagesChat from "./Chat/MessagesChat";
+import {DialogsType, MessagesType, ProfileType} from "../../redux/reducers/types";
+import {Paper, List, WithStyles} from "@material-ui/core";
+import EmptyChat from "./Chat/EmptyChat";
+import classNames from "classnames";
+import withMessagesStyles from "./messagesStyles";
 
-type MapStatePropsType = {
+type PropsType = {
     dialogs: Array<DialogsType>
     messages: Array<MessagesType>
-    userId: number | null
     lastUserActivityDate: string | null
     deletedMessages: Array<string>
     spamedMessages: Array<string>
-}
-
-type MapDispatchPropsType = {
+    selectedFriend: ProfileType | null
+    currentUserInfo: ProfileType | null,
+    friendId: number,
+    messagesLoading: boolean,
     sendMessage: (userId: number, message: string) => void
-    getDialogs: () => void
-    getMessages: (userId: number) => Promise<void>
+    getMessages: (userId: number) => void
     deleteMessage: (messageId: string) => void
     spamMessage: (messageId: string) => void
     restoreMessage: (messageId: string) => void
 }
 
-type RoutePropsType = {
-    match: any
-}
-
-type PropsType = MapStatePropsType & MapDispatchPropsType & RoutePropsType;
-
-const Messages: FC<PropsType> = ({
-                                     match,
-                                     messages,
-                                     deletedMessages,
-                                     dialogs,
-                                     sendMessage,
-                                     getDialogs,
-                                     getMessages,
-                                     userId,
-                                     deleteMessage,
-                                     spamMessage,
-                                     lastUserActivityDate,
-                                     restoreMessage,
-                                     spamedMessages
-                                 }) => {
-    let friendId = match.params.id;
-
-    useEffect(() => {
-        getDialogs()
-    }, []);
-
-    let dialogsElems = dialogs.map(user =>
-        <Dialog
-            key={user.id}
-            user={user}
-        />
-    );
-
+const Messages: FC<PropsType & WithStyles> = ({
+                                                  classes,
+                                                  messages,
+                                                  deletedMessages,
+                                                  dialogs,
+                                                  sendMessage,
+                                                  getMessages,
+                                                  deleteMessage,
+                                                  spamMessage,
+                                                  lastUserActivityDate,
+                                                  restoreMessage,
+                                                  spamedMessages,
+                                                  selectedFriend,
+                                                  currentUserInfo,
+                                                  friendId,
+                                                  messagesLoading
+                                              }) => {
     return (
-        <>
-            <div className={styles.content}>
-                <div className={styles.dialogs}>
-                    {dialogsElems}
+        <div className={classes.root}>
+            <Paper className={classes.paper} elevation={3}>
+                <List className={classNames(classes.list, {[classes.hiddenList]: friendId})} component="div">
+                    {dialogs.map(user =>
+                        <Dialog
+                            key={user.id}
+                            user={user}
+                        />)
+                    }
+                </List>
+                <div className={classes.content}>
+                    {currentUserInfo && friendId ?
+                        <MessagesChat
+                            messagesLoading={messagesLoading}
+                            deletedMessages={deletedMessages}
+                            spamedMessages={spamedMessages}
+                            messages={messages}
+                            friendId={friendId}
+                            sendMessage={sendMessage}
+                            getMessages={getMessages}
+                            deleteMessage={deleteMessage}
+                            spamMessage={spamMessage}
+                            lastUserActivityDate={lastUserActivityDate}
+                            restoreMessage={restoreMessage}
+                            selectedFriend={selectedFriend}
+                            currentUserInfo={currentUserInfo}
+                        /> :
+                        <EmptyChat/>
+                    }
                 </div>
-                {friendId && <MessagesChat
-                    deletedMessages={deletedMessages}
-                    spamedMessages={spamedMessages}
-                    messages={messages}
-                    friendId={friendId}
-                    sendMessage={sendMessage}
-                    getMessages={getMessages}
-                    userId={userId}
-                    deleteMessage={deleteMessage}
-                    spamMessage={spamMessage}
-                    lastUserActivityDate={lastUserActivityDate}
-                    restoreMessage={restoreMessage}
-                />}
-
-            </div>
-        </>
-
+            </Paper>
+        </div>
     )
 };
 
-export default Messages;
+export default withMessagesStyles(Messages);

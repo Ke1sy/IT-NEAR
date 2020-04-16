@@ -1,37 +1,78 @@
 import React, {FC} from "react";
-import styles from './form.module.scss';
-import { WrappedFieldProps } from "redux-form/lib/Field";
+import {WrappedFieldProps} from "redux-form/lib/Field";
+import {TextField, TextFieldProps, makeStyles, Checkbox, FormControlLabel, Switch} from "@material-ui/core";
 
 const inputTypes = [
     'text',
     'email',
-    'checkbox',
-    'password'
+    'search',
+    'password',
+    'textarea'
 ];
 
+const useStyles = makeStyles(theme => ({
+    textInput: {
+        marginBottom: 25,
+        '& .MuiFormHelperText-root': {
+            fontSize: 10,
+            position: 'absolute',
+            bottom: 0,
+            transform: 'translateY(100%)',
+            [theme.breakpoints.up('sm')]: {
+                fontSize: 12,
+            }
+        }
+    }
+}));
+
 type OwnPropsType = {
-    groupClasses?: string
     label?: string,
     type: string,
-    rest?: any
+    rest?: any,
 };
-type PropsType = WrappedFieldProps & OwnPropsType;
 
-export const renderField:FC<PropsType> = ({input, groupClasses, label, type, meta: {touched, error}, ...rest}) => {
+type PropsType = WrappedFieldProps & OwnPropsType & TextFieldProps;
+
+export const RenderField: FC<PropsType> = ({input, label, type, meta: {touched, error}, ...rest}) => {
+    const classes = useStyles();
     return (
-        <div
-            className={touched && error ? `${styles.form__group} ${styles.error} ${groupClasses}` : `${styles.form__group} ${groupClasses}`}>
-            {label &&
-            <label className={styles.form__label} htmlFor={input.name}>{label}</label>
-            }
-
+        <>
             {inputTypes.includes(type) &&
-            <input {...input} {...rest} type={type} className={styles.form__input}/>
+            <TextField
+                error={touched && Boolean(error)}
+                helperText={touched && error ? error : ''}
+                label={label}
+                type={type}
+                fullWidth={true}
+                className={classes.textInput}
+                {...input}
+                {...rest}
+            />
             }
-            {type === 'textarea' &&
-            <textarea {...input} {...rest} className={styles.form__textarea}/>
+            {type === 'checkbox' &&
+            <FormControlLabel
+                className={classes.textInput}
+                control={
+                    <Checkbox
+                        checked={!!input.value}
+                        onChange={input.onChange}
+                    />
+                }
+                label={label}
+            />
             }
-            {touched && (error && <span className={styles.error__text}>{error}</span>)}
-        </div>
+            {type === 'switch' &&
+            <FormControlLabel
+                className={classes.textInput}
+                control={
+                    <Switch
+                        checked={!!input.value}
+                        onChange={input.onChange}
+                    />
+                }
+                label={label}
+            />
+            }
+        </>
     )
 };
