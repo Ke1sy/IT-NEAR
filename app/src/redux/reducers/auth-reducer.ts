@@ -67,9 +67,6 @@ export const setCaptchaUrl = (captchaUrl: string): SetCaptchaUrlActionType => ({
     captchaUrl
 });
 
-type AuthenticateType = { type: typeof AUTH_ASYNC }
-export const authenticate = (): AuthenticateType => ({type: AUTH_ASYNC});
-
 type SetCurrentUserInfoType = { type: typeof SET_CURRENT_USER_INFO, currentUserInfo: ProfileType | null }
 export const setCurrentUserInfo = (currentUserInfo: ProfileType | null): SetCurrentUserInfoType => ({
     type: SET_CURRENT_USER_INFO,

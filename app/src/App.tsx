@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component, ComponentType} from 'react';
 import {Switch, Route, withRouter, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import {compose} from "redux";
@@ -8,42 +8,26 @@ import HeaderContainer from "./components/Header/HeaderContainer";
 import withSuspense from "./components/HOC/Suspense";
 import {getAppInited} from "./redux/reducers/app-selectors";
 import {AppStateType} from "./redux/redux-store";
-import {createStyles, StyleRules, Theme, WithStyles, withStyles, CssBaseline, Container} from "@material-ui/core";
+import {WithStyles, CssBaseline, Container} from "@material-ui/core";
 import Notifier from "./components/Notifier/Notifier";
 import {withSnackbar, WithSnackbarProps} from 'notistack';
 import RM from "./RouterManager";
 import Footer from "./components/Footer/Footer";
-
-const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileContainer" */"./components/Profile/ProfileContainer"));
-const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
-const LoginContainer = React.lazy(() => import(/* webpackChunkName: "LoginContainer" */"./components/Login/LoginContainer"));
-const UsersContainer = React.lazy(() => import(/* webpackChunkName: "UsersContainer" */"./components/Users/UsersContainer"));
-const NotFound = React.lazy(() => import(/* webpackChunkName: "Music" */"./components/NotFound/NotFound"));
+import {getIsAuth} from "./redux/reducers/auth-selectors";
+import withAppStyles from './appStyles'
 
 type MapStatePropsType = {
-    inited: boolean
+    inited: boolean,
+    isAuth: boolean
 }
 
 type MapDispatchPropsType = {
     appInitialize: () => void
 }
 
-const styles = (theme: Theme): StyleRules => createStyles({
-    root: {
-        display: 'flex',
-    },
-    content: {
-        flexGrow: 1,
-        display: 'flex',
-        flexDirection: 'column'
-    },
+type PropsType = MapStatePropsType & MapDispatchPropsType & WithStyles & WithSnackbarProps;
 
-    toolbar: theme.mixins.toolbar,
-});
-
-type PropsType = MapStatePropsType & MapDispatchPropsType & WithStyles<typeof styles> & WithSnackbarProps;
-
-class App extends React.Component<PropsType> {
+class App extends Component<PropsType> {
     componentDidMount() {
         this.props.appInitialize();
         window.addEventListener("unhandledrejection", this.globalError);
@@ -58,9 +42,9 @@ class App extends React.Component<PropsType> {
     }
 
     render() {
-        const {classes} = this.props;
-        if (!this.props.inited) {
-            return <Preloader showPreloader={!this.props.inited}/>
+        const {classes, inited} = this.props;
+        if (!inited) {
+            return <Preloader showPreloader={true}/>
         }
         return (
             <>
@@ -70,13 +54,20 @@ class App extends React.Component<PropsType> {
                 <Container maxWidth="lg" component="main" className={classes.content}>
                     <div className={classes.toolbar}/>
                     <Switch>
-                        <Route exact path={RM.home.path} render={() => <Redirect to={RM.profile.getPath(null)}/>}/>
-                        <Route path={RM.profile.path} component={withSuspense(ProfileContainer)}/>
-                        <Route path={RM.settings.path} component={withSuspense(ProfileContainer)}/>
-                        <Route path={RM.dialogs.path} component={withSuspense(MessagesContainer)}/>
-                        <Route path={RM.login.path} component={withSuspense(LoginContainer)}/>
-                        <Route path={RM.users.path} component={withSuspense(UsersContainer)}/>
-                        <Route path="*" component={withSuspense(NotFound)}/>
+                        {Object.entries(RM).map(([key, route]) => {
+                            const {path, exact=false, redirect=null, component: Cmp} = route;
+                            const redirectPath = redirect ? redirect(this.props.isAuth) : '';
+                            const RouteComponent = redirect ? <Redirect to={redirectPath}/> : withSuspense(Cmp);
+                            return (
+                                <Route
+                                    key={key}
+                                    path={path}
+                                    exact={exact}
+                                >
+                                    {RouteComponent}
+                                </Route>
+                            )
+                        })}
                     </Switch>
                 </Container>
                 <Footer/>
@@ -87,12 +78,13 @@ class App extends React.Component<PropsType> {
 
 const mapStateToProps = (state: AppStateType) => {
     return {
-        inited: getAppInited(state)
+        inited: getAppInited(state),
+        isAuth: getIsAuth(state)
     }
 };
 
 export default compose(
-    withStyles(styles),
+    withAppStyles,
     withSnackbar,
     connect<MapStatePropsType, MapDispatchPropsType, WithSnackbarProps, AppStateType>(mapStateToProps, {appInitialize}),
     withRouter
