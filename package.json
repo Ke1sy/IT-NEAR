@@ -1,5 +1,6 @@
 {
-  "name": "graphql-learn",
+  "name": "it-near",
+  "homepage": "https://it-near.herokuapp.com/",
   "version": "1.0.0",
   "description": "learn",
   "main": "server/server.js",
