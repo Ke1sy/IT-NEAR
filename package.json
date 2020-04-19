@@ -1,6 +1,5 @@
 {
   "name": "it-near",
-  "homepage": "https://it-near.herokuapp.com/",
   "version": "1.0.0",
   "description": "learn",
   "main": "server/server.js",
@@ -8,7 +7,8 @@
     "start": "node server/server.js",
     "server": "nodemon server/server.js",
     "client": "npm start --prefix app",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "deploy": "git push heroku master"
   },
   "author": "",
   "license": "ISC",

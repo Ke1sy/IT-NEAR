@@ -49,14 +49,15 @@ const UsersContainer: FC<PropsType> = ({
     let history = useHistory();
 
     useEffect(() => {
+        const request = queryString.parse(location.search);
+        setSearchRequest(request.search ? request.search : null);
+        updateUsers()
+    }, [location]);
+
+    const updateUsers = () => {
         const {search = '', page = 1} = getQueryParams();
         requestUsers(Number(page), pageSize, String(search));
-    }, []);
-
-    useEffect(() => {
-        const request = queryString.parse(location.search);
-        setSearchRequest(request.search ? request.search : null)
-    }, [location]);
+    };
 
     const getQueryParams = () => {
         return queryString.parse(location.search);
