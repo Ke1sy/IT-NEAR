@@ -1,10 +1,10 @@
 import {updateObjectInArray} from "../../utils/helpers";
 import {UserType} from "./types";
+import {InferActionsTypes} from "../redux-store";
 
 export const FOLLOW_ASYNC = 'users/FOLLOW_ASYNC';
 export const UNFOLLOW_ASYNC = 'users/UNFOLLOW_ASYNC';
 export const REQUEST_USERS_ASYNC = 'users/REQUEST_USERS_ASYNC';
-
 export const FOLLOW_ACCEPT = 'users/FOLLOW_ACCEPT';
 export const UNFOLLOW_ACCEPT = 'users/UNFOLLOW_ACCEPT';
 export const SET_USERS = 'users/SET_USERS';
@@ -24,113 +24,56 @@ const initialState = {
     searchQuery: null as string | null,
 };
 
-type PayloadType = {
-    type: ActionsTypes,
-    userId: number,
-    users: Array<UserType>,
-    page: number,
-    count: number,
-    isLoading: boolean,
-    inProgress: boolean,
-    query: string,
-};
-
-type ActionsTypes =
-    typeof FOLLOW_ACCEPT
-    | typeof UNFOLLOW_ACCEPT
-    | typeof SET_USERS
-    | typeof SET_PAGE
-    | typeof SET_TOTAL_COUNT
-    | typeof TOGGLE_IS_LOADING
-    | typeof SET_SEARCH_TEXT
-    | typeof TOGGLE_FOLLOW_IN_PROGRESS;
-
 export type InitialStateType = typeof initialState;
 
-const usersReducer = (state = initialState, {type, userId, users, page, count, isLoading, inProgress, query}: PayloadType): InitialStateType => {
-    switch (type) {
+const usersReducer = (state = initialState, action: UsersActionsTypes): InitialStateType => {
+    switch (action.type) {
         case FOLLOW_ACCEPT:
             return {
                 ...state,
-                users: updateObjectInArray(state.users, userId, "id", {followed: true})
+                users: updateObjectInArray(state.users, action.userId, "id", {followed: true})
             };
         case UNFOLLOW_ACCEPT:
             return {
                 ...state,
-                users: updateObjectInArray(state.users, userId, "id", {followed: false})
+                users: updateObjectInArray(state.users, action.userId, "id", {followed: false})
             };
         case SET_USERS:
-            return {...state, users};
+            return {...state, users: action.users};
         case SET_PAGE:
-            return {...state, currentPage: page};
+            return {...state, currentPage: action.page};
         case SET_TOTAL_COUNT:
-            return {...state, totalUsersCount: count};
+            return {...state, totalUsersCount: action.count};
         case TOGGLE_IS_LOADING:
-            return {...state, isLoading};
+            return {...state, isLoading: action.isLoading};
         case SET_SEARCH_TEXT:
-            return {...state, searchQuery: query};
+            return {...state, searchQuery: action.query};
         case TOGGLE_FOLLOW_IN_PROGRESS:
             return {
                 ...state,
-                followInProgress: inProgress ?
-                    [...state.followInProgress, userId] :
-                    state.followInProgress.filter(id => id !== userId)
+                followInProgress: action.inProgress ?
+                    [...state.followInProgress, action.userId] :
+                    state.followInProgress.filter(id => id !== action.userId)
             };
         default:
             return state;
     }
 };
 
-type SetUsersActionType = { type: typeof SET_USERS, users: Array<UserType> };
-export const setUsers = (users: Array<UserType>): SetUsersActionType => ({type: SET_USERS, users});
+export type UsersActionsTypes = InferActionsTypes<typeof usersActions>;
 
-type SetPageActionType = { type: typeof SET_PAGE, page: number };
-export const setPage = (page: number): SetPageActionType => ({type: SET_PAGE, page});
-
-type SetUsersTotalCountActionType = { type: typeof SET_TOTAL_COUNT, count: number };
-export const setUsersTotalCount = (count: number): SetUsersTotalCountActionType => ({type: SET_TOTAL_COUNT, count});
-
-type ToggleIsLoadingActionType = { type: typeof TOGGLE_IS_LOADING, isLoading: boolean };
-export const toggleIsLoading = (isLoading: boolean): ToggleIsLoadingActionType => ({
-    type: TOGGLE_IS_LOADING,
-    isLoading
-});
-
-type ToggleFollowInProgressActionType = { type: typeof TOGGLE_FOLLOW_IN_PROGRESS, inProgress: boolean, userId: number };
-export const toggleFollowInProgress = (inProgress: boolean, userId: number): ToggleFollowInProgressActionType => ({
-    type: TOGGLE_FOLLOW_IN_PROGRESS,
-    inProgress,
-    userId
-});
-
-type SetSearchTextActionType = { type: typeof SET_SEARCH_TEXT, query: string }
-export const setSearchText = (query: string): SetSearchTextActionType => ({type: SET_SEARCH_TEXT, query});
-
-export const requestUsers = (currentPage: number, pageSize: number, searchText: string) => ({
-    type: REQUEST_USERS_ASYNC,
-    currentPage,
-    pageSize,
-    searchText
-});
-
-export const follow = (id: number, updateProfileFollow: boolean) => ({
-    type: FOLLOW_ASYNC,
-    action: 'follow',
-    id,
-    updateProfileFollow
-});
-
-export const unfollow = (id: number, updateProfileFollow: boolean) => ({
-    type: UNFOLLOW_ASYNC,
-    action: 'unfollow',
-    id,
-    updateProfileFollow
-});
-
-type AcceptFollowActionType = { type: typeof FOLLOW_ACCEPT, userId: number };
-export const acceptFollow = (userId: number): AcceptFollowActionType => ({type: FOLLOW_ACCEPT, userId});
-
-type AcceptUnfollowActionType = { type: typeof UNFOLLOW_ACCEPT, userId: number };
-export const acceptUnfollow = (userId: number): AcceptUnfollowActionType => ({type: UNFOLLOW_ACCEPT, userId});
+export const usersActions = {
+   setUsers: (users: Array<UserType>) => ({type: SET_USERS, users} as const),
+   setPage: (page: number) => ({type: SET_PAGE, page} as const),
+   setUsersTotalCount: (count: number) => ({type: SET_TOTAL_COUNT, count} as const),
+   toggleIsLoading: (isLoading: boolean) => ({type: TOGGLE_IS_LOADING, isLoading} as const),
+   toggleFollowInProgress: (inProgress: boolean, userId: number) => ({type: TOGGLE_FOLLOW_IN_PROGRESS, inProgress, userId} as const),
+   setSearchText: (query: string) => ({type: SET_SEARCH_TEXT, query} as const),
+   requestUsers: (currentPage: number, pageSize: number, searchText: string) => ({type: REQUEST_USERS_ASYNC, currentPage, pageSize, searchText} as const),
+   follow: (id: number, updateProfileFollow: boolean) => ({type: FOLLOW_ASYNC, action: 'follow', id, updateProfileFollow} as const),
+   unfollow: (id: number, updateProfileFollow: boolean) => ({type: UNFOLLOW_ASYNC, action: 'unfollow', id, updateProfileFollow} as const),
+   acceptFollow: (userId: number) => ({type: FOLLOW_ACCEPT, userId} as const),
+   acceptUnfollow: (userId: number) => ({type: UNFOLLOW_ACCEPT, userId} as const),
+};
 
 export default usersReducer;

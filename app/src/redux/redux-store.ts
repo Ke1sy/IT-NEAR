@@ -22,6 +22,9 @@ type RootReducerType = typeof rootReducer;
 export type AppStateType =  ReturnType<RootReducerType>;
 const sagaMiddleware = createSagaMiddleware();
 
+type PropertiesTypes<T> = T extends {[key: string]: infer U} ? U : never;
+export type InferActionsTypes<T extends {[key: string]: (...args: any[]) => any}> = ReturnType<PropertiesTypes<T>>;
+
 // @ts-ignore
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 const store = createStore(rootReducer, composeEnhancers(

@@ -1,8 +1,8 @@
-import React, {Component, ComponentType} from 'react';
+import React, {Component} from 'react';
 import {Switch, Route, withRouter, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import {compose} from "redux";
-import {appInitialize} from "./redux/reducers/app-reducer";
+import {appActions} from "./redux/reducers/app-reducer";
 import Preloader from "./components/Preloader/Preloader";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import withSuspense from "./components/HOC/Suspense";
@@ -86,7 +86,7 @@ const mapStateToProps = (state: AppStateType) => {
 export default compose(
     withAppStyles,
     withSnackbar,
-    connect<MapStatePropsType, MapDispatchPropsType, WithSnackbarProps, AppStateType>(mapStateToProps, {appInitialize}),
+    connect<MapStatePropsType, MapDispatchPropsType, WithSnackbarProps, AppStateType>(mapStateToProps, {appInitialize: appActions.appInitialize}),
     withRouter
 )(App) as React.ComponentType<any>;
 

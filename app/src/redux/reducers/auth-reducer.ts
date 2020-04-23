@@ -1,4 +1,5 @@
 import {ProfileType} from "./types";
+import {InferActionsTypes} from "../redux-store";
 
 export const AUTH_ASYNC = 'auth/AUTH_ASYNC';
 export const LOGIN_ASYNC = 'auth/LOGIN_ASYNC';
@@ -15,74 +16,33 @@ const initialState = {
     captchaUrl: null as string | null,
     currentUserInfo: null as ProfileType | null
 };
-type InitialStateType = typeof initialState
-type ActionsTypes = typeof SET_USER_DATA | typeof SET_CURRENT_USER_INFO | typeof SET_CAPTCHA_URL;
-type PayloadType = {
-    type: ActionsTypes,
-    userId: number | null,
-    login: string | null,
-    email: string | null,
-    isAuth: boolean
-    captchaUrl: string,
-    currentUserInfo: ProfileType | null
-}
 
-const authReducer = (
-    state = initialState,
-    {type, userId, login, email, isAuth, captchaUrl, currentUserInfo}: PayloadType
-): InitialStateType => {
-    switch (type) {
+type InitialStateType = typeof initialState;
+
+const authReducer = (state = initialState, action: AuthActionsTypes): InitialStateType => {
+    switch (action.type) {
         case SET_USER_DATA:
-            return {
-                ...state,
-                userId,
-                login,
-                email,
-                isAuth,
-            };
+            const {userId, login, email, isAuth} = action;
+            return {...state, userId, login, email, isAuth};
         case SET_CURRENT_USER_INFO:
-            return {
-                ...state,
-                currentUserInfo
-            };
+            const {currentUserInfo} = action;
+            return {...state, currentUserInfo};
         case SET_CAPTCHA_URL:
+            const {captchaUrl} = action;
             return {...state, captchaUrl};
         default:
             return state;
     }
 };
 
-type SetUserDataActionType = { type: typeof SET_USER_DATA, userId: number | null, login: string | null, email: string | null, isAuth: boolean, }
-export const setUserData = (userId: number | null, login: string | null, email: string | null, isAuth: boolean): SetUserDataActionType => ({
-    type: SET_USER_DATA,
-    userId,
-    login,
-    email,
-    isAuth,
-});
-
-type SetCaptchaUrlActionType = { type: typeof SET_CAPTCHA_URL, captchaUrl: string, }
-export const setCaptchaUrl = (captchaUrl: string): SetCaptchaUrlActionType => ({
-    type: SET_CAPTCHA_URL,
-    captchaUrl
-});
-
-type SetCurrentUserInfoType = { type: typeof SET_CURRENT_USER_INFO, currentUserInfo: ProfileType | null }
-export const setCurrentUserInfo = (currentUserInfo: ProfileType | null): SetCurrentUserInfoType => ({
-    type: SET_CURRENT_USER_INFO,
-    currentUserInfo
-});
-
-export type LoginType = { type: typeof LOGIN_ASYNC, email: string, password: string, rememberMe: boolean, captcha: string | null }
-export const login = (email: string, password: string, rememberMe: boolean, captcha: string | null): LoginType => ({
-    type: LOGIN_ASYNC,
-    email,
-    password,
-    rememberMe,
-    captcha
-});
-
-export type LogoutType = { type: typeof LOGOUT_ASYNC, history: any }
-export const logout = (history: any): LogoutType => ({type: LOGOUT_ASYNC, history});
-
+export type AuthActionsTypes = InferActionsTypes<typeof authActions>;
+export const authActions = {
+    setUserData: (userId: number | null, login: string | null, email: string | null, isAuth: boolean) => ({
+        type: SET_USER_DATA, userId, login, email, isAuth
+    } as const),
+    setCaptchaUrl: (captchaUrl: string) => ({type: SET_CAPTCHA_URL, captchaUrl} as const),
+    setCurrentUserInfo: (currentUserInfo: ProfileType | null) => ({type: SET_CURRENT_USER_INFO, currentUserInfo} as const),
+    login: (email: string, password: string, rememberMe: boolean, captcha: string | null) => ({type: LOGIN_ASYNC, email, password, rememberMe, captcha} as const),
+    logout: (history: any) => ({type: LOGOUT_ASYNC, history}  as const),
+};
 export default authReducer;

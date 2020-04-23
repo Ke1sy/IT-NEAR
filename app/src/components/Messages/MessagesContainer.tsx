@@ -1,12 +1,5 @@
 import React, {FC, useEffect} from "react";
-import {
-    sendMessage,
-    getDialogs,
-    getMessages,
-    deleteMessage,
-    spamMessage,
-    restoreMessage,
-} from "../../redux/reducers/dialogs-reducer";
+import {dialogActions} from "../../redux/reducers/dialogs-reducer";
 import {
     getDeletedMessages,
     getDialogsList,
@@ -57,7 +50,6 @@ const MessagesContainer:FC<PropsType> = ({getDialogs, ...props}) => {
     return <Messages {...props} friendId={Number(id)}/>
 };
 
-
 const mapStateToProps = (state: AppStateType) => {
     return {
         messages: getMessagesList(state),
@@ -71,14 +63,9 @@ const mapStateToProps = (state: AppStateType) => {
     }
 };
 
+const {sendMessage, getDialogs, getMessages, deleteMessage, spamMessage, restoreMessage} = dialogActions;
+
 export default compose(
-    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {
-        sendMessage,
-        getDialogs,
-        getMessages,
-        deleteMessage,
-        spamMessage,
-        restoreMessage
-    }),
+    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {sendMessage, getDialogs, getMessages, deleteMessage, spamMessage, restoreMessage}),
     withAuthRedirect
 )(MessagesContainer) as FC;

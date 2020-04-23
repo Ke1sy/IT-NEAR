@@ -10,7 +10,7 @@ import {
     getTotalUsersCount,
     getUsers
 } from "../../redux/reducers/users-selectors";
-import {requestUsers} from "../../redux/reducers/users-reducer";
+import {usersActions} from "../../redux/reducers/users-reducer";
 import {withRouter, useLocation, useHistory} from "react-router-dom";
 import {compose} from "redux";
 import queryString from 'query-string';
@@ -108,10 +108,10 @@ let mapStateToProps = (state: AppStateType) => {
     }
 };
 
+const {requestUsers} = usersActions;
+
 export default compose(
-    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {
-        requestUsers,
-    }),
+    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {requestUsers}),
     withRouter,
     withAuthRedirect,
 )(UsersContainer) as FC;

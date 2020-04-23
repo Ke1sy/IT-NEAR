@@ -1,7 +1,7 @@
 import React, {FC, useState} from 'react';
 import Header from "./Header";
 import {connect} from "react-redux";
-import {logout} from "../../redux/reducers/auth-reducer";
+import {authActions} from "../../redux/reducers/auth-reducer";
 import {compose} from "redux";
 import {withRouter, RouteComponentProps, useHistory} from "react-router-dom";
 import {
@@ -63,6 +63,8 @@ const mapStateToProps = (state: AppStateType) => {
         currentUserInfo: getCurrentUserInfo(state)
     }
 };
+
+const {logout} = authActions;
 
 export default compose(
     connect<MapStatePropsType, MapDispatchPropsType, RouteComponentProps, AppStateType>(mapStateToProps, {logout}),

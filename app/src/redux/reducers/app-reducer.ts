@@ -1,6 +1,7 @@
+import {InferActionsTypes} from "../redux-store";
+
 export const INIT_APP_ASYNC = 'app/INIT_APP_ASYNC';
 export const ENQUEUE_SNACKBAR = 'app/ENQUEUE_SNACKBAR';
-export const CLOSE_SNACKBAR = 'app/CLOSE_SNACKBAR';
 export const REMOVE_SNACKBAR = 'app/REMOVE_SNACKBAR';
 const SET_INITED = 'app/SET_INITED';
 
@@ -14,10 +15,8 @@ const initialState: InitialStateType = {
     notifications: [],
 };
 
-type ActionsTypes = typeof SET_INITED | typeof ENQUEUE_SNACKBAR | typeof CLOSE_SNACKBAR | typeof REMOVE_SNACKBAR;
-
-const appReducer = (state = initialState, {type, key, notification, dismissAll}: { type: ActionsTypes, key: any, dismissAll: any, notification: any }): InitialStateType => {
-    switch (type) {
+const appReducer = (state = initialState, action: AppActionsTypes): InitialStateType => {
+    switch (action.type) {
         case SET_INITED:
             return {
                 ...state,
@@ -29,27 +28,15 @@ const appReducer = (state = initialState, {type, key, notification, dismissAll}:
                 notifications: [
                     ...state.notifications,
                     {
-                        key: key,
-                        ...notification,
+                        ...action.notification,
                     },
                 ],
             };
-
-        case CLOSE_SNACKBAR:
-            return {
-                ...state,
-                notifications: state.notifications.map(notification => (
-                    (dismissAll || notification.key === key)
-                        ? {...notification, dismissed: true}
-                        : {...notification}
-                )),
-            };
-
         case REMOVE_SNACKBAR:
             return {
                 ...state,
                 notifications: state.notifications.filter(
-                    notification => notification.key !== key,
+                    notification => notification.key !== action.key,
                 ),
             };
         default:
@@ -57,22 +44,18 @@ const appReducer = (state = initialState, {type, key, notification, dismissAll}:
     }
 };
 
-export const enqueueSnackbar = (notification: any) => {
-    const key = notification.options && notification.options.key;
-    return {
-        type: ENQUEUE_SNACKBAR,
-        notification: {
-            ...notification,
-            key: key || new Date().getTime() + Math.random(),
-        },
-    };
+export type AppActionsTypes = InferActionsTypes<typeof appActions>;
+export const appActions = {
+    enqueueSnackbar: (notification: any) => {
+        const key = notification.options && notification.options.key;
+        return {
+            type: ENQUEUE_SNACKBAR,
+            notification: {...notification, key: key || new Date().getTime() + Math.random()}
+        } as const;
+    },
+    removeSnackbar: (key: any) => ({type: REMOVE_SNACKBAR, key} as const),
+    setAppIsInited: () => ({type: SET_INITED} as const),
+    appInitialize: () => ({type: INIT_APP_ASYNC} as const),
 };
-
-export const removeSnackbar = (key: any) => ({type: REMOVE_SNACKBAR, key});
-
-type SetAppIsInitedActionType = { type: typeof SET_INITED }
-export const setAppIsInited = (): SetAppIsInitedActionType => ({type: SET_INITED});
-
-export const appInitialize = () => ({type: INIT_APP_ASYNC});
 
 export default appReducer;

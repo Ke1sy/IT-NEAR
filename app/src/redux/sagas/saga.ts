@@ -4,58 +4,49 @@ import {
     GET_USER_PROFILE_ASYNC,
     LOAD_PHOTO_ASYNC,
     GET_IS_FOLLOWED_ASYNC,
-    setUserProfile,
-    setUserProfileError,
-    toggleProfileLoading,
-    setPhoto,
-    getIsUserFollowed,
-    updateIsFollowed,
     GET_STATUS_ASYNC,
-    setStatus,
-    GetStatusType,
     SET_STATUS_ASYNC,
-    SetUserStatusType,
     UPDATE_USER_PROFILE_ASYNC,
-    getUserProfile, UpdateProfileInfoType, GetUserProfileType, loadPhotoType
+    profileActions
 } from "../reducers/profile-reducer";
-import {
-    AUTH_ASYNC,
-    LOGIN_ASYNC,
-    LOGOUT_ASYNC,
-    LoginType,
-    LogoutType,
-    setCaptchaUrl,
-    setCurrentUserInfo,
-    setUserData
-} from "../reducers/auth-reducer";
-import {enqueueSnackbar, INIT_APP_ASYNC, setAppIsInited} from "../reducers/app-reducer";
+import {AUTH_ASYNC, authActions, LOGIN_ASYNC, LOGOUT_ASYNC,} from "../reducers/auth-reducer";
+import {appActions, INIT_APP_ASYNC,} from "../reducers/app-reducer";
 import {getCurrentUserId} from "../reducers/auth-selectors";
 import {getProfile} from "../reducers/profile-selectors";
 import {
     FOLLOW_ASYNC,
     REQUEST_USERS_ASYNC,
     UNFOLLOW_ASYNC,
-    acceptFollow,
-    acceptUnfollow,
-    setPage, setSearchText, setUsers, setUsersTotalCount,
-    toggleFollowInProgress, toggleIsLoading,
+    usersActions,
 } from "../reducers/users-reducer";
 import {ProfileType} from "../reducers/types";
 import {reset, stopSubmit} from "redux-form";
 import {
     DELETE_MESSAGE_ASYNC,
-    DeleteMessagesType,
     GET_DIALOGS_ASYNC,
-    GET_MESSAGES_ASYNC, GET_NEW_MESSAGES_COUNT_ASYNC,
+    GET_MESSAGES_ASYNC,
+    GET_NEW_MESSAGES_COUNT_ASYNC,
     RESTORE_MESSAGE_ASYNC,
     SEND_MESSAGE_ASYNC,
     SPAM_MESSAGE_ASYNC,
     START_CHAT_ASYNC,
-    GetMessagesType,
-    RestoreMessagesType,
-    SendMessageType,
-    SpamMessagesType,
-    StartChatType,
+    dialogActions
+} from "../reducers/dialogs-reducer";
+
+const {enqueueSnackbar} = appActions;
+const {setUserData, setCaptchaUrl, setCurrentUserInfo} = authActions;
+const {setUserProfile, setUserProfileError, toggleProfileLoading, setPhoto, getIsUserFollowed, updateIsFollowed, getUserProfile, setStatus} = profileActions;
+const {
+    acceptFollow,
+    acceptUnfollow,
+    setPage,
+    setSearchText,
+    setUsers,
+    setUsersTotalCount,
+    toggleFollowInProgress,
+    toggleIsLoading
+} = usersActions;
+const {
     requestNewMessagesCount,
     addMessage,
     addMessageToDeleted,
@@ -64,11 +55,14 @@ import {
     setActivityDate,
     setDialogs,
     setMessages,
-    setMessagesLoading, setNewMessagesCount,
-    setSelectedFriend,
-} from "../reducers/dialogs-reducer";
+    setMessagesLoading,
+    setNewMessagesCount,
+    setSelectedFriend
+} = dialogActions;
 
 //PROFILE
+type GetUserProfileType = ReturnType<typeof profileActions.getUserProfile>;
+
 function* getUserProfileAsync({id, updateCurrentUserInfo}: GetUserProfileType) {
     try {
         const state = yield select();
@@ -90,9 +84,11 @@ function* getUserProfileAsync({id, updateCurrentUserInfo}: GetUserProfileType) {
     }
 }
 
+type UpdateProfileInfoType = ReturnType<typeof profileActions.updateProfileInfo>;
+
 function* updateProfileInfoAsync({info, userId}: UpdateProfileInfoType) {
     try {
-        const {resultCode, messages} =  yield call(updateProfile, info);
+        const {resultCode, messages} = yield call(updateProfile, info);
         if (resultCode === ResultCodes.Success) {
             yield put(getUserProfile(userId, true));
             yield put(enqueueSnackbar({message: 'Profile successfully updated!', options: {variant: 'success'}}))
@@ -104,6 +100,8 @@ function* updateProfileInfoAsync({info, userId}: UpdateProfileInfoType) {
     }
 }
 
+type GetStatusType = ReturnType<typeof profileActions.getUserStatus>;
+
 function* getStatusAsync({id}: GetStatusType) {
     try {
         const data = yield call(getUserStatus, id);
@@ -112,6 +110,8 @@ function* getStatusAsync({id}: GetStatusType) {
         yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
     }
 }
+
+type SetUserStatusType = ReturnType<typeof profileActions.setUserStatus>;
 
 function* setUserStatusAsync({status}: SetUserStatusType) {
     try {
@@ -124,6 +124,8 @@ function* setUserStatusAsync({status}: SetUserStatusType) {
         yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
     }
 }
+
+type loadPhotoType = ReturnType<typeof profileActions.loadPhoto>;
 
 function* loadPhotoAsync({photo}: loadPhotoType) {
     try {
@@ -141,7 +143,8 @@ function* loadPhotoAsync({photo}: loadPhotoType) {
 }
 
 //USERS
-type setUserIsFollowedType = { type: typeof GET_IS_FOLLOWED_ASYNC, id: number };
+type setUserIsFollowedType = ReturnType<typeof profileActions.getIsUserFollowed>;
+
 function* setUserIsFollowedAsync({id}: setUserIsFollowedType) {
     try {
         const isFollowed = yield call(getUserIsFollowed, id);
@@ -151,7 +154,8 @@ function* setUserIsFollowedAsync({id}: setUserIsFollowedType) {
     }
 }
 
-type RequestUsersType = { type: typeof REQUEST_USERS_ASYNC, currentPage: number, pageSize: number, searchText: string }
+type RequestUsersType = ReturnType<typeof usersActions.requestUsers>;
+
 function* requestUsersAsync({currentPage, pageSize, searchText}: RequestUsersType) {
     try {
         yield put(setSearchText(searchText));
@@ -166,7 +170,8 @@ function* requestUsersAsync({currentPage, pageSize, searchText}: RequestUsersTyp
     }
 }
 
-type FollowActionType = { type: typeof FOLLOW_ASYNC | typeof UNFOLLOW_ASYNC, action: 'follow' | 'unfollow', id: number, updateProfileFollow: boolean };
+type FollowActionType = ReturnType<typeof usersActions.follow | typeof usersActions.unfollow>;
+
 function* toggleFollowAsync({action, id, updateProfileFollow}: FollowActionType) {
     try {
         yield put(toggleFollowInProgress(true, id));
@@ -195,7 +200,8 @@ function* getDialogsAsync() {
     }
 }
 
-function* startChatAsync({userId, history}: StartChatType) {
+type StartChatAsyncType = ReturnType<typeof dialogActions.startChat>;
+function* startChatAsync({userId, history}: StartChatAsyncType) {
     try {
         const {resultCode} = yield call(startChat, userId);
         if (resultCode === ResultCodes.Success) {
@@ -206,9 +212,11 @@ function* startChatAsync({userId, history}: StartChatType) {
     }
 }
 
+type SendMessageType = ReturnType<typeof dialogActions.sendMessage>;
+
 function* sendMessageAsync({userId, message}: SendMessageType) {
     try {
-        const {data, resultCode} =  yield call(sendMessage, userId, message);
+        const {data, resultCode} = yield call(sendMessage, userId, message);
         if (resultCode === ResultCodes.Success) {
             yield put(addMessage(data.message));
             yield put(reset('message'));
@@ -218,9 +226,11 @@ function* sendMessageAsync({userId, message}: SendMessageType) {
     }
 }
 
+type DeleteMessagesType = ReturnType<typeof dialogActions.deleteMessage>;
+
 function* deleteMessagesAsync({messageId}: DeleteMessagesType) {
     try {
-        const {resultCode} =  yield call(deleteMessage, messageId);
+        const {resultCode} = yield call(deleteMessage, messageId);
         if (resultCode === ResultCodes.Success) {
             yield put(addMessageToDeleted(messageId));
         }
@@ -229,9 +239,11 @@ function* deleteMessagesAsync({messageId}: DeleteMessagesType) {
     }
 }
 
+type RestoreMessagesType = ReturnType<typeof dialogActions.restoreMessage>;
+
 function* restoreMessagesAsync({messageId}: RestoreMessagesType) {
     try {
-        const {resultCode} =  yield call(restoreMessage, messageId);
+        const {resultCode} = yield call(restoreMessage, messageId);
         if (resultCode === ResultCodes.Success) {
             yield put(restoreFromSpamDeleted(messageId));
         }
@@ -240,9 +252,11 @@ function* restoreMessagesAsync({messageId}: RestoreMessagesType) {
     }
 }
 
+type SpamMessagesType = ReturnType<typeof dialogActions.spamMessage>;
+
 function* spamMessagesAsync({messageId}: SpamMessagesType) {
     try {
-        const {resultCode} =  yield call(spamMessage, messageId);
+        const {resultCode} = yield call(spamMessage, messageId);
         if (resultCode === ResultCodes.Success) {
             yield put(addMessageToSpam(messageId));
         }
@@ -250,6 +264,8 @@ function* spamMessagesAsync({messageId}: SpamMessagesType) {
         yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
     }
 }
+
+type GetMessagesType = ReturnType<typeof dialogActions.getMessages>;
 
 function* getMessagesAsync({userId}: GetMessagesType) {
     try {
@@ -291,6 +307,8 @@ function* authenticateAsync() {
     }
 }
 
+type LoginType = ReturnType<typeof authActions.login>;
+
 function* loginAsync({email, password, rememberMe, captcha}: LoginType) {
     try {
         const {resultCode, messages} = yield call(login, email, password, rememberMe, captcha);
@@ -308,6 +326,8 @@ function* loginAsync({email, password, rememberMe, captcha}: LoginType) {
     }
 }
 
+type LogoutType = ReturnType<typeof authActions.logout>;
+
 function* logoutAsync({history}: LogoutType) {
     try {
         const {resultCode} = yield call(logout);
@@ -323,12 +343,11 @@ function* logoutAsync({history}: LogoutType) {
 function* appInitAsync() {
     try {
         yield put({type: AUTH_ASYNC});
-        yield put(setAppIsInited());
+        yield put(appActions.setAppIsInited());
     } catch (e) {
         yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
     }
 }
-
 
 // API REQUESTS
 async function authenticate() {
@@ -406,9 +425,11 @@ async function deleteMessage(messageId: string) {
 async function restoreMessage(messageId: string) {
     return await dialogsAPI.restoreMessage(messageId)
 }
+
 async function spamMessage(messageId: string) {
     return await dialogsAPI.spamMessage(messageId);
 }
+
 async function newMessagesCount() {
     return await dialogsAPI.newMessagesCount()
 }

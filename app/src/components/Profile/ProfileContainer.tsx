@@ -1,13 +1,7 @@
 import React, {useEffect, FC} from 'react';
 import Profile from "./Profile";
 import {connect} from "react-redux";
-import {
-    getUserProfile,
-    getUserStatus, getIsUserFollowed,
-    loadPhoto, updateProfileInfo,
-    setUserProfile,
-    setUserStatus,
-} from "../../redux/reducers/profile-reducer";
+import {profileActions} from "../../redux/reducers/profile-reducer";
 import {useParams, withRouter, useHistory} from "react-router-dom";
 import {compose} from "redux";
 import {
@@ -135,6 +129,7 @@ const mapStateToProps = (state: AppStateType) => {
         isFollowed: getIsFollowed(state),
     }
 };
+const { getUserProfile, getUserStatus, getIsUserFollowed, loadPhoto, updateProfileInfo, setUserProfile, setUserStatus} = profileActions;
 
 export default compose(
     connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {

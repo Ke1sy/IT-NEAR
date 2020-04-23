@@ -6,8 +6,8 @@ import {useHistory} from "react-router-dom";
 import {AppStateType} from "../../redux/redux-store";
 import {getFollowInProgress} from "../../redux/reducers/users-selectors";
 import {connect} from "react-redux";
-import {follow, unfollow} from "../../redux/reducers/users-reducer";
-import {startChat} from "../../redux/reducers/dialogs-reducer";
+import {usersActions} from "../../redux/reducers/users-reducer";
+import {dialogActions} from "../../redux/reducers/dialogs-reducer";
 import {Skeleton} from "@material-ui/lab";
 import withFollowMessageStyles from "./followMessageStyles";
 import {PersonAddDisabledRoundedIcon, PersonAddRoundedIcon, EmailRoundedIcon} from "../Icons/MeterialIcons";
@@ -23,7 +23,7 @@ type OwnPropsType = {
         text?: string
     }
 };
-type MapStatePropsType = {followInProgress: Array<number>}
+type MapStatePropsType = { followInProgress: Array<number> }
 type MapDispatchPropsType = {
     startChat: (userId: number, history: any) => void
     follow: (id: number, updateProfileFollow: boolean) => void
@@ -89,9 +89,11 @@ let mapStateToProps = (state: AppStateType) => {
     }
 };
 
+const mapDispatchToProps = {
+    follow: usersActions.follow,
+    unfollow: usersActions.unfollow,
+    startChat: dialogActions.startChat
+};
 
-export default connect<MapStatePropsType, MapDispatchPropsType, OwnPropsType, AppStateType>(mapStateToProps, {
-    unfollow,
-    follow,
-    startChat,
-})(withFollowMessageStyles(FollowMessageBtns));
+export default connect<MapStatePropsType, MapDispatchPropsType, OwnPropsType, AppStateType>(mapStateToProps, mapDispatchToProps)
+(withFollowMessageStyles(FollowMessageBtns));

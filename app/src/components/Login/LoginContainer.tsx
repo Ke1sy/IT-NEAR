@@ -1,7 +1,7 @@
 import React, {FC} from "react";
 import Login from "./Login";
 import {connect} from "react-redux";
-import {login} from "../../redux/reducers/auth-reducer";
+import {authActions} from "../../redux/reducers/auth-reducer";
 import {Redirect} from "react-router-dom";
 import {getCaptchaUrl, getCurrentUserId, getIsAuth} from "../../redux/reducers/auth-selectors";
 import {AppStateType} from "../../redux/redux-store";
@@ -41,5 +41,7 @@ const mapStateToProps = (state: AppStateType) => {
         captchaUrl: getCaptchaUrl(state)
     }
 };
+
+const {login} = authActions;
 
 export default connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {login})(LoginContainer);
