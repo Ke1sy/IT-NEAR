@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from "react-dom";
 import * as serviceWorker from './serviceWorker';
 import store from "./redux/redux-store";
-import {HashRouter as Router} from "react-router-dom";
+import {BrowserRouter as Router} from "react-router-dom";
 import {Provider} from 'react-redux';
 import './index.scss';
 import App from './App';
@@ -18,7 +18,7 @@ const client = new ApolloClient({
 
 
 ReactDOM.render(
-    <Router basename="/">
+    <Router>
         <ApolloHooksProvider client={client}>
             <Provider store={store}>
                 <SnackbarProvider maxSnack={3} anchorOrigin={{vertical: 'bottom', horizontal: 'right',}} autoHideDuration={2000}>
