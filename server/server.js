@@ -28,6 +28,20 @@ const dbConnection = mongoose.connection;
 dbConnection.on('error', err => console.log(`Connection error: ${err}`));
 dbConnection.once('open', () => console.log('Connected to DB!'));
 
-app.listen(PORT, err => {
-    err ? console.log(err) : console.log('Server started!');
+const server = app.listen(PORT, err => {
+    err ? console.log(err) : console.log(`Server started on port: ${PORT}`);
+});
+
+const io = require('socket.io')(server);
+io.on('connection', (socket) => {
+    console.log('user connected');
+    socket.on('new_message', (msg) => {
+        io.emit('new_message', msg);
+    });
+    socket.on('watch_messages', (participants) => {
+        io.emit('watch_messages', participants);
+    });
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
 });
