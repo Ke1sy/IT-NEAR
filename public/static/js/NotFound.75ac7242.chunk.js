@@ -1,2 +1,2 @@
 (this["webpackJsonpit-near"]=this["webpackJsonpit-near"]||[]).push([[3],{447:function(e,t,n){"use strict";n.r(t);var a=n(0),i=n.n(a),s=n(615),c=n.n(s),r=n(228),o=n(11),u=Object(r.a)((function(e){return{notFound:{flexGrow:1,display:"flex",alignItems:"center",justifyContent:"center"},img:{maxHeight:"70vh"}}})),l=Object(o.a)(u,{withTheme:!0});t.default=l((function(e){var t=e.classes;return i.a.createElement("div",{className:t.notFound},i.a.createElement("img",{src:c.a,alt:""}))}))},615:function(e,t,n){e.exports=n.p+"static/media/404.953dd785.png"}}]);
-//# sourceMappingURL=Music.75ac7242.chunk.js.map
+//# sourceMappingURL=NotFound.75ac7242.chunk.js.map

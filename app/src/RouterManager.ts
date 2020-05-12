@@ -3,7 +3,7 @@ const ProfileContainer = React.lazy(() => import(/* webpackChunkName: "ProfileCo
 const MessagesContainer = React.lazy(() => import(/* webpackChunkName: "MessagesContainer" */"./components/Messages/MessagesContainer"));
 const LoginContainer = React.lazy(() => import(/* webpackChunkName: "LoginContainer" */"./components/Login/LoginContainer"));
 const UsersContainer = React.lazy(() => import(/* webpackChunkName: "UsersContainer" */"./components/Users/UsersContainer"));
-const NotFound = React.lazy(() => import(/* webpackChunkName: "Music" */"./components/NotFound/NotFound"));
+const NotFound = React.lazy(() => import(/* webpackChunkName: "NotFound" */"./components/NotFound/NotFound"));
 
 type RouteValueType = {
     path: string,
