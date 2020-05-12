@@ -13,16 +13,22 @@ import Notifier from "./components/Notifier/Notifier";
 import {withSnackbar, WithSnackbarProps} from 'notistack';
 import RM from "./RouterManager";
 import Footer from "./components/Footer/Footer";
-import {getIsAuth} from "./redux/reducers/auth-selectors";
+import {getCurrentUserInfo, getIsAuth} from "./redux/reducers/auth-selectors";
 import withAppStyles from './appStyles'
+import {GetMessageType, ProfileType} from "./redux/reducers/types";
+import NewMessageNoty from "./components/Notifier/NewMessageNoty";
+import {dialogActions} from "./redux/reducers/dialogs-reducer";
+import {emitInitUser, socket} from "./utils/socket";
 
 type MapStatePropsType = {
     inited: boolean,
-    isAuth: boolean
+    isAuth: boolean,
+    currentUserInfo: ProfileType | null
 }
 
 type MapDispatchPropsType = {
-    appInitialize: () => void
+    appInitialize: () => void,
+    requestNewMessagesCount: () => void,
 }
 
 type PropsType = MapStatePropsType & MapDispatchPropsType & WithStyles & WithSnackbarProps;
@@ -32,6 +38,25 @@ class App extends Component<PropsType> {
         this.props.appInitialize();
         window.addEventListener("unhandledrejection", this.globalError);
     }
+
+    componentDidUpdate(prevProps: PropsType) {
+        if (this.props.currentUserInfo !== prevProps.currentUserInfo) {
+            this.initSocket();
+        }
+    }
+
+    initSocket = () => {
+        const {requestNewMessagesCount, currentUserInfo} = this.props;
+        if (!currentUserInfo) return;
+        const {userId, fullName} = currentUserInfo;
+        emitInitUser({userId, userName: fullName});
+        socket.on('get_new_message', (msg: GetMessageType) => {
+            this.props.enqueueSnackbar(
+                <NewMessageNoty message={`New message from: ${msg.sender.name}`}/>, {variant: 'default'}
+            );
+            requestNewMessagesCount()
+        });
+    };
 
     globalError = (e: any) => {
         this.props.enqueueSnackbar(`${e.reason}`, {variant: 'error'});
@@ -55,7 +80,7 @@ class App extends Component<PropsType> {
                     <div className={classes.toolbar}/>
                     <Switch>
                         {Object.entries(RM).map(([key, route]) => {
-                            const {path, exact=false, redirect=null, component: Cmp} = route;
+                            const {path, exact = false, redirect = null, component: Cmp} = route;
                             const redirectPath = redirect ? redirect(this.props.isAuth) : '';
                             const RouteComponent = redirect ? <Redirect to={redirectPath}/> : withSuspense(Cmp);
                             return (
@@ -79,14 +104,21 @@ class App extends Component<PropsType> {
 const mapStateToProps = (state: AppStateType) => {
     return {
         inited: getAppInited(state),
-        isAuth: getIsAuth(state)
+        isAuth: getIsAuth(state),
+        currentUserInfo: getCurrentUserInfo(state)
     }
 };
+
+const {appInitialize} = appActions;
+const {requestNewMessagesCount} = dialogActions;
 
 export default compose(
     withAppStyles,
     withSnackbar,
-    connect<MapStatePropsType, MapDispatchPropsType, WithSnackbarProps, AppStateType>(mapStateToProps, {appInitialize: appActions.appInitialize}),
+    connect<MapStatePropsType, MapDispatchPropsType, WithSnackbarProps, AppStateType>(mapStateToProps, {
+        appInitialize,
+        requestNewMessagesCount
+    }),
     withRouter
 )(App) as React.ComponentType<any>;
 

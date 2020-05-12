@@ -167,7 +167,7 @@ export const dialogsAPI = {
     },
 
     getMessages: (userId: number) => {
-        return instance.get<GetMessagesResponseType>(`dialogs/${userId}/messages`)
+        return instance.get<GetMessagesResponseType>(`dialogs/${userId}/messages/new?newerThen=2018-05-11T18:11:43.737`)
             .then(response => response.data)
     },
 

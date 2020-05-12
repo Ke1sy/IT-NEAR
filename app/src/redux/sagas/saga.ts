@@ -32,6 +32,8 @@ import {
     START_CHAT_ASYNC,
     dialogActions
 } from "../reducers/dialogs-reducer";
+import {emitSendMessage} from "../../utils/socket";
+import {getSelectedFriend} from "../reducers/dialogs-selectors";
 
 const {enqueueSnackbar} = appActions;
 const {setUserData, setCaptchaUrl, setCurrentUserInfo} = authActions;
@@ -214,12 +216,13 @@ function* startChatAsync({userId, history}: StartChatAsyncType) {
 
 type SendMessageType = ReturnType<typeof dialogActions.sendMessage>;
 
-function* sendMessageAsync({userId, message}: SendMessageType) {
+function* sendMessageAsync({reciever, sender, message}: SendMessageType) {
     try {
-        const {data, resultCode} = yield call(sendMessage, userId, message);
+        const {data, resultCode} = yield call(sendMessage, reciever, message);
         if (resultCode === ResultCodes.Success) {
             yield put(addMessage(data.message));
             yield put(reset('message'));
+            emitSendMessage({sender, reciever, msg: message});
         }
     } catch (e) {
         yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
@@ -269,15 +272,19 @@ type GetMessagesType = ReturnType<typeof dialogActions.getMessages>;
 
 function* getMessagesAsync({userId}: GetMessagesType) {
     try {
-        yield put(setMessagesLoading(true));
-        const {error, items} = yield call(getMessages, userId);
-        const data = yield call(getProfileById, userId);
-        if (!error) {
-            yield put(setMessages(items));
-            yield put(setActivityDate(userId));
-            yield put(setSelectedFriend(data));
+        const state = yield select();
+        const sameUser = getSelectedFriend(state)?.userId === userId;
+        if (!sameUser) {
+            yield put(setMessagesLoading(true));
         }
-        yield put(setMessagesLoading(false));
+        const items = yield call(getMessages, userId);
+        const data = yield call(getProfileById, userId);
+        yield put(setMessages(items));
+        yield put(setActivityDate(userId));
+        yield put(setSelectedFriend(data));
+        if (!sameUser) {
+            yield put(setMessagesLoading(false));
+        }
     } catch (e) {
         yield put(enqueueSnackbar({message: e.message, options: {variant: 'error'}}))
     }

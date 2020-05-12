@@ -23,12 +23,6 @@ const socialsFields = ['website', 'facebook', 'vk', 'twitter', 'instagram', 'you
 const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting, reset, initialize, profile, classes}) => {
     useEffect(() => {
         if (profile) {
-            initForm()
-        }
-    }, [profile]);
-
-    const initForm = () => {
-        if (profile) {
             const {aboutMe, contacts: {facebook, website, github, instagram, youtube, twitter, vk}, lookingForAJob, lookingForAJobDescription, fullName} = profile;
             initialize({
                 fullName,
@@ -44,7 +38,8 @@ const SettingsForm: FC<PropsType> = ({handleSubmit, error, pristine, submitting,
                 lookingForAJobDescription
             });
         }
-    };
+    }, [profile]);
+
 
     if (!profile) {
         return <Preloader showPreloader={true}/>

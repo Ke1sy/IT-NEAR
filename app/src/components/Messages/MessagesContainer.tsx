@@ -17,6 +17,7 @@ import {AppStateType} from "../../redux/redux-store";
 import {DialogsType, MessagesType, ProfileType} from "../../redux/reducers/types";
 import Messages from "./Messages";
 import {useParams} from "react-router-dom";
+import {socket} from "../../utils/socket";
 
 type MapStatePropsType = {
     dialogs: Array<DialogsType>
@@ -30,24 +31,29 @@ type MapStatePropsType = {
 }
 
 type MapDispatchPropsType = {
-    sendMessage: (userId: number, message: string) => void
+    sendMessage: (reciever: number, sender: { id: number, name: string }, message: string) => void
     getDialogs: () => void
     getMessages: (userId: number) => void
     deleteMessage: (messageId: string) => void
     spamMessage: (messageId: string) => void
     restoreMessage: (messageId: string) => void
+    requestNewMessagesCount: () => void
 }
 
 type PropsType = MapStatePropsType & MapDispatchPropsType;
 
-const MessagesContainer:FC<PropsType> = ({getDialogs, ...props}) => {
-    let { id } = useParams();
+const MessagesContainer: FC<PropsType> = ({getDialogs, ...props}) => {
+    let {id} = useParams();
 
     useEffect(() => {
-        getDialogs()
-    }, []);
+        getDialogs();
+        socket.on('get_new_message', getDialogs);
+        return () => {
+            socket.off('get_new_message', getDialogs);
+        }
+    }, [getDialogs]);
 
-    return <Messages {...props} friendId={Number(id)}/>
+    return <Messages {...props} getDialogs={getDialogs} friendId={Number(id)}/>
 };
 
 const mapStateToProps = (state: AppStateType) => {
@@ -63,9 +69,17 @@ const mapStateToProps = (state: AppStateType) => {
     }
 };
 
-const {sendMessage, getDialogs, getMessages, deleteMessage, spamMessage, restoreMessage} = dialogActions;
+const {sendMessage, getDialogs, getMessages, deleteMessage, spamMessage, restoreMessage, requestNewMessagesCount} = dialogActions;
 
 export default compose(
-    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {sendMessage, getDialogs, getMessages, deleteMessage, spamMessage, restoreMessage}),
+    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {
+        sendMessage,
+        getDialogs,
+        getMessages,
+        deleteMessage,
+        spamMessage,
+        restoreMessage,
+        requestNewMessagesCount
+    }),
     withAuthRedirect
 )(MessagesContainer) as FC;

@@ -77,5 +77,13 @@ export type LoginFormDataPropsType = {
     captcha: string | null
 }
 
+export type GetMessageType = {
+    text: string,
+    sender: {
+        id: number,
+        name: string
+    }
+};
+
 export type OpenPostDialogType = 'edit' | 'confirm';
 

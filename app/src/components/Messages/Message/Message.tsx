@@ -57,7 +57,10 @@ const Message: FC<PropsType & WithStyles> = ({message, deleteMessage, spamMessag
             <Typography variant="body2" className={classes.messageItem} component="div">
                 {messageInactive ? inactiveText : <Markdown>{body}</Markdown>}
             </Typography>
+
+            {isOwnerMessage &&
             <img src={viewed ? readIcon : unreadIcon} alt="" className={classes.viewedIcon}/>
+            }
 
             <div className={classes.date}>
                 {date}

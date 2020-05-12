@@ -17,11 +17,13 @@ type PropsType = {
     currentUserInfo: ProfileType | null,
     friendId: number,
     messagesLoading: boolean,
-    sendMessage: (userId: number, message: string) => void
+    sendMessage: (reciever: number, sender: {id: number, name: string}, message: string) => void
     getMessages: (userId: number) => void
     deleteMessage: (messageId: string) => void
     spamMessage: (messageId: string) => void
     restoreMessage: (messageId: string) => void
+    requestNewMessagesCount: () => void
+    getDialogs: () => void
 }
 
 const Messages: FC<PropsType & WithStyles> = ({
@@ -39,7 +41,9 @@ const Messages: FC<PropsType & WithStyles> = ({
                                                   selectedFriend,
                                                   currentUserInfo,
                                                   friendId,
-                                                  messagesLoading
+                                                  messagesLoading,
+                                                  requestNewMessagesCount,
+                                                  getDialogs
                                               }) => {
     return (
         <div className={classes.root}>
@@ -68,6 +72,8 @@ const Messages: FC<PropsType & WithStyles> = ({
                             restoreMessage={restoreMessage}
                             selectedFriend={selectedFriend}
                             currentUserInfo={currentUserInfo}
+                            requestNewMessagesCount={requestNewMessagesCount}
+                            getDialogs={getDialogs}
                         /> :
                         <EmptyChat/>
                     }
