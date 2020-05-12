@@ -1,11 +1,12 @@
-import React, {useEffect, FC, useState, Fragment} from 'react';
+import React, {useEffect, FC, useState, Fragment, useRef} from 'react';
 import Message from "./../Message/Message";
 import MessageForm from "./../Message/MessageForm";
-import {MessagesType, ProfileType} from "../../../redux/reducers/types";
+import {GetMessageType, MessagesType, ProfileType} from "../../../redux/reducers/types";
 import Preloader from "../../Preloader/Preloader";
 import ChatHeader from "./ChatHeader";
 import {WithStyles} from "@material-ui/core";
 import withMessagesChatStyles from "./messagesChatStyles";
+import {emitWatchMessages, socket} from "../../../utils/socket";
 
 type PropsType = {
     messages: Array<MessagesType>
@@ -16,11 +17,13 @@ type PropsType = {
     selectedFriend: ProfileType | null
     currentUserInfo: ProfileType,
     messagesLoading: boolean,
-    sendMessage: (userId: number, message: string) => void
+    sendMessage: (reciever: number, sender: {id: number, name: string}, message: string) => void
     getMessages: (userId: number) => void
     deleteMessage: (messageId: string) => void
     spamMessage: (messageId: string) => void
     restoreMessage: (messageId: string) => void
+    requestNewMessagesCount: () => void
+    getDialogs: () => void
 }
 
 type FilteredMessagesType = {
@@ -42,9 +45,13 @@ const MessagesChat: FC<PropsType & WithStyles> = ({
                                                       spamedMessages,
                                                       selectedFriend,
                                                       currentUserInfo,
-                                                      messagesLoading
+                                                      messagesLoading,
+                                                      requestNewMessagesCount,
+                                                      getDialogs
                                                   }) => {
     const [filteredMessages, setFilteredMessages] = useState<[] | Array<FilteredMessagesType>>([]);
+    const wrapperRef = useRef<any>(null);
+
     const filterByDate = () => {
         let newArr: any = {};
         messages.map((message: MessagesType) => {
@@ -69,36 +76,60 @@ const MessagesChat: FC<PropsType & WithStyles> = ({
     };
 
     const updateMessages = () => {
-        if (friendId !== undefined) {
+        if (friendId) {
             getMessages(friendId);
+        }
+    };
+
+    // Watch for new messages
+    const subscribeToNewMessages = (msg: GetMessageType) => {
+        if(msg.sender.id === friendId) {
+            updateMessages();
+        }
+    };
+
+    // Watch for messages view status
+    const subscribeToVieWMessages = (watcher: number) => {
+        if(watcher === friendId) {
+            // If friend have viewed our messages, we need to know
+            updateMessages();
+        } else if (watcher === currentUserInfo.userId) {
+            // If we have viewed new messages, we need to update new messages count
+            requestNewMessagesCount();
+            getDialogs()
         }
     };
 
     useEffect(() => {
         if (friendId) {
             updateMessages();
+            socket.on('get_new_message', subscribeToNewMessages);
+            socket.on('need_update_messages', subscribeToVieWMessages);
+            return () => {
+                socket.off('get_new_message', subscribeToNewMessages);
+                socket.off('need_update_messages', subscribeToVieWMessages);
+            }
         }
     }, [friendId]);
 
+    //group messages by date and emit view status of messages
     useEffect(() => {
         filterByDate();
+        const unreadMess = messages.filter(item => !item.viewed && item.recipientId === currentUserInfo.userId);
+        if (unreadMess.length) {
+            emitWatchMessages({reciever: friendId, sender: currentUserInfo.userId});
+        }
     }, [messages]);
 
     useEffect(() => {
-        if (!messagesLoading) {
-            scrollChatToBottom();
+        if (!messagesLoading ) {
+           const wrapper = wrapperRef.current;
+            wrapper.scroll(0, wrapper.scrollHeight - wrapper.clientHeight)
         }
     }, [messagesLoading, filteredMessages]);
 
-    const scrollChatToBottom = () => {
-        const wrapper = document.getElementById("wrapper");
-        if (wrapper) {
-            wrapper.scroll(0, wrapper.scrollHeight - wrapper.clientHeight);
-        }
-    };
-
     const onAddMessage = ({message}: { message: string }) => {
-        sendMessage(friendId, message);
+        sendMessage(friendId, {id: currentUserInfo.userId, name: currentUserInfo.fullName}, message);
     };
 
     return (
@@ -108,7 +139,7 @@ const MessagesChat: FC<PropsType & WithStyles> = ({
                 <ChatHeader lastUserActivityDate={lastUserActivityDate} selectedFriend={selectedFriend}
                             messagesLoading={messagesLoading}/>
                 }
-                <div className={classes.chatWrapper} id="wrapper">
+                <div className={classes.chatWrapper} ref={wrapperRef}>
                     {messagesLoading ?
                         <Preloader showPreloader={true}/> :
                         (filteredMessages as FilteredMessagesType[]).map(({date, messages}) =>
