@@ -38,7 +38,7 @@ const styles = createStyles((theme: Theme) => ({
     headDate: {
         color: theme.palette.grey[400],
         [theme.breakpoints.down(480)]: {
-            fontSize: 11
+            fontSize: 10
         },
     },
     back: {

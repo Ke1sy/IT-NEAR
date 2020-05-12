@@ -13,6 +13,7 @@ const styles = createStyles((theme: Theme) => ({
             marginBottom: 30,
         },
     },
+
     avatar: {
         height: 40,
         width: 40
@@ -77,17 +78,21 @@ const styles = createStyles((theme: Theme) => ({
         fontSize: "0.9rem",
         padding: "9px 15px",
         borderRadius: "10px",
+        wordBreak: 'break-word'
     },
+
     viewedIcon: {
         position: "absolute",
         bottom: "2px",
         height: "12px",
     },
+
     messageIcon: {
         maxWidth: 17,
         maxHeight: 17,
         opacity: "0.5"
     },
+
     actionBtn: {
         cursor: "pointer",
         width: 20,
@@ -107,11 +112,13 @@ const styles = createStyles((theme: Theme) => ({
     delete: {
         top: 0
     },
+
     restore: {
         top: 0,
         bottom: 0,
         margin: "auto 0"
     },
+
     spam: {
         top: 20
     },

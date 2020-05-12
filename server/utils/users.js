@@ -2,7 +2,6 @@ let users = [];
 
 const userJoin = (user) => {
     users = [...users.filter(({id}) => id !== user.id), user];
-    console.log(users);
     return user;
 };
 

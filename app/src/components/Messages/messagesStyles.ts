@@ -50,7 +50,7 @@ const styles = createStyles((theme: Theme) => ({
     content: {
         flexGrow: 1,
         position: 'relative',
-
+        maxWidth: '100%'
     }
 }));
 
